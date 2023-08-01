@@ -2,6 +2,9 @@
 📌 Preparation
 [Nextプロジェクト作成・環境構築など #9](https://github.com/saku-1101/Teamenver/issues/9#issue-1827772365)
 
+💉 Test Preparation
+[テスト環境整備 #14](https://github.com/saku-1101/Teamenver/issues/14#issue-1830533667)
+
 
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
