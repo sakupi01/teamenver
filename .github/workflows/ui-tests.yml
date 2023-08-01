@@ -10,7 +10,7 @@ jobs:
       - name: Checkout Commit
         uses: actions/checkout@v2
       - name: Cache yarn dependencies and cypress
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         id: yarn-cache
         with:
           path: |
@@ -32,7 +32,7 @@ jobs:
         with:
           node-version: '16.x'
       - name: Restore yarn dependencies
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         id: yarn-cache
         with:
           path: |
