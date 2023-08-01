@@ -3,8 +3,14 @@
     "source.fixAll.eslint": true
   },
   "editor.formatOnSave": true,
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true
+  },
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "editor.formatOnType": false,
+  "editor.quickSuggestions": {
+    "strings": true
+  },
   "files.eol": "\n",
   "cSpell.words": [
     "Parens",
