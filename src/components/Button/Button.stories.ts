@@ -41,7 +41,7 @@ export const Secondary: Story = {
     const canvas = within(canvasElement)
 
     await userEvent.click(canvas.getByRole('button'))
-    expect(canvas.getByRole('button').textContent).toContain('Clicked!')
+    expect(canvas).not.toContain('loading...')
   },
 }
 

@@ -1,6 +1,8 @@
 'use client'
-import React, { useState } from 'react'
+import React from 'react'
 import './button.css'
+import { useState } from 'react'
+import useSWR from 'swr'
 
 interface ButtonProps {
   /**
@@ -22,7 +24,6 @@ interface ButtonProps {
   /**
    * Optional click handler
    */
-  onClick?: () => void
 }
 
 /**
@@ -35,22 +36,30 @@ export const Button = ({
   label,
   ...props
 }: ButtonProps) => {
-  const [isClicked, setIsClicked] = useState(label)
+  // const [isPending, startTransition] = useTransition()
+  const [shouldFetch, setShouldFetch] = useState(false)
+  const fetcher = (url: string) => fetch(url).then((res) => res.json())
+  const { data, error, isLoading } = useSWR(
+    shouldFetch ? `/get/frameworks?query=${label}` : null,
+    fetcher,
+  )
 
   const mode = primary ? 'storybook-button--primary' : 'storybook-button--secondary'
   return (
-    <button
-      type='button'
-      className={['storybook-button', `storybook-button--${size}`, mode].join(' ')}
-      {...props}
-      onClick={() => setIsClicked('Clicked!')}
-    >
-      {isClicked}
-      <style jsx>{`
-        button {
-          background-color: ${backgroundColor};
-        }
-      `}</style>
-    </button>
+    <>
+      <button
+        type='button'
+        className={['storybook-button', `storybook-button--${size}`, mode].join(' ')}
+        onClick={() => setShouldFetch(true)}
+      >
+        {label}
+        <style jsx>{`
+          button {
+            background-color: ${backgroundColor};
+          }
+        `}</style>
+      </button>
+      {shouldFetch ? <p>{isLoading ? 'loading...' : JSON.stringify(data)}</p> : ''}
+    </>
   )
 }

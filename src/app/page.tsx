@@ -25,8 +25,12 @@ export default async function Home() {
       <a href='/api/auth/login'>Login</a>
       <a href='/api/auth/logout'>Logout</a>
       <Button size='medium' label='Button' />
-      {framework.map((el, index) => {
-        return <p key={el.id}>{el.name}</p>
+      {framework.map((el) => {
+        return (
+          <p key={el.id}>
+            <Button label={el.name!}/>
+          </p>
+        )
       })}
     </main>
   )
