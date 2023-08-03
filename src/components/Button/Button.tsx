@@ -38,7 +38,6 @@ export const Button = ({
   ...props
 }: ButtonProps) => {
   const [isPending, startTransition] = useTransition()
-  const [shouldFetch, setShouldFetch] = useState(false)
   const [res, setRes] = useState('')
 
   const mode = primary ? 'storybook-button--primary' : 'storybook-button--secondary'
