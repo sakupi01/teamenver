@@ -18,13 +18,15 @@ export interface Object {
 
 export interface Package {
   name: string
+  scope?: string
   version: string
   description: string
-  keywords: string[]
-  date: Date
-  links: Links
-  publisher: Publisher
-  maintainers: Publisher[]
+  keywords?: string[]
+  date: string
+  links?: Links
+  author?: Author
+  publisher?: Publisher
+  maintainers?: Publisher[]
 }
 
 export interface Links {
@@ -48,6 +50,13 @@ export interface Detail {
   quality: number
   popularity: number
   maintenance: number
+}
+
+export interface Author {
+  name?: string
+  email?: string
+  url?: string
+  username?: string
 }
 
 // Converts JSON strings to/from your types

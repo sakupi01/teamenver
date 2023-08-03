@@ -1,5 +1,4 @@
-import { expect } from '@storybook/jest'
-import { userEvent, within } from '@storybook/testing-library'
+import { userEvent, waitFor, within } from '@storybook/testing-library'
 
 import { Button } from './Button'
 
@@ -12,10 +11,10 @@ const meta = {
   parameters: {
     // Optional parameter to center the component in the Canvas. More info: https://storybook.js.org/docs/react/configure/story-layout
     layout: 'centered',
+    // msw: { handlers: [handleGetLibraries({ status: 401, query: 'next' })] },
   },
   // This component will have an automatically generated Autodocs entry: https://storybook.js.org/docs/react/writing-docs/autodocs
   tags: ['autodocs'],
-  // More on argTypes: https://storybook.js.org/docs/react/api/argtypes
   argTypes: {
     backgroundColor: { control: 'color' },
   },
@@ -36,13 +35,6 @@ export const Secondary: Story = {
   args: {
     label: 'Button',
   },
-  play: async ({ canvasElement }) => {
-    // Assigns canvas to the component root element
-    const canvas = within(canvasElement)
-
-    await userEvent.click(canvas.getByRole('button'))
-    expect(canvas).not.toContain('loading...')
-  },
 }
 
 export const Large: Story = {
@@ -56,5 +48,24 @@ export const Small: Story = {
   args: {
     size: 'small',
     label: 'Button',
+  },
+}
+
+export const SucceedToGetData: Story = {
+  args: {
+    label: 'Fetch!',
+  },
+  play: async ({ canvasElement }) => {
+    // Assigns canvas to the component root element
+    const canvas = within(canvasElement)
+
+    await userEvent.click(
+      canvas.getByRole('button', { name: SucceedToGetData.args.label }),
+    )
+
+    await waitFor(() => canvas.getByText('loading...'))
+
+    // DOM内のテクストノードを受け取り，真偽値を返すマッチャーを渡す
+    await waitFor(() => canvas.getByText((text) => text.includes('data')))
   },
 }
