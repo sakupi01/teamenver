@@ -1,6 +1,6 @@
 import { Button } from '@/components/Button/Button'
 
-import supabaseClient from '@/libs/supabaseClient'
+import supabaseClient from '@/libs/supabase/supabaseClient'
 
 export default async function Home() {
   const get = async () => {
@@ -20,6 +20,7 @@ export default async function Home() {
   if (!framework) {
     return <p>Loading Error.</p>
   }
+  // get user info from gql
   return (
     <main className='flex min-h-screen flex-col items-center justify-between p-24'>
       <a href='/api/auth/login'>Login</a>
@@ -28,7 +29,7 @@ export default async function Home() {
       {framework.map((el) => {
         return (
           <p key={el.id}>
-            <Button label={el.name!}/>
+            <Button label={el.name!} />
           </p>
         )
       })}

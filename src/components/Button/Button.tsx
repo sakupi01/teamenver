@@ -1,8 +1,9 @@
 'use client'
-import React from 'react'
+import React, { useTransition } from 'react'
 import './button.css'
 import { useState } from 'react'
-import useSWR from 'swr'
+
+import { getLibraries } from '@/services/client/GetLibraries'
 
 interface ButtonProps {
   /**
@@ -36,21 +37,23 @@ export const Button = ({
   label,
   ...props
 }: ButtonProps) => {
-  // const [isPending, startTransition] = useTransition()
+  const [isPending, startTransition] = useTransition()
   const [shouldFetch, setShouldFetch] = useState(false)
-  const fetcher = (url: string) => fetch(url).then((res) => res.json())
-  const { data, error, isLoading } = useSWR(
-    shouldFetch ? `/get/frameworks?query=${label}` : null,
-    fetcher,
-  )
+  const [res, setRes] = useState('')
 
   const mode = primary ? 'storybook-button--primary' : 'storybook-button--secondary'
   return (
     <>
       <button
+        disabled={isPending}
         type='button'
         className={['storybook-button', `storybook-button--${size}`, mode].join(' ')}
-        onClick={() => setShouldFetch(true)}
+        onClick={() =>
+          startTransition(() => {
+            setRes('roading')
+            getLibraries(label).then((res) => setRes(JSON.stringify(res)))
+          })
+        }
       >
         {label}
         <style jsx>{`
@@ -59,7 +62,7 @@ export const Button = ({
           }
         `}</style>
       </button>
-      {shouldFetch ? <p>{isLoading ? 'loading...' : JSON.stringify(data)}</p> : ''}
+      {res === 'roading' || isPending ? <p>loading...</p> : <p>{res}</p>}
     </>
   )
 }
