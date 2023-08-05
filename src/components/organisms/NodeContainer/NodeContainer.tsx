@@ -2,16 +2,36 @@
 import { WebContainer } from '@webcontainer/api'
 import { useEffect } from 'react'
 
+import { files } from '@/app/files'
+
 import style from './NodeContainer.module.css'
 
 /** @type {import('@webcontainer/api').WebContainer}  */
-let webcontainerInstance
+let webcontainerInstance: WebContainer
 
 export const NodeContainer = () => {
   useEffect(() => {
     window.addEventListener('load', async () => {
       // Call only once
       webcontainerInstance = await WebContainer.boot()
+      await webcontainerInstance.mount(files)
+
+      const packageJSON = await webcontainerInstance.fs.readFile('package.json', 'utf-8')
+      console.log(packageJSON)
+      const installProcess = await webcontainerInstance.spawn('npm', ['install'])
+
+      installProcess.output.pipeTo(
+        new WritableStream({
+          write(data) {
+            console.log(data)
+          },
+        }),
+      )
+
+      const textareaEl = document!.querySelector('textarea')
+      if (textareaEl != null) {
+        textareaEl.value = files['index.js'].file.contents
+      }
     })
   }, [])
 
@@ -20,7 +40,9 @@ export const NodeContainer = () => {
       <div className={style.editor}>
         <textarea className={style.textarea} defaultValue='Start Coding!'></textarea>
       </div>
-      <iframe src='http://localhost:3000/loading'> </iframe>
+      <div className='preview'>
+        <iframe src='/loading.html'></iframe>
+      </div>
     </div>
   )
 }
