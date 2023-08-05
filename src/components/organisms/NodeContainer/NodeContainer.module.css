@@ -1,3 +1,12 @@
+.wrapper {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+}
 .container {
   box-sizing: border-box;
   display: grid;
@@ -5,6 +14,7 @@
   gap: 1rem;
   height: 100%;
   width: 100%;
+  margin-bottom: 20px;
 }
 
 .textarea {
@@ -21,4 +31,8 @@
   height: 100%;
   width: 100%;
   border-radius: 0.5rem;
+}
+
+.output {
+  composes: textarea;
 }
