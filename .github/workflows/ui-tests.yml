@@ -9,6 +9,9 @@ jobs:
     steps:
       - name: Checkout Commit
         uses: actions/checkout@v3
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 7.27.1 # 明示的に指定して Renovate と package.json 内の "engine" で管理するのがいいと思います
       - name: Cache pnpm dependencies and cypress
         uses: actions/cache@v3
         id: pnpm-cache
@@ -21,7 +24,7 @@ jobs:
             ${{ runner.os }}-pnpm-v1
       - name: Install dependencies if cache invalid
         if: steps.pnpm-cache.outputs.cache-hit != 'true'
-        run: pnpm
+        run: pnpm i --frozen-lockfile
   # Run interaction and accessibility tests
   interaction-and-accessibility:
     runs-on: ubuntu-latest
