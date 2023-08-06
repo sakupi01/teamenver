@@ -1,8 +1,8 @@
-import { NodeContainer } from '../components/organisms/NodeContainer/NodeContainer'
+import { Flow } from '../components/molecules/Flow/Flow'
 export default async function Home() {
   return (
     <main className='p-24'>
-      <NodeContainer />
+      <Flow />
     </main>
   )
 }
