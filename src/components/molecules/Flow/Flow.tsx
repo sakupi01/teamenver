@@ -21,11 +21,10 @@ import ReactFlow, {
 
 import 'reactflow/dist/style.css'
 
-import style from './index.module.css'
-import './index.css'
+import { css } from 'styled-system/css'
+
 import { SideBar } from './sidebar'
 
-// TODO: need to create an array with (node objects)[https://reactflow.dev/docs/api/nodes/node-options/]
 const initialElements = [
   {
     id: '1',
@@ -39,21 +38,13 @@ const MIN_DISTANCE = 150
 
 let id = 0
 const getId = () => `dndnode_${id++}`
-// TODO: To make an edge, we need to specify two attributes: the source node (where the edge begins) and the target node (where the edge ends). We use the id of the two nodes to specify this (in our example, our two nodes have ids of "1" and "2"):
-// const initialEdges = [
-//   { id: 'e1-2', source: '1', target: '2', label: 'to the', type: 'step' },
-// ]
+
 const InnerFlow = () => {
   const store = useStoreApi()
   const reactFlowWrapper = useRef<HTMLInputElement>(null)
   const [nodes, setNodes] = useNodesState(initialElements)
   const [edges, setEdges] = useEdgesState([])
   const [reactFlowInstance, setReactFlowInstance] = useState<any>(null)
-
-  // It's important that the nodeTypes are memoized or defined outside of the component.
-  // Otherwise React creates a new object on every render which leads to performance issues and bugs.
-  // https://reactflow.dev/docs/api/react-flow-props/#nodetypes
-  // const nodeTypes = useMemo(() => ({ prompterNode: PrompterNode }), [])
 
   // When you drag or select a node, the onNodeChange handler gets called.
   // With help of the applyNodeChanges function you can then apply those changes to your current node state.
@@ -132,7 +123,6 @@ const InnerFlow = () => {
 
           if (d < res.distance && d < MIN_DISTANCE) {
             res.distance = d
-            // @ts-ingnore
             res.node = n
           }
         }
@@ -201,8 +191,18 @@ const InnerFlow = () => {
   )
 
   return (
-    <div className={style.dndflow}>
-      <div className='h-[100vh] w-[100vw]' ref={reactFlowWrapper}>
+    <div
+      className={css({
+        flexDirection: 'column',
+        display: 'flex',
+        flexGrow: '1',
+        height: '100%',
+        md: {
+          flexDirection: 'row',
+        },
+      })}
+    >
+      <div className={css({ width: '100vw', height: '100vh' })} ref={reactFlowWrapper}>
         <ReactFlow
           nodes={nodes}
           edges={edges}
