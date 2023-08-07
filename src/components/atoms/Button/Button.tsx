@@ -1,9 +1,13 @@
 'use client'
 import React, { useTransition } from 'react'
-import './button.css'
+
+// import './button.css'
 import { useState } from 'react'
 
 import { getLibraries } from '@/services/client/GetLibraries'
+
+import { button } from './button.css'
+
 
 interface ButtonProps {
   /**
@@ -40,13 +44,13 @@ export const Button = ({
   const [isPending, startTransition] = useTransition()
   const [res, setRes] = useState('')
 
-  const mode = primary ? 'storybook-button--primary' : 'storybook-button--secondary'
+  const mode = primary ? 'primary' : 'secondary'
   return (
     <>
       <button
         disabled={isPending}
         type='button'
-        className={['storybook-button', `storybook-button--${size}`, mode].join(' ')}
+        className={button({type: mode, size: size})}
         onClick={() =>
           startTransition(() => {
             setRes('roading')
