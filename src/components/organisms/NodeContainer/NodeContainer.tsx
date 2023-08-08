@@ -1,32 +1,35 @@
 'use client'
 import { WebContainer } from '@webcontainer/api'
 import { useEffect, useState } from 'react'
+import { Terminal } from 'xterm'
 
 import { files } from '@/app/webContainerSideFiles'
 import { css } from 'styled-system/css'
 
 import { textarea } from './NodeContainer.css'
+import 'xterm/css/xterm.css';
 
-/** @type {import('@webcontainer/api').WebContainer}  */
 
 export const NodeContainer = () => {
   const [webcontainer, setWebcontainer] = useState<WebContainer | null>(null)
-
+  
   useEffect(() => {
     const initWebContainer = async () => {
       const wc = await WebContainer.boot()
       setWebcontainer(wc)
     }
-
+    
     initWebContainer()
   }, [])
-
+  
+  
   useEffect(() => {
     if (!webcontainer) return
-
+    
     const textarea = document.querySelector('textarea')
     const iframe = document.querySelector('iframe')
-    const output = document.getElementById('output')
+    const terminalEl: HTMLElement = document.querySelector('.terminal')!
+    // const output = document.getElementById('output')
 
     if (textarea) {
       // @ts-ignore
@@ -42,12 +45,13 @@ export const NodeContainer = () => {
       })
     }
 
-    const installDependencies = async () => {
+    const installDependencies = async (terminal: Terminal) => {
       const installProcess = await webcontainer.spawn('npm', ['install'])
       installProcess.output.pipeTo(
         new WritableStream({
           write(data) {
-            output!.innerHTML = output!.innerHTML + data + '\n'
+            // output!.innerHTML = output!.innerHTML + data + '\n'
+            terminal.write(data);
             console.log(data)
           },
         }),
@@ -55,8 +59,19 @@ export const NodeContainer = () => {
       return installProcess.exit
     }
 
-    const startDevServer = async () => {
-      await webcontainer.spawn('npm', ['run', 'start'])
+    const startDevServer = async (terminal: Terminal) => {
+        // Run `npm run start` to start the Express app
+      const serverProcess = await webcontainer.spawn('npm', [
+        'run',
+        'start',
+      ]);
+      serverProcess.output.pipeTo(
+        new WritableStream({
+          write(data) {
+            terminal.write(data);
+          },
+        })
+      );
       webcontainer.on('server-ready', (port, url) => {
         if (iframe) {
           iframe.src = url
@@ -65,14 +80,24 @@ export const NodeContainer = () => {
     }
 
     const bootWebContainer = async () => {
+      const initTerminal = (terminalEl: HTMLElement) => {
+        const terminal = new Terminal({
+          convertEol: true,
+        });
+        terminal.open(terminalEl);
+        return terminal;
+      }
+
+      const terminal = initTerminal(terminalEl);
+
       await webcontainer.mount(files)
       // TODO: Install base Frameworks mentioned first in the package.json
-      const exitCode = await installDependencies()
+      const exitCode = await installDependencies(terminal);
       if (exitCode !== 0) {
-        throw new Error('Installation failed')
-      }
-      // TODO: Install additional libraries and start dev server
-      startDevServer()
+        throw new Error('Installation failed');
+      };
+    // TODO: Install additional libraries and start dev server
+      startDevServer(terminal);
     }
 
     bootWebContainer()
@@ -114,8 +139,8 @@ export const NodeContainer = () => {
         </div>
       </div>
       <div className={css({ width: '100%', height: '100%' })}>
-        <p className={css({ marginTop: '20px' })}>🤖 Execution Log</p>
-        <div id='output' className={textarea()}></div>
+        <p className={css({ marginTop: '20px' })}>🤖 Terminal</p>
+        <div className='terminal'></div>
       </div>
     </div>
   )
