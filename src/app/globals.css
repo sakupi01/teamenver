@@ -1,6 +1,4 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@layer reset, base, tokens, recipes, utilities;
 
 /* :root {
   --foreground-rgb: 0, 0, 0;

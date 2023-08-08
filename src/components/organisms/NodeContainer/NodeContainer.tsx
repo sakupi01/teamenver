@@ -3,8 +3,9 @@ import { WebContainer } from '@webcontainer/api'
 import { useEffect, useState } from 'react'
 
 import { files } from '@/app/webContainerSideFiles'
+import { css } from 'styled-system/css'
 
-import style from './NodeContainer.module.css'
+import { textarea } from './NodeContainer.css'
 
 /** @type {import('@webcontainer/api').WebContainer}  */
 
@@ -78,20 +79,43 @@ export const NodeContainer = () => {
   }, [webcontainer])
 
   return (
-    <div className={style.wrapper}>
-      <div className={style.container}>
-        <div className={style.editor}>
+    <div
+      className={css({
+        boxSizing: 'border-box',
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: '100%',
+        width: '100%',
+      })}
+    >
+      <div
+        className={css({
+          boxSizing: 'border-box',
+          display: 'grid',
+          gridTemplateColumns: '1fr 1fr',
+          gap: '1rem',
+          height: '100%',
+          width: '100%',
+          marginBottom: '20px',
+        })}
+      >
+        <div>
           <p>📝 Editor(Readonly)</p>
-          <textarea className={style.textarea} defaultValue='Start Coding!'></textarea>
+          <textarea className={textarea()} defaultValue='Start Coding!'></textarea>
         </div>
-        <div style={{ width: '100%', height: '100%' }}>
+        <div className={css({ width: '100%', height: '100%' })}>
           <p>✨ Output</p>
-          <iframe src='/loading'></iframe>
+          <iframe
+            src='/loading'
+            className={css({ height: '100%', width: '100%', borderRadius: '0.5rem' })}
+          ></iframe>
         </div>
       </div>
-      <div style={{width: '100%', height: '100%'}}>
-        <p style={{marginTop: '20px'}}>🤖 Execution Log</p>
-        <div id='output' className={style.output}></div>
+      <div className={css({ width: '100%', height: '100%' })}>
+        <p className={css({ marginTop: '20px' })}>🤖 Execution Log</p>
+        <div id='output' className={textarea()}></div>
       </div>
     </div>
   )

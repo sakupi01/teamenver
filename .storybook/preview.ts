@@ -1,6 +1,7 @@
 import type { Preview } from '@storybook/react'
 import { initialize, mswDecorator } from 'msw-storybook-addon'
 import { handleGetLibraries } from '../src/services/client/GetLibraries/__mock__/msw'
+import '../src/app/globals.css'
 const preview: Preview = {
   parameters: {
     actions: { argTypesRegex: '^on[A-Z].*' },
