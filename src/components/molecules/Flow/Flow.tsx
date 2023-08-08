@@ -17,6 +17,8 @@ import ReactFlow, {
   BackgroundVariant,
   useStoreApi,
   Node,
+  useReactFlow,
+  getOutgoers,
 } from 'reactflow'
 
 import 'reactflow/dist/style.css'
@@ -52,6 +54,7 @@ const InnerFlow = ({frameworks}: FlowProps) => {
   const [nodes, setNodes] = useNodesState(initialElements)
   const [edges, setEdges] = useEdgesState([])
   const [reactFlowInstance, setReactFlowInstance] = useState<any>(null)
+  const { deleteElements } = useReactFlow();
 
   // When you drag or select a node, the onNodeChange handler gets called.
   // With help of the applyNodeChanges function you can then apply those changes to your current node state.
@@ -92,7 +95,6 @@ const InnerFlow = ({frameworks}: FlowProps) => {
       }
       const reactFlowBounds = reactFlowWrapper.current.getBoundingClientRect()
       const data: nodeInfo = JSON.parse(event.dataTransfer.getData('application/reactflow'))
-      console.log('data:', data);
 
       const type = data.type;
       // check if the dropped element is valid
@@ -199,6 +201,26 @@ const InnerFlow = ({frameworks}: FlowProps) => {
     [getClosestEdge, setEdges],
   )
 
+  const onNodesDelete = useCallback(
+    (deleted: Node[]) => {
+      function removeTreeOfOutgoers(node: Node) {
+        const outgoers = getOutgoers(node, nodes, edges);
+        console.log(outgoers);
+        if (outgoers.length) {
+          deleteElements({ nodes: outgoers });
+          // we loop through the outgoers and try to remove any outgoers of our outgoers
+          outgoers.forEach((outgoer) => {
+            removeTreeOfOutgoers(outgoer);
+          });
+        }
+      }
+      deleted.forEach((node) => {
+        removeTreeOfOutgoers(node);
+      });
+    },
+    [nodes, deleteElements, edges]
+  );
+
   return (
     <div
       className={css({
@@ -219,6 +241,7 @@ const InnerFlow = ({frameworks}: FlowProps) => {
           onEdgesChange={onEdgesChange}
           onNodeDrag={onNodeDrag}
           onNodeDragStop={onNodeDragStop}
+          onNodesDelete={onNodesDelete}
           onConnect={onConnect}
           onInit={setReactFlowInstance}
           onDrop={onDrop}
