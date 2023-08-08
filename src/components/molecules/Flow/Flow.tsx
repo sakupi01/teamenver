@@ -17,19 +17,28 @@ import ReactFlow, {
   BackgroundVariant,
   useStoreApi,
   Node,
+  useReactFlow,
+  getOutgoers,
 } from 'reactflow'
 
 import 'reactflow/dist/style.css'
+
+import { nodeInfo } from '@/types/custom/nodeInfo';
+import { Database } from '@/types/supabase';
 
 import { css } from 'styled-system/css'
 
 import { SideBar } from './sidebar'
 
+export type FlowProps = {
+  frameworks: Array<Database['public']['Tables']['frameworks']['Row']>
+}
+
 const initialElements = [
   {
     id: '1',
     type: 'input',
-    data: { label: 'input node' },
+    data: { label: 'フレームワークを選択してください' },
     position: { x: 250, y: 5 },
   },
 ]
@@ -39,12 +48,13 @@ const MIN_DISTANCE = 150
 let id = 0
 const getId = () => `dndnode_${id++}`
 
-const InnerFlow = () => {
+const InnerFlow = ({frameworks}: FlowProps) => {
   const store = useStoreApi()
   const reactFlowWrapper = useRef<HTMLInputElement>(null)
   const [nodes, setNodes] = useNodesState(initialElements)
   const [edges, setEdges] = useEdgesState([])
   const [reactFlowInstance, setReactFlowInstance] = useState<any>(null)
+  const { deleteElements } = useReactFlow();
 
   // When you drag or select a node, the onNodeChange handler gets called.
   // With help of the applyNodeChanges function you can then apply those changes to your current node state.
@@ -84,8 +94,9 @@ const InnerFlow = () => {
         return
       }
       const reactFlowBounds = reactFlowWrapper.current.getBoundingClientRect()
-      const type = event.dataTransfer.getData('application/reactflow')
+      const data: nodeInfo = JSON.parse(event.dataTransfer.getData('application/reactflow'))
 
+      const type = data.type;
       // check if the dropped element is valid
       if (typeof type === 'undefined' || !type) {
         return
@@ -99,7 +110,7 @@ const InnerFlow = () => {
         id: getId(),
         type,
         position,
-        data: { label: `${type} node` },
+        data: { label: data.label ? data.label : 'N/A'},
       }
 
       setNodes((nds) => nds.concat(newNode))
@@ -148,7 +159,7 @@ const InnerFlow = () => {
       target: closeNodeIsSource ? node.id : closestNode.node.id,
       className: '',
     }
-  }, [])
+  }, [store])
 
   const onNodeDrag = useCallback(
     (_: React.MouseEvent, node: Node) => {
@@ -187,8 +198,28 @@ const InnerFlow = () => {
         return nextEdges
       })
     },
-    [getClosestEdge],
+    [getClosestEdge, setEdges],
   )
+
+  const onNodesDelete = useCallback(
+    (deleted: Node[]) => {
+      function removeTreeOfOutgoers(node: Node) {
+        const outgoers = getOutgoers(node, nodes, edges);
+        console.log(outgoers);
+        if (outgoers.length) {
+          deleteElements({ nodes: outgoers });
+          // we loop through the outgoers and try to remove any outgoers of our outgoers
+          outgoers.forEach((outgoer) => {
+            removeTreeOfOutgoers(outgoer);
+          });
+        }
+      }
+      deleted.forEach((node) => {
+        removeTreeOfOutgoers(node);
+      });
+    },
+    [nodes, deleteElements, edges]
+  );
 
   return (
     <div
@@ -210,6 +241,7 @@ const InnerFlow = () => {
           onEdgesChange={onEdgesChange}
           onNodeDrag={onNodeDrag}
           onNodeDragStop={onNodeDragStop}
+          onNodesDelete={onNodesDelete}
           onConnect={onConnect}
           onInit={setReactFlowInstance}
           onDrop={onDrop}
@@ -221,15 +253,15 @@ const InnerFlow = () => {
           <Background variant={BackgroundVariant.Dots} gap={12} size={1} />
         </ReactFlow>
       </div>
-      <SideBar />
+      <SideBar frameworks={frameworks} />
     </div>
   )
 }
 
-export const Flow = () => {
+export const Flow = ({frameworks}: FlowProps ) => {
   return (
     <ReactFlowProvider>
-      <InnerFlow />
+      <InnerFlow frameworks={frameworks}/>
     </ReactFlowProvider>
   )
 }
