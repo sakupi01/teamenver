@@ -2,6 +2,7 @@
 import { WebContainer } from '@webcontainer/api'
 import { useEffect, useState } from 'react'
 import { Terminal } from 'xterm'
+import {FitAddon} from 'xterm-addon-fit'
 
 import { files } from '@/app/webContainerSideFiles'
 import { css } from 'styled-system/css'
@@ -79,12 +80,38 @@ export const NodeContainer = () => {
       })
     }
 
+    async function startShell(terminal: Terminal) {
+      const shellProcess = await webcontainer!.spawn('jsh', {
+        terminal: {
+          cols: terminal.cols,
+          rows: terminal.rows,
+        },
+      });
+      shellProcess.output.pipeTo(
+        new WritableStream({
+          write(data) {
+            terminal.write(data);
+          },
+        })
+      );
+      const input = shellProcess.input.getWriter();
+      terminal.onData((data) => {
+        input.write(data);
+      });
+      return shellProcess;
+    };
+
     const bootWebContainer = async () => {
+      const fitAddon = new FitAddon();
       const initTerminal = (terminalEl: HTMLElement) => {
+
         const terminal = new Terminal({
           convertEol: true,
         });
+        terminal.loadAddon(fitAddon);
         terminal.open(terminalEl);
+      
+        fitAddon.fit();
         return terminal;
       }
 
@@ -92,12 +119,27 @@ export const NodeContainer = () => {
 
       await webcontainer.mount(files)
       // TODO: Install base Frameworks mentioned first in the package.json
-      const exitCode = await installDependencies(terminal);
-      if (exitCode !== 0) {
-        throw new Error('Installation failed');
-      };
+      // const exitCode = await installDependencies(terminal);
+      // if (exitCode !== 0) {
+      //   throw new Error('Installation failed');
+      // };
     // TODO: Install additional libraries and start dev server
-      startDevServer(terminal);
+      // startDevServer(terminal);
+
+      // Wait for server ready event
+      webcontainer.on('server-ready', (port, url) => {
+        if (iframe) {
+          iframe.src = url
+        }
+      })
+      const shellProcess = await startShell(terminal);
+      window.addEventListener('resize', () => {
+        fitAddon.fit();
+        shellProcess.resize({
+          cols: terminal.cols,
+          rows: terminal.rows,
+        });
+      });
     }
 
     bootWebContainer()
