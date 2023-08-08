@@ -21,15 +21,22 @@ import ReactFlow, {
 
 import 'reactflow/dist/style.css'
 
+import { nodeInfo } from '@/types/custom/nodeInfo';
+import { Database } from '@/types/supabase';
+
 import { css } from 'styled-system/css'
 
 import { SideBar } from './sidebar'
+
+export type FlowProps = {
+  frameworks: Array<Database['public']['Tables']['frameworks']['Row']>
+}
 
 const initialElements = [
   {
     id: '1',
     type: 'input',
-    data: { label: 'input node' },
+    data: { label: 'フレームワークを選択してください' },
     position: { x: 250, y: 5 },
   },
 ]
@@ -39,7 +46,7 @@ const MIN_DISTANCE = 150
 let id = 0
 const getId = () => `dndnode_${id++}`
 
-const InnerFlow = () => {
+const InnerFlow = ({frameworks}: FlowProps) => {
   const store = useStoreApi()
   const reactFlowWrapper = useRef<HTMLInputElement>(null)
   const [nodes, setNodes] = useNodesState(initialElements)
@@ -84,8 +91,10 @@ const InnerFlow = () => {
         return
       }
       const reactFlowBounds = reactFlowWrapper.current.getBoundingClientRect()
-      const type = event.dataTransfer.getData('application/reactflow')
+      const data: nodeInfo = JSON.parse(event.dataTransfer.getData('application/reactflow'))
+      console.log('data:', data);
 
+      const type = data.type;
       // check if the dropped element is valid
       if (typeof type === 'undefined' || !type) {
         return
@@ -99,7 +108,7 @@ const InnerFlow = () => {
         id: getId(),
         type,
         position,
-        data: { label: `${type} node` },
+        data: { label: data.label ? data.label : 'N/A'},
       }
 
       setNodes((nds) => nds.concat(newNode))
@@ -148,7 +157,7 @@ const InnerFlow = () => {
       target: closeNodeIsSource ? node.id : closestNode.node.id,
       className: '',
     }
-  }, [])
+  }, [store])
 
   const onNodeDrag = useCallback(
     (_: React.MouseEvent, node: Node) => {
@@ -187,7 +196,7 @@ const InnerFlow = () => {
         return nextEdges
       })
     },
-    [getClosestEdge],
+    [getClosestEdge, setEdges],
   )
 
   return (
@@ -221,15 +230,15 @@ const InnerFlow = () => {
           <Background variant={BackgroundVariant.Dots} gap={12} size={1} />
         </ReactFlow>
       </div>
-      <SideBar />
+      <SideBar frameworks={frameworks} />
     </div>
   )
 }
 
-export const Flow = () => {
+export const Flow = ({frameworks}: FlowProps ) => {
   return (
     <ReactFlowProvider>
-      <InnerFlow />
+      <InnerFlow frameworks={frameworks}/>
     </ReactFlowProvider>
   )
 }
