@@ -8,6 +8,7 @@ import { files } from '@/app/webContainerSideFiles'
 import { css } from 'styled-system/css'
 
 import { textarea } from './NodeContainer.css'
+
 import 'xterm/css/xterm.css';
 
 
@@ -30,52 +31,17 @@ export const NodeContainer = () => {
     const textarea = document.querySelector('textarea')
     const iframe = document.querySelector('iframe')
     const terminalEl: HTMLElement = document.querySelector('.terminal')!
-    // const output = document.getElementById('output')
 
     if (textarea) {
       // @ts-ignore
-      textarea.value = files['index.js'].file.contents
+      textarea.value = files['README.md'].file.contents
       textarea.addEventListener('input', (event: Event) => {
         if (event.currentTarget) {
           // @ts-ignore
           const content = event.currentTarget.value
-          webcontainer.fs.writeFile('/index.js', content)
+          webcontainer.fs.writeFile('/README.md', content)
         } else {
           return
-        }
-      })
-    }
-
-    const installDependencies = async (terminal: Terminal) => {
-      const installProcess = await webcontainer.spawn('npm', ['install'])
-      installProcess.output.pipeTo(
-        new WritableStream({
-          write(data) {
-            // output!.innerHTML = output!.innerHTML + data + '\n'
-            terminal.write(data);
-            console.log(data)
-          },
-        }),
-      )
-      return installProcess.exit
-    }
-
-    const startDevServer = async (terminal: Terminal) => {
-        // Run `npm run start` to start the Express app
-      const serverProcess = await webcontainer.spawn('npm', [
-        'run',
-        'start',
-      ]);
-      serverProcess.output.pipeTo(
-        new WritableStream({
-          write(data) {
-            terminal.write(data);
-          },
-        })
-      );
-      webcontainer.on('server-ready', (port, url) => {
-        if (iframe) {
-          iframe.src = url
         }
       })
     }
@@ -87,6 +53,7 @@ export const NodeContainer = () => {
           rows: terminal.rows,
         },
       });
+
       shellProcess.output.pipeTo(
         new WritableStream({
           write(data) {
@@ -94,6 +61,7 @@ export const NodeContainer = () => {
           },
         })
       );
+
       const input = shellProcess.input.getWriter();
       terminal.onData((data) => {
         input.write(data);
@@ -118,13 +86,6 @@ export const NodeContainer = () => {
       const terminal = initTerminal(terminalEl);
 
       await webcontainer.mount(files)
-      // TODO: Install base Frameworks mentioned first in the package.json
-      // const exitCode = await installDependencies(terminal);
-      // if (exitCode !== 0) {
-      //   throw new Error('Installation failed');
-      // };
-    // TODO: Install additional libraries and start dev server
-      // startDevServer(terminal);
 
       // Wait for server ready event
       webcontainer.on('server-ready', (port, url) => {
@@ -170,7 +131,7 @@ export const NodeContainer = () => {
       >
         <div>
           <p>📝 Editor(Readonly)</p>
-          <textarea className={textarea()} defaultValue='Start Coding!'></textarea>
+          <textarea readOnly className={textarea()} defaultValue='⛅️ Reading the instructions...'></textarea>
         </div>
         <div className={css({ width: '100%', height: '100%' })}>
           <p>✨ Output</p>
