@@ -35,7 +35,9 @@
     "react-dom": "18.2.0",
     "reactflow": "^11.7.4",
     "swr": "^2.2.0",
-    "typescript": "5.1.6"
+    "typescript": "5.1.6",
+    "xterm": "^5.2.1",
+    "xterm-addon-fit": "^0.7.0"
   },
   "volta": {
     "node": "20.5.0"

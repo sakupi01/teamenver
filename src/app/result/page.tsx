@@ -1,4 +1,6 @@
+import { css } from 'styled-system/css';
+
 import { NodeContainer } from '../../components/organisms/NodeContainer/NodeContainer';
 export default function Result(){
-    return (<><NodeContainer /></>)
+    return (<main className={css({ padding: '5%' })}><NodeContainer /></main>)
 }
