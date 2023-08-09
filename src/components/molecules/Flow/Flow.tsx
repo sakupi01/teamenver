@@ -24,14 +24,13 @@ import ReactFlow, {
 import 'reactflow/dist/style.css'
 
 import { nodeInfo } from '@/types/custom/nodeInfo';
-import { Database } from '@/types/supabase';
 
 import { css } from 'styled-system/css'
 
 import { SideBar } from './sidebar'
 
 export type FlowProps = {
-  frameworks: Array<Database['public']['Tables']['frameworks']['Row']>
+  frameworks: Array<{name: string | null}>
 }
 
 const initialElements = [

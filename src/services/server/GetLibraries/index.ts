@@ -1,6 +1,6 @@
 import { Libraries } from '@/types/libraries'
 
-import { handleNpmApiError } from '..'
+import { handleServerError } from '..'
 
 export const getLibraries = async ({ query }: { query: string | null }) => {
   try {
@@ -10,7 +10,7 @@ export const getLibraries = async ({ query }: { query: string | null }) => {
     const data: Libraries = await res.json()
     return { data: data }
   } catch (error) {
-    return handleNpmApiError(error)
+    return handleServerError(error)
   }
 }
 export type GetLibrariesType = Awaited<ReturnType<typeof getLibraries>>
