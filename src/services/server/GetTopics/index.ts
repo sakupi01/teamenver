@@ -1,6 +1,6 @@
 import { gqlGhClient } from "@/libs/graphql/client"
 
-import { GetCssFrameworksDocument } from "@/gql/codegen/graphql"
+import { GetCssFrameworksDocument } from "@/gql/codegen/github/graphql"
 
 import { handleServerError } from ".."
 

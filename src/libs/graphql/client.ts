@@ -10,3 +10,12 @@ export const gqlGhClient = new GraphQLClient(
     }
   }
 )
+
+export const gqlHasuraClient = new GraphQLClient(
+  process.env.HASURA_GRAPHQL_API_ENDPOINT as string,
+  {
+    headers: {
+      'Authorization': `bearer ${process.env.HASURA_GRAPHQL_API_ADMIN_SECRET}`
+    }
+  }
+)
