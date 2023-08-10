@@ -8,7 +8,7 @@ export default async function Home() {
     try {
       const { data: frameworks, error } = await supabaseClient
         .from('frameworks')
-        .select('*')
+        .select('name')
         .order('webframe_want_to_work_with_count', { ascending: false })
       console.log(JSON.stringify(frameworks))
       console.log('here')

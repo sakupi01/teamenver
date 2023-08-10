@@ -1,27 +1,28 @@
 import React, { useState } from 'react'
 
 import { nodeInfo } from '@/types/custom/nodeInfo'
-import { Object } from '@/types/libraries'
-import { Package } from '@/types/libraries'
-import { Database } from '@/types/supabase'
 
-import { getLibraries } from '@/services/client/GetLibraries'
+import { getTopics } from '@/services/client/GetTopics'
 import { css } from 'styled-system/css'
 
 import { dndNode } from './dndNode.css'
 
 
 type SideBarProps= {
-  frameworks: Array<Database['public']['Tables']['frameworks']['Row']>
+  frameworks: Array<{name: string | null}>
 }
 
 export const SideBar = ({frameworks}: SideBarProps) => {
 
   const [loading, setLoading] = useState(true);
-  const [libraries, setLibraries] = useState<Array<Database['public']['Tables']['frameworks']['Row']> | Array<Package>>(frameworks)
-  const fetchData = async(label: string | null) => {
-    const json = await getLibraries(label);
-    const data = JSON.stringify(json);
+  const [libraries, setLibraries] = useState<Array<{name: string | null}>>(frameworks)
+  const fetchData = async() => {
+    const json = await getTopics('css-framework');
+    const data = JSON.stringify(json.topic?.repositories.nodes?.map(node => {return {name: node?.name}}));
+    console.log('***************************');
+    console.log(data);
+    console.log('***************************');
+    
     return data;
   }
   const onDragStart = async(event: React.DragEvent<HTMLDivElement>, nodeInfo: nodeInfo) => {
@@ -29,8 +30,8 @@ export const SideBar = ({frameworks}: SideBarProps) => {
     event.dataTransfer.effectAllowed = 'move'
     if(nodeInfo.type === 'default'){
       setLoading(false);
-      const data = await fetchData(nodeInfo.label);
-      const libs: Array<Package> = JSON.parse(data).data.objects.map((obj: Object) => obj.package);
+      const data = await fetchData();
+      const libs: Array<{name: string}> = JSON.parse(data);
       console.log(libs);
       setLibraries(libs);
       setLoading(true);

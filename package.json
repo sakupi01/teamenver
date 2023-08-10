@@ -21,6 +21,7 @@
   },
   "dependencies": {
     "@auth0/nextjs-auth0": "^3.0.0-beta.3",
+    "@graphql-typed-document-node/core": "^3.2.0",
     "@supabase/supabase-js": "^2.31.0",
     "@types/node": "20.4.5",
     "@types/react": "18.2.18",
@@ -28,6 +29,8 @@
     "autoprefixer": "10.4.14",
     "eslint": "8.46.0",
     "eslint-config-next": "13.4.12",
+    "graphql": "^16.7.1",
+    "graphql-request": "^6.1.0",
     "hygen": "^6.2.11",
     "next": "13.4.12",
     "postcss": "8.4.27",
@@ -35,12 +38,15 @@
     "react-dom": "18.2.0",
     "reactflow": "^11.7.4",
     "swr": "^2.2.0",
-    "typescript": "5.1.6"
+    "xterm": "^5.2.1",
+    "xterm-addon-fit": "^0.7.0"
   },
   "volta": {
     "node": "20.5.0"
   },
   "devDependencies": {
+    "@graphql-codegen/cli": "^5.0.0",
+    "@graphql-codegen/client-preset": "^4.1.0",
     "@pandacss/dev": "^0.9.0",
     "@storybook/addon-a11y": "^7.2.0",
     "@storybook/addon-essentials": "^7.2.0",
@@ -67,7 +73,9 @@
     "prettier": "3.0.0",
     "storybook": "^7.2.0",
     "supabase": "^1.82.5",
-    "tsconfig-paths-webpack-plugin": "^4.1.0"
+    "ts-node": "^10.9.1",
+    "tsconfig-paths-webpack-plugin": "^4.1.0",
+    "typescript": "5.1.6"
   },
   "msw": {
     "workerDirectory": "public"
