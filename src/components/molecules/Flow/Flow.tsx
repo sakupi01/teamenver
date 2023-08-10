@@ -24,13 +24,14 @@ import ReactFlow, {
 import 'reactflow/dist/style.css'
 
 import { nodeInfo } from '@/types/custom/nodeInfo';
+import { sidebarData } from '@/types/custom/sidebarData';
 
 import { css } from 'styled-system/css'
 
 import { SideBar } from './sidebar'
 
 export type FlowProps = {
-  frameworks: Array<{name: string | null}>
+  frameworks: sidebarData
 }
 
 const initialElements = [
