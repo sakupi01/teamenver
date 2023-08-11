@@ -1,14 +1,15 @@
+import { redirect } from 'next/navigation'
+
 import { createTeam } from "@/services/server/CreateTeam";
 import { css } from "styled-system/css";
-
 
 export default function Join() {
     const createTeamHandler = async (data: FormData) => {
         'use server'
         const name = data.get('name') as string
-        const res = await createTeam({name})
-        // const res = await fetch(`${process.env.BASE_URL}/api/create/team?name=${name}`);
+        const res = await createTeam({ name })
         console.log(res)
+        redirect('/create/board');
     }
 
     return (

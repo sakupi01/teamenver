@@ -1,6 +1,5 @@
 mutation CreateTeam($name: String!) {
   insert_teams(objects: { name: $name }) {
-    affected_rows
     returning {
       admin_id
       name
@@ -10,3 +9,33 @@ mutation CreateTeam($name: String!) {
 }
 
 # if the user wanna join, only the team leader can add a user
+
+mutation CreateBoard($is_public: Boolean!, $team_id: uuid!) {
+  insert_boards(objects: { is_public: $is_public, team_id: $team_id }) {
+    returning {
+      id
+      created_at
+      is_public
+      user_id
+      team_id
+    }
+  }
+}
+
+mutation CreateDetails($board_id: uuid!) {
+  insert_board_details(objects: { board_id: $board_id }) {
+    returning {
+      id
+      board_id
+    }
+  }
+}
+
+mutation UpdateDetails($id: uuid!, $framework: String!) {
+  update_board_details(where: { id: { _eq: $id } }, _set: { framework: $framework }) {
+    returning {
+      id
+      framework
+    }
+  }
+}
