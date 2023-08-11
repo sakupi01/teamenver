@@ -1,0 +1,12 @@
+mutation CreateTeam($name: String!) {
+  insert_teams(objects: { name: $name }) {
+    affected_rows
+    returning {
+      admin_id
+      name
+      id
+    }
+  }
+}
+
+# if the user wanna join, only the team leader can add a user

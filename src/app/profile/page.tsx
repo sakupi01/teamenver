@@ -1,9 +1,8 @@
-// app/profile/page.js
-
 import { getSession } from "@auth0/nextjs-auth0";
 
-export default async function Profile(){
+export default async function Profile() {
   const session = await getSession();
+
   return (
     <main>
       <h1>Profile</h1>
@@ -13,5 +12,5 @@ export default async function Profile(){
       <h3>User</h3>
       <pre>{JSON.stringify(session?.user, null, 2)}</pre>
     </main>
-  ); 
+  );
 }
