@@ -1,3 +1,4 @@
+
 import supabaseClient from '@/libs/supabase/supabaseClient'
 
 
@@ -22,6 +23,8 @@ export default async function Home() {
   const frameworks = await get()
   return (
     <main className={css({ padding: '5%' })}>
+      {/* Next linting rules might suggest using the Link component instead of an anchor tag. The Link component is meant to perform client-side transitions between pages. As the links point to an API route and not to a page, you should keep them as anchor tags. */}
+      <a href='/api/auth/logout'>Logout</a>
       <Flow frameworks={frameworks ? {name: 'frameworks', nodes: frameworks} : {} as sidebarData} />
     </main>
   )

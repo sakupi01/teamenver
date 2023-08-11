@@ -21,8 +21,6 @@ export const FetchFramework = async () => {
   }
   return (
     <>
-      <a href='/api/auth/login'>Login</a>
-      <a href='/api/auth/logout'>Logout</a>
       <Button size='medium' label='Button' />
       {framework.map((el) => {
         return (
