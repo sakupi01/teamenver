@@ -1,21 +1,35 @@
 import { FileSystemTree } from '@webcontainer/api'
 
 type fileGeneratorProps = {
-  fw_name: string,
-  builder: string,
-  ui_name:string | null,
-  css_name: string | null,
-  eslint: 'yes' | 'no' | 'template',
-  prettier: 'yes' | 'no' | 'template',
-  lint_staged_husky?: 'yes' | 'no' | 'template',
-  hygen?: 'yes' | 'no' | 'template',
-  vscode?: 'yes' | 'no' | 'template',
-  volta?: 'yes' | 'no' | 'template',
-  manager: 'npm' | 'yarn' | 'pnpm',
-  project_name: string,
+  fw_name: string
+  builder: string
+  ui_name: string | null
+  css_name: string | null
+  eslint: 'yes' | 'no' | 'template'
+  prettier: 'yes' | 'no' | 'template'
+  lint_staged_husky?: 'yes' | 'no' | 'template'
+  hygen?: 'yes' | 'no' | 'template'
+  vscode?: 'yes' | 'no' | 'template'
+  volta?: 'yes' | 'no' | 'template'
+  manager: 'npm' | 'yarn' | 'pnpm' | 'bun'
+  project_name: string
   isGit: boolean
 }
-const fileGenerator = ({fw_name, builder, ui_name, css_name, eslint, prettier, lint_staged_husky, hygen, vscode, volta, manager, project_name, isGit}: fileGeneratorProps) => {
+const fileGenerator = ({
+  fw_name,
+  builder,
+  ui_name,
+  css_name,
+  eslint,
+  prettier,
+  lint_staged_husky,
+  hygen,
+  vscode,
+  volta,
+  manager,
+  project_name,
+  isGit,
+}: fileGeneratorProps) => {
   const md = `
   // 🚀 If you agree with the settings below, just type \`node script.js\` to start your Vite app with your settings.
   // In order to observe what contents were generated, stop the server with \`ctrl + C\` and type \`ls -a\` on the terminal.
@@ -35,8 +49,8 @@ const fileGenerator = ({fw_name, builder, ui_name, css_name, eslint, prettier, l
   ${manager} panda init --postcss
   ${manager} run dev
   ${
-    isGit ? 
-    `// 🐙🐱 Initialize Github repository *********************************************
+    isGit
+      ? `// 🐙🐱 Initialize Github repository *********************************************
 
   # 1: Initialize the local repository (Please execute only once.)
   git init
@@ -57,12 +71,12 @@ const fileGenerator = ({fw_name, builder, ui_name, css_name, eslint, prettier, l
 
   # Push all
   git push -u origin main`
-  : ``
+      : ``
   }
   
 `
 
-const script = `
+  const script = `
   const { execSync } = require('child_process');
   const fs = require('fs');
   const path = require('path');
@@ -72,11 +86,12 @@ const script = `
     
     ${
       // frameworkの部分にインストールコマンドを追加しておき，それでexecSyncする
-      builder == 'vite' && fw_name === 'vue' ?
-      `
+      builder == 'vite' && fw_name === 'vue'
+        ? `
       // Create a ${builder} project using ${fw_name} template
       execSync('${manager} create ${builder} ${project_name} --template vue-ts', { stdio: 'inherit' });
-      ` : ``
+      `
+        : ``
     }
 
     // Change to the project directory
@@ -84,9 +99,8 @@ const script = `
     console.log(path.join(__dirname, \`${project_name}/\`));
 
     ${
-      eslint === 'template' ? 
-      
-      `
+      eslint === 'template'
+        ? `
       const eslintrcFileGenerate = () => \`
       {
         "extends": ["next/core-web-vitals", "prettier"],
@@ -127,17 +141,20 @@ const script = `
       
       fs.writeFileSync(path.join(__dirname, \`${project_name}/\`, eslintignoreFile), eslintingoreFileGenerate());
 
-      ` : eslint === 'yes' ? `
+      `
+        : eslint === 'yes'
+        ? `
       execSync('${manager} install -D eslint', { stdio: 'inherit' });
       execSync('${manager} create @eslint/config', { stdio: 'inherit' });
       execSync('${manager} install -D vite-plugin-checker', { stdio: 'inherit' });
-      ` : ``
+      `
+        : ``
     }
    
     
     ${
-      prettier === 'template' ? 
-      `
+      prettier === 'template'
+        ? `
       execSync('${manager} install -D prettier', { stdio: 'inherit' });
       execSync('${manager} install -D eslint-config-prettier', { stdio: 'inherit' });
       console.log(__dirname);
@@ -163,25 +180,32 @@ const script = `
 
       fs.writeFileSync(path.join(__dirname, \`${project_name}/\`, prettierignoreFile), prettieringoreFileGenerate());
 
-      ` : prettier === 'yes' ? `
+      `
+        : prettier === 'yes'
+        ? `
       execSync('${manager} install -D prettier eslint-config-prettier', { stdio: 'inherit' });
-      ` : ``
+      `
+        : ``
     }
 
     ${
-      css_name ? `
+      css_name
+        ? `
       // Install ${css_name} as a development dependency
       // execSync('${manager} install -D @pandacss/dev', { stdio: 'inherit' });
       // Initialize ${css_name} with postcss
       // execSync('${manager} panda init --postcss', { stdio: 'inherit' });
-  ` : `console.log('css library installation was skipped');`
+  `
+        : `console.log('css library installation was skipped');`
     }
     
     ${
-      ui_name ?  `
+      ui_name
+        ? `
       // Install ${ui_name} as a development dependency
       // execSync('${manager} install -D ${ui_name}', { stdio: 'inherit' });
-      ` : `console.log('UI library installation was skipped');`
+      `
+        : `console.log('UI library installation was skipped');`
     }
     
     // Install dependency if needed
@@ -192,7 +216,20 @@ const script = `
     console.error('An error occurred:', error.message);
   }
 `
-return {'README.md': {file: { contents: md}} , 'script.js': {file: { contents: script}}}
+  return {
+    'README.md': { file: { contents: md } },
+    'script.js': { file: { contents: script } },
+  }
 }
 
-export const files: FileSystemTree = fileGenerator({fw_name: 'vue', builder: 'vite', ui_name: null, css_name: null, eslint: 'yes', prettier: 'template', manager: 'pnpm', project_name: 'testProj', isGit: false})
+export const files: FileSystemTree = fileGenerator({
+  fw_name: 'vue',
+  builder: 'vite',
+  ui_name: null,
+  css_name: null,
+  eslint: 'yes',
+  prettier: 'template',
+  manager: 'pnpm',
+  project_name: 'testProj',
+  isGit: false,
+})

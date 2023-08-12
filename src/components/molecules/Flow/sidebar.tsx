@@ -4,13 +4,14 @@ import { nodeInfo } from '@/types/custom/nodeInfo'
 import { sidebarData } from '@/types/custom/sidebarData'
 
 import { getTopics } from '@/services/client/GetTopics'
+import { updateBoardDetail } from '@/services/client/UpdateBoardDetail'
 import { css } from 'styled-system/css'
 
 import { dndNode } from './dndNode.css'
 
 
 type SideBarProps = {
-  frameworks: sidebarData
+  frameworks: sidebarData,
 }
 
 export const SideBar = ({ frameworks }: SideBarProps) => {
@@ -18,7 +19,7 @@ export const SideBar = ({ frameworks }: SideBarProps) => {
   const [loading, setLoading] = useState(true);
   const [libraries, setLibraries] = useState<sidebarData>(frameworks);
   const fetchData = async (prevCategory: string) => {
-    const categories = ['frameworks', 'css-framework', 'ui-framework', 'eslint', 'prettier', 'lint_staged_husky', 'vscode', 'volta'];
+    const categories = ['framework', 'css-framework', 'ui-framework', 'linter', 'formatter', 'lint_staged_husky', 'hygen', 'builder', 'manager', 'vscode', 'volta', 'isGit'];
     const prevCategoryId = categories.indexOf(prevCategory);
     const nextCategory = categories[prevCategoryId + 1];
     const isDataFetchNeeded = categories.slice(0, 3).indexOf(nextCategory) // 0 ~ 2までがデータフェッチが必要
@@ -28,19 +29,28 @@ export const SideBar = ({ frameworks }: SideBarProps) => {
       const data = JSON.stringify({ name: json.topic?.name, nodes: nodes });
       return data;
     } else {
-      return JSON.stringify({ name: nextCategory, nodes: [{ name: 'yes' }, { name: 'no' }, { name: 'template' }] })
+      switch (nextCategory) {
+        case 'builder':
+          return JSON.stringify({ name: nextCategory, nodes: [{ name: 'vite' }, { name: 'already using different builder' }] })
+        case 'manager':
+          return JSON.stringify({ name: nextCategory, nodes: [{ name: 'npm' }, { name: 'yarn' }, { name: 'pnpm' }, { name: 'bun' }] })
+        case 'isGit':
+          return JSON.stringify({ name: nextCategory, nodes: [{ name: 'true' }, { name: 'false' }] })
+        default:
+          return JSON.stringify({ name: nextCategory, nodes: [{ name: 'yes' }, { name: 'no' }, { name: 'template' }] })
+      }
     }
   }
   const onDragStart = async (event: React.DragEvent<HTMLDivElement>, nodeInfo: nodeInfo) => {
     event.dataTransfer.setData('application/reactflow', JSON.stringify(nodeInfo))
     event.dataTransfer.effectAllowed = 'move'
     if (nodeInfo.type === 'default') {
-      setLoading(!loading);
+      setLoading(false);
+      await updateBoardDetail(nodeInfo.category, nodeInfo.label);
       const data = await fetchData(nodeInfo.category ? nodeInfo.category : '');
       const libs: sidebarData = JSON.parse(data);
-      console.log(libs);
       setLibraries(libs);
-      setLoading(!loading);
+      setLoading(true);
     }
   }
   return (

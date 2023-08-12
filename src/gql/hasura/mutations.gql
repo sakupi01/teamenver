@@ -31,11 +31,10 @@ mutation CreateDetails($board_id: uuid!) {
   }
 }
 
-mutation UpdateDetails($id: uuid!, $framework: String!) {
-  update_board_details(where: { id: { _eq: $id } }, _set: { framework: $framework }) {
+mutation UpdateDetails($id: uuid!, $changes: board_details_set_input) {
+  update_board_details(where: { id: { _eq: $id } }, _set: $changes) {
     returning {
       id
-      framework
     }
   }
 }

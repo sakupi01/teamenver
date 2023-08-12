@@ -1,3 +1,4 @@
+
 import supabaseClient from '@/libs/supabase/supabaseClient'
 
 
@@ -7,6 +8,8 @@ import { css } from 'styled-system/css'
 
 import { Flow } from '../components/molecules/Flow/Flow'
 export default async function Home() {
+
+
   const get = async () => {
     try {
       const { data: frameworks, error } = await supabaseClient
@@ -25,8 +28,7 @@ export default async function Home() {
     <main className={css({ padding: '5%' })}>
       {/* Next linting rules might suggest using the Link component instead of an anchor tag. The Link component is meant to perform client-side transitions between pages. As the links point to an API route and not to a page, you should keep them as anchor tags. */}
       <a href='/api/auth/logout'>Logout</a>
-
-      <Flow frameworks={frameworks ? { name: 'frameworks', nodes: frameworks } : {} as sidebarData} />
+      <Flow frameworks={frameworks ? { name: 'framework', nodes: frameworks } : {} as sidebarData} />
     </main>
   )
 }

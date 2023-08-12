@@ -31,7 +31,7 @@ import { css } from 'styled-system/css'
 import { SideBar } from './sidebar'
 
 export type FlowProps = {
-  frameworks: sidebarData
+  frameworks: sidebarData,
 }
 
 const initialElements = [
@@ -48,7 +48,7 @@ const MIN_DISTANCE = 150
 let id = 0
 const getId = () => `dndnode_${id++}`
 
-const InnerFlow = ({frameworks}: FlowProps) => {
+const InnerFlow = ({ frameworks }: FlowProps) => {
   const store = useStoreApi()
   const reactFlowWrapper = useRef<HTMLInputElement>(null)
   const [nodes, setNodes] = useNodesState(initialElements)
@@ -110,7 +110,7 @@ const InnerFlow = ({frameworks}: FlowProps) => {
         id: getId(),
         type,
         position,
-        data: { label: data.label ? data.label : 'N/A'},
+        data: { label: data.label ? data.label : 'N/A' },
       }
 
       setNodes((nds) => nds.concat(newNode))
@@ -258,10 +258,10 @@ const InnerFlow = ({frameworks}: FlowProps) => {
   )
 }
 
-export const Flow = ({frameworks}: FlowProps ) => {
+export const Flow = ({ frameworks }: FlowProps) => {
   return (
     <ReactFlowProvider>
-      <InnerFlow frameworks={frameworks}/>
+      <InnerFlow frameworks={frameworks} />
     </ReactFlowProvider>
   )
 }
