@@ -48,7 +48,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-pnpm-v1
       - name: Install Playwright
-        run: pnpm dlx playwright install --with-deps
+        run: npx playwright install
       - name: Install MSW
         run: pnpm add msw-storybook-addon
       - name: Run Pre Install Command
