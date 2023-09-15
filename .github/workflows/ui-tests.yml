@@ -53,6 +53,8 @@ jobs:
         run: pnpm dlx playwright install --with-deps
       - name: Install MSW
         run: pnpm add msw-storybook-addon
+      - name: Create annotation for build error
+        run: ls 
       - name: Build Storybook
         run: pnpm build-storybook --quiet
       - name: Serve Storybook and run tests
