@@ -1,10 +1,10 @@
 'use client'
 import { WebContainer } from '@webcontainer/api'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Terminal } from 'xterm'
-import {FitAddon} from 'xterm-addon-fit'
+import { FitAddon } from 'xterm-addon-fit'
 
-import { files } from '@/app/webContainerSideFiles'
+import { getFiles } from '@/app/webContainerSideFiles'
 import { css } from 'styled-system/css'
 
 import { textarea } from './NodeContainer.css'
@@ -14,27 +14,40 @@ import 'xterm/css/xterm.css';
 
 export const NodeContainer = () => {
   const [webcontainer, setWebcontainer] = useState<WebContainer | null>(null)
-  
+
   useEffect(() => {
+    let ignore = false;
     const initWebContainer = async () => {
       const wc = await WebContainer.boot()
       setWebcontainer(wc)
     }
-    
-    initWebContainer()
+    if (!ignore) {
+      initWebContainer()
+    }
+    return () => {
+      ignore = true;
+    };
   }, [])
-  
-  
-  useEffect(() => {
+
+
+  useMemo(() => {
     if (!webcontainer) return
-    
+
     const textarea = document.querySelector('textarea')
     const iframe = document.querySelector('iframe')
     const terminalEl: HTMLElement = document.querySelector('.terminal')!
 
     if (textarea) {
-      // @ts-ignore
-      textarea.value = files['README.md'].file.contents
+      // 即時関数
+      (async () => {
+        const files = await getFiles()
+        console.log('**********');
+        console.log(files);
+        console.log('**********');
+
+        // @ts-ignore
+        textarea.value = files['README.md'].file.contents
+      })();
       textarea.addEventListener('input', (event: Event) => {
         if (event.currentTarget) {
           // @ts-ignore
@@ -78,14 +91,16 @@ export const NodeContainer = () => {
         });
         terminal.loadAddon(fitAddon);
         terminal.open(terminalEl);
-      
+
         fitAddon.fit();
         return terminal;
       }
 
       const terminal = initTerminal(terminalEl);
-
-      await webcontainer.mount(files)
+      // 即時関数
+      (async () => {
+        await webcontainer.mount(await getFiles())
+      })();
 
       // Wait for server ready event
       webcontainer.on('server-ready', (port, url) => {
@@ -109,28 +124,23 @@ export const NodeContainer = () => {
   return (
     <div
       className={css({
-        boxSizing: 'border-box',
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'center',
-        alignItems: 'center',
+        display: 'grid',
+        gridTemplateRows: '1fr 1fr',
+        gap: '1rem',
         height: '100%',
         width: '100%',
       })}
     >
       <div
         className={css({
-          boxSizing: 'border-box',
           display: 'grid',
           gridTemplateColumns: '1fr 1fr',
           gap: '1rem',
-          height: '100%',
-          width: '100%',
           marginBottom: '20px',
         })}
       >
         <div>
-          <p>📝 Editor(Readonly)</p>
+          <p>📝 Information</p>
           <textarea readOnly className={textarea()} defaultValue='⛅️ Reading the instructions...'></textarea>
         </div>
         <div className={css({ width: '100%', height: '100%' })}>
