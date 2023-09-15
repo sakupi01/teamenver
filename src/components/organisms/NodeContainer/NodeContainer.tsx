@@ -124,28 +124,23 @@ export const NodeContainer = () => {
   return (
     <div
       className={css({
-        boxSizing: 'border-box',
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'center',
-        alignItems: 'center',
+        display: 'grid',
+        gridTemplateRows: '1fr 1fr',
+        gap: '1rem',
         height: '100%',
         width: '100%',
       })}
     >
       <div
         className={css({
-          boxSizing: 'border-box',
           display: 'grid',
           gridTemplateColumns: '1fr 1fr',
           gap: '1rem',
-          height: '100%',
-          width: '100%',
           marginBottom: '20px',
         })}
       >
         <div>
-          <p>📝 Editor(Readonly)</p>
+          <p>📝 Information</p>
           <textarea readOnly className={textarea()} defaultValue='⛅️ Reading the instructions...'></textarea>
         </div>
         <div className={css({ width: '100%', height: '100%' })}>
