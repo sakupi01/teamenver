@@ -71,7 +71,7 @@
     "lint-staged": "^14.0.0",
     "msw": "^1.2.3",
     "msw-storybook-addon": "^1.8.0",
-    "prettier": "3.0.0",
+    "prettier": "3.0.3",
     "storybook": "^7.2.0",
     "supabase": "^1.82.5",
     "ts-node": "^10.9.1",
