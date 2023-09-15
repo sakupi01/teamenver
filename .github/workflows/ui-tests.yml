@@ -12,12 +12,11 @@ jobs:
       - uses: pnpm/action-setup@v2
         with:
           version: 7.27.1
-      - name: Cache pnpm dependencies and cypress
+      - name: Cache pnpm dependencies
         uses: actions/cache@v3
         id: pnpm-cache
         with:
           path: |
-            ~/.cache/Cypress
             node_modules
           key: ${{ runner.os }}-pnpm-v1-${{ hashFiles('**/pnpm-lock.yaml') }}
           restore-keys: |
@@ -42,21 +41,18 @@ jobs:
         id: pnpm-cache
         with:
           path: |
-            ~/.cache/Cypress
             node_modules
           key: ${{ runner.os }}-pnpm-v1-${{ hashFiles('**/pnpm-lock.yaml') }}
           restore-keys: |
             ${{ runner.os }}-pnpm-v1
-      - name: Install Playwright
-        run: pnpm dlx playwright install --with-deps
       - name: Install MSW
         run: pnpm add msw-storybook-addon
       - name: Run Pre Install Command
         run: pnpm prepare
       - name: Build Storybook
         run: pnpm build-storybook --quiet
-      - name: Serve Storybook and run tests
-        run: |
-          npx concurrently -k -s first -n "SB,TEST" -c "magenta,blue" \
-            "npx http-server storybook-static --port 6006 --silent" \
-            "pnpm dlx wait-on tcp:6006 && pnpm test-storybook"
+      - name: Publish　Storybook
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          personal_token: ${{ secrets.PAT_TEAMENVER_PAGES }}
+          publish_dir: ./storybook-static
