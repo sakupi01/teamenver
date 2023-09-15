@@ -1,5 +1,4 @@
 {
-  "$NOTE": "https://webcontainers.io/guides/configuring-headers",
   "headers": [
     {
       "source": "/(.*)",
