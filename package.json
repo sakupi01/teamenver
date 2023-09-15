@@ -48,7 +48,7 @@
   "devDependencies": {
     "@graphql-codegen/cli": "^5.0.0",
     "@graphql-codegen/client-preset": "^4.1.0",
-    "@pandacss/dev": "^0.9.0",
+    "@pandacss/dev": "^0.15.0",
     "@storybook/addon-a11y": "^7.2.0",
     "@storybook/addon-essentials": "^7.2.0",
     "@storybook/addon-interactions": "^7.2.0",
