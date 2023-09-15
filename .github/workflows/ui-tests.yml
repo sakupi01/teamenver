@@ -48,13 +48,15 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-pnpm-v1
       - name: Install Playwright
-        run: npx playwright install
+        run: pnpm dlx playwright install --with-deps
       - name: Install MSW
         run: pnpm add msw-storybook-addon
       - name: Run Pre Install Command
         run: pnpm prepare
       - name: Build Storybook
         run: pnpm build-storybook --quiet
+      - name: Prepare Chronium
+        run: npx playwright install
       - name: Serve Storybook and run tests
         run: |
           npx concurrently -k -s first -n "SB,TEST" -c "magenta,blue" \
