@@ -1,38 +1,34 @@
-import { Button } from '@/components/Button/Button'
 
 import supabaseClient from '@/libs/supabase/supabaseClient'
 
+
+import { sidebarData } from '@/types/custom/sidebarData'
+
+import { css } from 'styled-system/css'
+
+import { Flow } from '../components/molecules/Flow/Flow'
 export default async function Home() {
+
+
   const get = async () => {
     try {
       const { data: frameworks, error } = await supabaseClient
         .from('frameworks')
-        .select('*')
-      console.log(JSON.stringify(frameworks))
-      console.log('here')
+        .select('name')
+        .order('webframe_want_to_work_with_count', { ascending: false })
       return frameworks
     } catch (error) {
       console.log(error)
     }
   }
 
-  const framework = await get()
-  if (!framework) {
-    return <p>Loading Error.</p>
-  }
-  // get user info from gql
+  const frameworks = await get()
+
   return (
-    <main className='flex min-h-screen flex-col items-center justify-between p-24'>
-      <a href='/api/auth/login'>Login</a>
+    <main className={css({ padding: '5%' })}>
+      {/* Next linting rules might suggest using the Link component instead of an anchor tag. The Link component is meant to perform client-side transitions between pages. As the links point to an API route and not to a page, you should keep them as anchor tags. */}
       <a href='/api/auth/logout'>Logout</a>
-      <Button size='medium' label='Button' />
-      {framework.map((el) => {
-        return (
-          <p key={el.id}>
-            <Button label={el.name!} />
-          </p>
-        )
-      })}
+      <Flow frameworks={frameworks ? { name: 'framework', nodes: frameworks } : {} as sidebarData} />
     </main>
   )
 }

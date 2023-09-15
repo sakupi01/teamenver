@@ -9,19 +9,22 @@ jobs:
     steps:
       - name: Checkout Commit
         uses: actions/checkout@v3
-      - name: Cache yarn dependencies and cypress
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 7.27.1
+      - name: Cache pnpm dependencies and cypress
         uses: actions/cache@v3
-        id: yarn-cache
+        id: pnpm-cache
         with:
           path: |
             ~/.cache/Cypress
             node_modules
-          key: ${{ runner.os }}-yarn-v1-${{ hashFiles('**/yarn.lock') }}
+          key: ${{ runner.os }}-pnpm-v1-${{ hashFiles('**/pnpm-lock.yaml') }}
           restore-keys: |
-            ${{ runner.os }}-yarn-v1
+            ${{ runner.os }}-pnpm-v1
       - name: Install dependencies if cache invalid
-        if: steps.yarn-cache.outputs.cache-hit != 'true'
-        run: yarn
+        if: steps.pnpm-cache.outputs.cache-hit != 'true'
+        run: pnpm i --frozen-lockfile
   # Run interaction and accessibility tests
   interaction-and-accessibility:
     runs-on: ubuntu-latest
@@ -31,22 +34,27 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: '16.x'
-      - name: Restore yarn dependencies
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 7.27.1
+      - name: Restore pnpm dependencies
         uses: actions/cache@v3
-        id: yarn-cache
+        id: pnpm-cache
         with:
           path: |
             ~/.cache/Cypress
             node_modules
-          key: ${{ runner.os }}-yarn-v1-${{ hashFiles('**/yarn.lock') }}
+          key: ${{ runner.os }}-pnpm-v1-${{ hashFiles('**/pnpm-lock.yaml') }}
           restore-keys: |
-            ${{ runner.os }}-yarn-v1
+            ${{ runner.os }}-pnpm-v1
       - name: Install Playwright
-        run: npx playwright install --with-deps
+        run: pnpm dlx playwright install --with-deps
+      - name: Install MSW
+        run: pnpm add msw-storybook-addon  --with-deps
       - name: Build Storybook
-        run: yarn build-storybook --quiet
+        run: pnpm build-storybook --quiet
       - name: Serve Storybook and run tests
         run: |
           npx concurrently -k -s first -n "SB,TEST" -c "magenta,blue" \
             "npx http-server storybook-static --port 6006 --silent" \
-            "npx wait-on tcp:6006 && yarn test-storybook"
+            "pnpm dlx wait-on tcp:6006 && pnpm test-storybook"
