@@ -36,4 +36,4 @@ next-env.d.ts
 
 styled-system
 
-/src/gql/github.schema.graphql
+/src/gql/github/github.schema.graphql

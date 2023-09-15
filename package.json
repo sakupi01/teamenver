@@ -4,14 +4,15 @@
   "private": true,
   "scripts": {
     "prepare": "husky install",
-    "dev": "next dev",
+    "dev": "next dev -p 3000",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
     "test:storybook": "test-storybook",
-    "new:fc": "hygen generator new "
+    "new:fc": "hygen generator new ",
+    "codegen": "graphql-codegen --require dotenv/config --config codegen.ts dotenv_config_path=.env.local"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [

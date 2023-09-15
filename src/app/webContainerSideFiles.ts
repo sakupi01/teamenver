@@ -1,6 +1,5 @@
 import { FileSystemTree } from '@webcontainer/api'
 
-
 import { readmeGenerator, readmeGeneratorProps } from './readme'
 
 type appGeneratorProps = {

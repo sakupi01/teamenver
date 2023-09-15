@@ -1,12 +1,10 @@
 'use client'
-import React, { useTransition } from 'react'
+import React from 'react'
 
 // import './button.css'
-import { useState } from 'react'
 
-import { getLibraries } from '@/services/client/GetLibraries'
 
-import { button } from './button.css'
+import { button } from './genericButton.css'
 
 
 interface ButtonProps {
@@ -29,34 +27,27 @@ interface ButtonProps {
   /**
    * Optional click handler
    */
+  clickAction?: () => void
 }
 
 /**
  * Primary UI component for user interaction
  */
-export const Button = ({
+export const GenericButton = ({
   primary = false,
   size = 'medium',
   backgroundColor,
   label,
   ...props
 }: ButtonProps) => {
-  const [isPending, startTransition] = useTransition()
-  const [res, setRes] = useState('')
 
   const mode = primary ? 'primary' : 'secondary'
   return (
     <>
       <button
-        disabled={isPending}
         type='button'
         className={button({ type: mode, size: size })}
-        onClick={() =>
-          startTransition(() => {
-            setRes('roading')
-            getLibraries(label).then((res) => setRes(JSON.stringify(res)))
-          })
-        }
+        onClick={props.clickAction}
       >
         {label}
         <style jsx>{`
@@ -65,7 +56,6 @@ export const Button = ({
           }
         `}</style>
       </button>
-      {res === 'roading' || isPending ? <p>loading...</p> : <p>{res}</p>}
     </>
   )
 }

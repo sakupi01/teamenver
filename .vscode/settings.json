@@ -30,5 +30,9 @@
     "stylelint",
     "userdata",
     "vsce"
-  ]
+  ],
+  "prettier.configPath": "./.prettierrc.json",
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "vscode.typescript-language-features"
+  },
 }
