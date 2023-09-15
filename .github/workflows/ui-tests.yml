@@ -22,6 +22,8 @@ jobs:
           key: ${{ runner.os }}-pnpm-v1-${{ hashFiles('**/pnpm-lock.yaml') }}
           restore-keys: |
             ${{ runner.os }}-pnpm-v1
+      - name: Run Pre Install Command
+        run: pnpm prepare
       - name: Install dependencies if cache invalid
         if: steps.pnpm-cache.outputs.cache-hit != 'true'
         run: pnpm i --frozen-lockfile
