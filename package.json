@@ -43,7 +43,7 @@
     "xterm-addon-fit": "^0.8.0"
   },
   "volta": {
-    "node": "20.6.1"
+    "node": "20.7.0"
   },
   "devDependencies": {
     "@graphql-codegen/cli": "^5.0.0",
