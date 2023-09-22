@@ -23,13 +23,13 @@ const config: StorybookConfig = {
     if (config.resolve) {
       config.resolve.modules = [
         ...(config.resolve.modules || []),
-        path.resolve(__dirname, '../')
+        path.resolve(__dirname, '../'),
       ]
-  
+
       config.resolve.plugins = [
         new TsconfigPathsPlugin({
           configFile: path.resolve(__dirname, '../tsconfig.json'),
-        })
+        }),
       ]
     }
     return config

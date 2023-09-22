@@ -1,7 +1,9 @@
+const million = require('million/compiler')
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   experimental: {
     serverActions: true,
+    typedRoutes: true,
   },
   async headers() {
     return [
@@ -22,4 +24,4 @@ const nextConfig = {
   },
 }
 
-module.exports = nextConfig
+module.exports = million.next(nextConfig, { auto: true })

@@ -23,15 +23,15 @@ import ReactFlow, {
 
 import 'reactflow/dist/style.css'
 
-import { nodeInfo } from '@/types/custom/nodeInfo';
-import { sidebarData } from '@/types/custom/sidebarData';
+import { nodeInfo } from '@/types/custom/nodeInfo'
+import { sidebarData } from '@/types/custom/sidebarData'
 
 import { css } from 'styled-system/css'
 
 import { SideBar } from './sidebar'
 
 export type FlowProps = {
-  frameworks: sidebarData,
+  frameworks: sidebarData
 }
 
 const initialElements = [
@@ -54,7 +54,7 @@ const InnerFlow = ({ frameworks }: FlowProps) => {
   const [nodes, setNodes] = useNodesState(initialElements)
   const [edges, setEdges] = useEdgesState([])
   const [reactFlowInstance, setReactFlowInstance] = useState<any>(null)
-  const { deleteElements } = useReactFlow();
+  const { deleteElements } = useReactFlow()
 
   // When you drag or select a node, the onNodeChange handler gets called.
   // With help of the applyNodeChanges function you can then apply those changes to your current node state.
@@ -94,9 +94,11 @@ const InnerFlow = ({ frameworks }: FlowProps) => {
         return
       }
       const reactFlowBounds = reactFlowWrapper.current.getBoundingClientRect()
-      const data: nodeInfo = JSON.parse(event.dataTransfer.getData('application/reactflow'))
+      const data: nodeInfo = JSON.parse(
+        event.dataTransfer.getData('application/reactflow'),
+      )
 
-      const type = data.type;
+      const type = data.type
       // check if the dropped element is valid
       if (typeof type === 'undefined' || !type) {
         return
@@ -118,48 +120,51 @@ const InnerFlow = ({ frameworks }: FlowProps) => {
     [reactFlowInstance, setNodes],
   )
 
-  const getClosestEdge = useCallback((node: Node) => {
-    const { nodeInternals } = store.getState()
-    const storeNodes = Array.from(nodeInternals.values())
-    interface ClosestNode {
-      distance: number
-      node: Node
-    }
-    const closestNode: ClosestNode = storeNodes.reduce(
-      (res, n) => {
-        if (n.id !== node.id) {
-          const dx = n.positionAbsolute!.x - node.positionAbsolute!.x
-          const dy = n.positionAbsolute!.y - node.positionAbsolute!.y
-          const d = Math.sqrt(dx * dx + dy * dy)
+  const getClosestEdge = useCallback(
+    (node: Node) => {
+      const { nodeInternals } = store.getState()
+      const storeNodes = Array.from(nodeInternals.values())
+      interface ClosestNode {
+        distance: number
+        node: Node
+      }
+      const closestNode: ClosestNode = storeNodes.reduce(
+        (res, n) => {
+          if (n.id !== node.id) {
+            const dx = n.positionAbsolute!.x - node.positionAbsolute!.x
+            const dy = n.positionAbsolute!.y - node.positionAbsolute!.y
+            const d = Math.sqrt(dx * dx + dy * dy)
 
-          if (d < res.distance && d < MIN_DISTANCE) {
-            res.distance = d
-            res.node = n
+            if (d < res.distance && d < MIN_DISTANCE) {
+              res.distance = d
+              res.node = n
+            }
           }
-        }
 
-        return res
-      },
-      {
-        distance: Number.MAX_VALUE,
-        node: node,
-      },
-    )
+          return res
+        },
+        {
+          distance: Number.MAX_VALUE,
+          node: node,
+        },
+      )
 
-    if (!closestNode.node) {
-      return null
-    }
+      if (!closestNode.node) {
+        return null
+      }
 
-    const closeNodeIsSource =
-      closestNode.node.positionAbsolute!.x < node.positionAbsolute!.x
+      const closeNodeIsSource =
+        closestNode.node.positionAbsolute!.x < node.positionAbsolute!.x
 
-    return {
-      id: `${node.id}-${closestNode.node.id}`,
-      source: closeNodeIsSource ? closestNode.node.id : node.id,
-      target: closeNodeIsSource ? node.id : closestNode.node.id,
-      className: '',
-    }
-  }, [store])
+      return {
+        id: `${node.id}-${closestNode.node.id}`,
+        source: closeNodeIsSource ? closestNode.node.id : node.id,
+        target: closeNodeIsSource ? node.id : closestNode.node.id,
+        className: '',
+      }
+    },
+    [store],
+  )
 
   const onNodeDrag = useCallback(
     (_: React.MouseEvent, node: Node) => {
@@ -204,22 +209,22 @@ const InnerFlow = ({ frameworks }: FlowProps) => {
   const onNodesDelete = useCallback(
     (deleted: Node[]) => {
       function removeTreeOfOutgoers(node: Node) {
-        const outgoers = getOutgoers(node, nodes, edges);
-        console.log(outgoers);
+        const outgoers = getOutgoers(node, nodes, edges)
+        console.log(outgoers)
         if (outgoers.length) {
-          deleteElements({ nodes: outgoers });
+          deleteElements({ nodes: outgoers })
           // we loop through the outgoers and try to remove any outgoers of our outgoers
           outgoers.forEach((outgoer) => {
-            removeTreeOfOutgoers(outgoer);
-          });
+            removeTreeOfOutgoers(outgoer)
+          })
         }
       }
       deleted.forEach((node) => {
-        removeTreeOfOutgoers(node);
-      });
+        removeTreeOfOutgoers(node)
+      })
     },
-    [nodes, deleteElements, edges]
-  );
+    [nodes, deleteElements, edges],
+  )
 
   return (
     <div
