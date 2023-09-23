@@ -26,12 +26,14 @@ export const Primary: Story = {
   args: {
     primary: true,
     label: 'Button',
+    backgroundColor: '#ff0000',
   },
 }
 
 export const Secondary: Story = {
   args: {
     label: 'Button',
+    backgroundColor: '#ff0000',
   },
 }
 
@@ -39,6 +41,7 @@ export const Large: Story = {
   args: {
     size: 'large',
     label: 'Button',
+    backgroundColor: '#ff0000',
   },
 }
 
@@ -46,5 +49,6 @@ export const Small: Story = {
   args: {
     size: 'small',
     label: 'Button',
+    backgroundColor: '#ff0000',
   },
 }

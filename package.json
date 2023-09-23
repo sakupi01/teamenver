@@ -3,47 +3,68 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "prepare": "husky install",
+    "prepare": "panda codegen && husky install",
     "dev": "next dev -p 3000",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
+    "commit": "cz",
+    "check:lint": "next lint",
+    "check:typecheck": "tsc --noEmit",
+    "check:markuplint": "markuplint \"./src/**/*.{jsx,tsx}\"",
+    "check:format": "prettier \"./src/**/*.ts\" \"./src/**/*.tsx\" --check",
+    "format": "prettier \"./src/**/*.{ts,tsx}\" --write",
+    "test:storybook": "test-storybook --url http://localhost:6006",
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build",
-    "test:storybook": "test-storybook",
-    "new:fc": "hygen generator new ",
-    "codegen": "graphql-codegen --require dotenv/config --config codegen.ts dotenv_config_path=.env.local"
+    "storybook:build": "storybook build",
+    "storybook:serve": "bunx http-server storybook-static -a localhost -p 6006 -s",
+    "storybook:test": "bunx wait-on http://localhost:6006 && bun run test:storybook",
+    "storybook:ci": "bunx concurrently -k -s first \"bun run storybook:serve\" \"bun run storybook:test\"",
+    "chromatic": "chromatic --exit-zero-on-changes ---build-script-name \"storybook:build\"",
+    "precommit": "lint-staged",
+    "commitlint": "commitlint -e $GIT_PARAMS"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
-      "lint --fix",
-      "prettier --write --ignore-unknown src/"
+      "check:lint --fix",
+      "check:markuplint",
+      "check:typecheck",
+      "format"
     ]
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
   },
   "dependencies": {
     "@auth0/nextjs-auth0": "^3.0.0-beta.3",
+    "@commitlint/config-conventional": "^17.7.0",
     "@graphql-typed-document-node/core": "^3.2.0",
     "@supabase/supabase-js": "^2.31.0",
-    "@types/node": "20.6.0",
-    "@types/react": "18.2.21",
+    "@types/node": "20.6.3",
+    "@types/react": "18.2.22",
     "@types/react-dom": "18.2.7",
-    "autoprefixer": "10.4.15",
+    "autoprefixer": "10.4.16",
+    "chromatic": "^7.2.0",
+    "commitlint": "^17.7.1",
     "eslint": "8.46.0",
     "eslint-config-next": "13.4.12",
     "graphql": "^16.7.1",
     "graphql-request": "^6.1.0",
     "hygen": "^6.2.11",
+    "markuplint": "^3.12.1",
+    "million": "latest",
     "next": "13.4.12",
-    "postcss": "8.4.27",
+    "postcss": "8.4.30",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "reactflow": "^11.7.4",
     "swr": "^2.2.0",
     "xterm": "^5.2.1",
-    "xterm-addon-fit": "^0.7.0"
+    "xterm-addon-fit": "^0.8.0"
   },
   "volta": {
-    "node": "20.6.1"
+    "node": "20.7.0"
   },
   "devDependencies": {
     "@graphql-codegen/cli": "^5.0.0",
@@ -63,6 +84,7 @@
     "@storybook/testing-library": "^0.2.0",
     "@testing-library/react": "^14.0.0",
     "@webcontainer/api": "^1.1.5",
+    "commitizen": "^4.3.0",
     "eslint-config-prettier": "^8.9.0",
     "eslint-plugin-storybook": "^0.6.13",
     "eslint-plugin-unused-imports": "^3.0.0",
@@ -73,6 +95,7 @@
     "msw-storybook-addon": "^1.8.0",
     "prettier": "3.0.0",
     "storybook": "^7.2.0",
+    "storybook-addon-turbo-build": "^2.0.1",
     "supabase": "^1.82.5",
     "ts-node": "^10.9.1",
     "tsconfig-paths-webpack-plugin": "^4.1.0",

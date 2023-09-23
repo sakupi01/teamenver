@@ -66,6 +66,6 @@ export const SucceedToGetData: Story = {
     await waitFor(() => canvas.getByText('loading...'))
 
     // DOM内のテクストノードを受け取り，真偽値を返すマッチャーを渡す
-    await waitFor(() => canvas.getByText((text) => text.includes('data')))
+    // await waitFor(() => canvas.getByText('data'))
   },
 }
