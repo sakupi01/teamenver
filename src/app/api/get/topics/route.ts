@@ -9,7 +9,7 @@ export type GetType = GetTopicsType
 
 export async function GET(
   request: NextRequest,
-): Promise<NextResponse<GetType | ErrorType>> {
+): Promise<NextResponse<GetType | ErrorType | { message: string; status: number }>> {
   try {
     const { searchParams } = new URL(request.url!)
     const query = searchParams.get('query')

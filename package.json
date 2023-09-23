@@ -16,9 +16,9 @@
     "test:storybook": "test-storybook --url http://localhost:6006",
     "storybook": "storybook dev -p 6006",
     "storybook:build": "storybook build",
-    "storybook:serve": "bunx http-server storybook-static -a localhost -p 6006 -s",
-    "storybook:test": "bunx wait-on http://localhost:6006 && bun run test:storybook",
-    "storybook:ci": "bunx concurrently -k -s first \"bun run storybook:serve\" \"bun run storybook:test\"",
+    "storybook:serve": "pnpm dlx http-server storybook-static -a localhost -p 6006 -s",
+    "storybook:test": "pnpm dlx wait-on http://localhost:6006 && pnpm run test:storybook",
+    "storybook:ci": "pnpm dlx concurrently -k -s first \"pnpm run storybook:serve\" \"pnpm run storybook:test\"",
     "chromatic": "chromatic --exit-zero-on-changes ---build-script-name \"storybook:build\"",
     "precommit": "lint-staged",
     "commitlint": "commitlint -e $GIT_PARAMS"
@@ -33,7 +33,12 @@
   },
   "config": {
     "commitizen": {
-      "path": "./node_modules/cz-conventional-changelog"
+      "path": "cz-conventional-changelog"
+    }
+  },
+  "husky": {
+    "hooks": {
+      "prepare-commit-msg": "exec < /dev/tty && pnpm dlx cz --hook || true"
     }
   },
   "dependencies": {
@@ -69,7 +74,7 @@
   "devDependencies": {
     "@graphql-codegen/cli": "^5.0.0",
     "@graphql-codegen/client-preset": "^4.1.0",
-    "@pandacss/dev": "^0.9.0",
+    "@pandacss/dev": "^0.15.1",
     "@storybook/addon-a11y": "^7.2.0",
     "@storybook/addon-essentials": "^7.2.0",
     "@storybook/addon-interactions": "^7.2.0",

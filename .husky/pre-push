@@ -1,5 +1,5 @@
 #!/usr/bin/env sh
 . "$(dirname -- "$0")/_/husky.sh"
 
-bun run build
-bun run storybook:build
+pnpm run build
+pnpm run storybook:build
