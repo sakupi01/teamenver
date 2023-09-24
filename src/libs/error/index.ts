@@ -1,6 +1,7 @@
 import { ClientError } from 'graphql-request'
 import { NextResponse } from 'next/server'
 
+import { CustomError } from './custom'
 import { errors, ErrorType, HttpError } from './http'
 
 export function handleApiRouteError(err: unknown): NextResponse<ErrorType> {
@@ -28,6 +29,9 @@ export function handleApiRouteError(err: unknown): NextResponse<ErrorType> {
       default:
         break
     }
+  }
+  if (err instanceof CustomError) {
+    return NextResponse.json({ message: err.message, status: err.status }, { status: err.status })
   }
   const status = 500
   const { message } = errors[status]

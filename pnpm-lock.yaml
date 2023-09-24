@@ -71,6 +71,9 @@ dependencies:
   reactflow:
     specifier: ^11.7.4
     version: 11.7.4(@types/react@18.2.22)(react-dom@18.2.0)(react@18.2.0)
+  semver:
+    specifier: ^7.5.4
+    version: 7.5.4
   swr:
     specifier: ^2.2.0
     version: 2.2.0(react@18.2.0)

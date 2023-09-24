@@ -59,20 +59,27 @@ const InnerFlow = ({ frameworks }: FlowProps) => {
   // When you drag or select a node, the onNodeChange handler gets called.
   // With help of the applyNodeChanges function you can then apply those changes to your current node state.
   const onNodesChange = useCallback(
-    (changes: NodeChange[]) => setNodes((nds) => applyNodeChanges(changes, nds)),
+    (changes: NodeChange[]) => {
+      setNodes((nds) => applyNodeChanges(changes, nds))
+      console.log('onNodesChange called')
+    },
     [setNodes],
   )
   // to manage edge state
   const onEdgesChange = useCallback(
-    (changes: EdgeChange[]) => setEdges((eds) => applyEdgeChanges(changes, eds)),
+    (changes: EdgeChange[]) => {
+      setEdges((eds) => applyEdgeChanges(changes, eds))
+      console.log('onEdgesChange called')
+    },
     [setEdges],
   )
 
-  // to connect nodes manually
-  const onConnect = useCallback(
-    (params: Edge | Connection) => setEdges((eds) => addEdge(params, eds)),
-    [],
-  )
+  const onConnect = useCallback(async (params: Edge | Connection) => {
+    console.log('onConnect called')
+
+    // await checkDependency(nodes.map((node) => node.data.label))
+    setEdges((eds) => addEdge(params, eds))
+  }, [])
 
   const onDragOver = useCallback(
     (event: { preventDefault: () => void; dataTransfer: { dropEffect: string } }) => {

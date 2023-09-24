@@ -18,7 +18,7 @@
     "storybook:build": "storybook build",
     "storybook:serve": "pnpm dlx http-server storybook-static -a localhost -p 6006 -s",
     "storybook:test": "pnpm dlx wait-on http://localhost:6006 && pnpm run test:storybook",
-    "storybook:ci": "pnpm dlx concurrently -k -s first \"pnpm run storybook:serve\" \"pnpm run storybook:test\"",
+    "storybook:ci": "bunx concurrently -k -s first \"bun run storybook:serve\" \"bun run storybook:test\"",
     "chromatic": "chromatic --exit-zero-on-changes ---build-script-name \"storybook:build\"",
     "precommit": "lint-staged",
     "commitlint": "commitlint -e $GIT_PARAMS"
@@ -34,11 +34,6 @@
   "config": {
     "commitizen": {
       "path": "cz-conventional-changelog"
-    }
-  },
-  "husky": {
-    "hooks": {
-      "prepare-commit-msg": "exec < /dev/tty && pnpm dlx cz --hook || true"
     }
   },
   "dependencies": {
@@ -64,6 +59,7 @@
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "reactflow": "^11.7.4",
+    "semver": "^7.5.4",
     "swr": "^2.2.0",
     "xterm": "^5.2.1",
     "xterm-addon-fit": "^0.8.0"
