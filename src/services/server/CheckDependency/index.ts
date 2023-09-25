@@ -1,84 +1,185 @@
-
 // this api is to check is a certain library has peer dependencies that are not compatible with the current node environment
 
-import { execSync } from 'child_process';
+import { execSync } from 'child_process'
 
-import semver from 'semver';
+import semver from 'semver'
+
+import supabaseClient from '@/libs/supabase/supabaseClient'
 
 type PeerDependency = {
   [packageName: string]: string
 }
-function getPeerDependenciesInfo(library: string){
-  const command = `npm info ${library} peerDependencies --json`;
+function getPeerDependenciesInfo(library: string) {
+  const command = `npm info ${library} peerDependencies --json`
 
   try {
-    const stdout = execSync(command, { encoding: 'utf8', stdio: 'pipe' });
+    const stdout = execSync(command, { encoding: 'utf8', stdio: 'pipe' })
 
     // if there're peer dependencies, return error
-    if(stdout){
-      const peerDeps =JSON.parse(stdout);
-      console.log(`Peer Dependencies for ${library}:`);
-      for (const [key, value] of Object.entries(peerDeps)) {
-        console.log(`${key}: ${value}`);
+    if (stdout) {
+      const peerDeps = JSON.parse(stdout)
+      console.log(`Peer Dependencies for ${library}:`)
+      for (const [dep, version] of Object.entries(peerDeps)) {
+        console.log(`${dep}: ${version}`)
       }
-      return peerDeps
+      return { [library]: peerDeps }
     }
-    return {};
+    return { [library]: {} }
   } catch (error: unknown) {
-    console.error(`Error: ${error}`);
-    return {};
+    console.error(`Error: ${error}`)
+    return {}
   }
 }
 
+const getPeerDependency = (libraries: string | Array<string>): Array<Object> => {
+  // array in string form
 
-export const checkDependency = (libraries: string) => {
-  // check if the passed dependencies are all compatible each other in node environment
-  // if not, return error
-  // if compatible, return true
-  const arrLibraries = libraries.replace(/[\[\]']+/g, '').split(', ')
-  
-  if (arrLibraries.length === 0) {
-    return true
+  let arrLibraries: Array<string>
+
+  if (typeof libraries === 'string') {
+    arrLibraries = libraries.replace(/[\[\]']+/g, '').split(', ')
+  } else {
+    arrLibraries = libraries
   }
 
-  const peerDepsOfLibraries: Array<Object> = [];
+  if (arrLibraries.length === 0) {
+    return [] as Array<Object>
+  }
+
+  const peerDepsOfLibraries: Array<Object> = []
   arrLibraries.forEach((library) => {
     const peerDeps = getPeerDependenciesInfo(library)
     peerDepsOfLibraries.push(peerDeps)
-  }
-  )
-  console.log('**************************');
-  console.log('peerDepsOfLibraries: ', peerDepsOfLibraries);
-  console.log('**************************');
-
-  // Check if package1's peerDependencies are satisfied by package2
-  const missingDependencies: Array<string> = [];
-
-  for (let i = 0; i < peerDepsOfLibraries.length; i++) {
-    // peerDepsOfLibraries[i] is an object which contains the peer dependencies of the i-th library
-    // the expected dynamic type of the object is as { [packageName: string]: string, [packageName: string]: string, ... }
-    const peerDepsOfLib1 = peerDepsOfLibraries[i]; 
-    for (let j = i + 1; j < peerDepsOfLibraries.length; j++) {
-      const peerDepsOfLib2 = peerDepsOfLibraries[j];
-      for (const packageName in peerDepsOfLib1) {
-        // @ts-ignore
-        if (!peerDepsOfLib2[packageName] || !semver.satisfies(peerDepsOfLib2[packageName], peerDepsOfLib1[packageName])) {
-          missingDependencies.push(packageName);
-        }
-      }
-    }
-  }
-
-  if (missingDependencies.length === 0) {
-    console.log('PeerDependencies are satisfied!');
-  } else {
-    console.error('PeerDependencies are missing or not compatible:');
-    missingDependencies.forEach(dep => {
-      console.error(`- ${dep}`);
-    });
-  }
-
-
+  })
+  peerDepsOfLibraries.shift()
+  console.log('**************************')
+  console.log('peerDepsOfLibraries: ', peerDepsOfLibraries)
+  console.log('**************************')
+  return peerDepsOfLibraries
 }
 
-export type ReturnCheckDependencyType = Awaited<ReturnType<typeof checkDependency>>
+export const checkPeerDependencyMetLibraries = async (
+  selectedFw: string,
+  css: boolean,
+  ui: boolean,
+) => {
+  if (css) {
+    const compatibleCssLibs: string[] = []
+
+    // get peerDependency of all css
+    // get css from database
+    try {
+      const { data: css_libraries, error } = await supabaseClient
+        .from('css_libraries')
+        .select('name')
+
+      if (css_libraries === null) {
+        return compatibleCssLibs
+      } else {
+        const cssLibrariesArr = css_libraries.map((library) => library.name)
+        const peerDeps1 = getPeerDependency(cssLibrariesArr) // css libs with peerDeps
+
+        for (const peerDep of peerDeps1) {
+          // ライブラリ名を取得
+          const library = Object.keys(peerDep)[0]
+          // @ts-ignore
+          const cssPeerDeps = peerDep[library]
+
+          if (Object.keys(cssPeerDeps).length > 0) {
+            // css peerDepsがある場合: frameworkのpeerDependency(フレームワークにpeerDepsがない場合はそのフレームワークのバージョン)
+            // にcssのpeerDependencyが該当するなら，インストールされるべきframeworkのセマンティックバージョンとともにcssを返す
+
+            // selectedFwのpeerDependenciesを取得する
+            try {
+              const { data: peerDependenciesOfFw, error } = await supabaseClient
+                .from('frameworks')
+                .select('peerDependencies')
+                .eq('name', selectedFw)
+                .limit(1)
+                .single()
+              console.log(`**********************`)
+              console.log(peerDependenciesOfFw)
+              console.log(`**********************`)
+              if (peerDependenciesOfFw === null) {
+                // frameworkにcssPeerDepsがない場合，そのフレームワークとの互換性，そのフレームワークと互換性がある場合バージョンとの互換性を確認する
+                if (selectedFw in cssPeerDeps) {
+                  // バージョンのわからないselected fwの名前がcssPeerDepsにある場合，インストールされるべきfwのバージョンを出力し，cssをpushする
+                  console.log(
+                    `You need to adjust the version of ${selectedFw} to ${cssPeerDeps[selectedFw]} in order to use this css library`,
+                  )
+                  compatibleCssLibs.push(library)
+                } else {
+                  // 互換性がない場合はエラーを返し，compatibleCssLibsにpushしない
+                  console.log(
+                    `You're required to install ${selectedFw} in order to use this css library`,
+                  )
+                }
+              } else {
+                const fwPeerDeps = peerDependenciesOfFw.peerDependencies
+
+                if (fwPeerDeps && Object.keys(fwPeerDeps).length > 0) {
+                  let isSemverSatisfied = false
+                  Object.keys(fwPeerDeps).some((fwPeerDep) => {
+                    if (fwPeerDep in cssPeerDeps) {
+                      // fwPeerDepがcssPeerDepsにある場合
+                      // peerDepVersionがcssPeerDeps[fwPeerDep]と互換性があるかどうかを確認する
+                      isSemverSatisfied = semver.satisfies(
+                        // @ts-ignore
+                        fwPeerDeps[fwPeerDep].replace(/^\^/, ''),
+                        cssPeerDeps[fwPeerDep],
+                      )
+                      if (!isSemverSatisfied) {
+                        // 互換性がない場合はエラーを返し，compatibleCssLibsにpushしない
+                        console.log(
+                          `You need to adjust the version of ${fwPeerDep} to ${cssPeerDeps[fwPeerDep]} in order to use this css library`,
+                        )
+                        return true // .some()の処理を終了する
+                      }
+                    }
+                  })
+                  isSemverSatisfied && compatibleCssLibs.push(library)
+                } else {
+                  // frameworkにcssPeerDepsがない場合，そのフレームワークとの互換性，そのフレームワークと互換性がある場合バージョンとの互換性を確認する
+                  if (selectedFw in cssPeerDeps) {
+                    // バージョンのわからないselected fwの名前がcssPeerDepsにある場合，インストールされるべきfwのバージョンを出力し，cssをpushする
+                    console.log(
+                      `You need to adjust the version of ${selectedFw} to ${cssPeerDeps[selectedFw]} in order to use this css library`,
+                    )
+                    compatibleCssLibs.push(library)
+                  } else {
+                    // 互換性がない場合はエラーを返し，compatibleCssLibsにpushしない
+                    console.log(
+                      `You're required to install ${selectedFw} in order to use this css library`,
+                    )
+                  }
+                }
+              }
+            } catch (error) {
+              console.error(error)
+            }
+          } else {
+            // peerDepsがない場合: cssを返す
+            compatibleCssLibs.push(library)
+          }
+        }
+        console.log('##################################')
+        console.log('compatibleCssLibs: ', compatibleCssLibs)
+        console.log('##################################')
+        return compatibleCssLibs
+      }
+    } catch (error) {
+      console.error(error)
+    }
+    return compatibleCssLibs
+  } else if (ui) {
+    return
+  }
+
+  // get peerDependency of second person...(recursively)
+
+  // first personにpeerDependencyがない場合とsecond person以降にpeerDependencyがある場合はtrueを返す
+}
+
+export type ReturnCheckDependencyType = Awaited<
+  ReturnType<typeof checkPeerDependencyMetLibraries>
+>

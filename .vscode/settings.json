@@ -2,6 +2,7 @@
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": true
   },
+  "prettier.configPath": "./.prettierrc.json",
   "editor.formatOnSave": true,
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "editor.quickSuggestions": {

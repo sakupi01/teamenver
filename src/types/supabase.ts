@@ -52,36 +52,57 @@ export interface Database {
       board_details: {
         Row: {
           board_id: string
+          builder: string | null
           created_at: string
-          css_library: string
-          formatter: string
-          framework: string
+          css_library: string | null
+          formatter: string | null
+          framework: string | null
+          hygen: string | null
           id: string
-          linter: string
-          ui_library: string
+          isGit: string | null
+          lint_staged_husky: string | null
+          linter: string | null
+          manager: string | null
+          ui_library: string | null
           updated_at: string
+          volta: string | null
+          vscode: string | null
         }
         Insert: {
           board_id: string
+          builder?: string | null
           created_at?: string
-          css_library: string
-          formatter: string
-          framework: string
+          css_library?: string | null
+          formatter?: string | null
+          framework?: string | null
+          hygen?: string | null
           id?: string
-          linter: string
-          ui_library: string
+          isGit?: string | null
+          lint_staged_husky?: string | null
+          linter?: string | null
+          manager?: string | null
+          ui_library?: string | null
           updated_at?: string
+          volta?: string | null
+          vscode?: string | null
         }
         Update: {
           board_id?: string
+          builder?: string | null
           created_at?: string
-          css_library?: string
-          formatter?: string
-          framework?: string
+          css_library?: string | null
+          formatter?: string | null
+          framework?: string | null
+          hygen?: string | null
           id?: string
-          linter?: string
-          ui_library?: string
+          isGit?: string | null
+          lint_staged_husky?: string | null
+          linter?: string | null
+          manager?: string | null
+          ui_library?: string | null
           updated_at?: string
+          volta?: string | null
+          vscode?: string | null
         }
         Relationships: [
           {
@@ -172,22 +193,49 @@ export interface Database {
           }
         ]
       }
+      css_libraries: {
+        Row: {
+          commandToRun: string | null
+          created_at: string
+          id: number
+          name: string
+        }
+        Insert: {
+          commandToRun?: string | null
+          created_at?: string
+          id?: number
+          name: string
+        }
+        Update: {
+          commandToRun?: string | null
+          created_at?: string
+          id?: number
+          name?: string
+        }
+        Relationships: []
+      }
       frameworks: {
         Row: {
+          ableToSetWithNode: boolean
           id: string
           name: string | null
+          peerDependencies: Json | null
           webframe_have_worked_with_count: number | null
           webframe_want_to_work_with_count: number | null
         }
         Insert: {
+          ableToSetWithNode?: boolean
           id: string
           name?: string | null
+          peerDependencies?: Json | null
           webframe_have_worked_with_count?: number | null
           webframe_want_to_work_with_count?: number | null
         }
         Update: {
+          ableToSetWithNode?: boolean
           id?: string
           name?: string | null
+          peerDependencies?: Json | null
           webframe_have_worked_with_count?: number | null
           webframe_want_to_work_with_count?: number | null
         }
@@ -408,6 +456,27 @@ export interface Database {
             referencedColumns: ["id"]
           }
         ]
+      }
+      ui_libraries: {
+        Row: {
+          commandToInstall: string | null
+          created_at: string
+          id: number
+          name: string | null
+        }
+        Insert: {
+          commandToInstall?: string | null
+          created_at?: string
+          id?: number
+          name?: string | null
+        }
+        Update: {
+          commandToInstall?: string | null
+          created_at?: string
+          id?: number
+          name?: string | null
+        }
+        Relationships: []
       }
       users: {
         Row: {
