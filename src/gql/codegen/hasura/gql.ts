@@ -14,6 +14,7 @@ import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/
  */
 const documents = {
     "mutation CreateTeam($name: String!) {\n  insert_teams(objects: {name: $name}) {\n    returning {\n      admin_id\n      name\n      id\n    }\n  }\n}\n\nmutation CreateBoard($is_public: Boolean!, $team_id: uuid!) {\n  insert_boards(objects: {is_public: $is_public, team_id: $team_id}) {\n    returning {\n      id\n      created_at\n      is_public\n      user_id\n      team_id\n    }\n  }\n}\n\nmutation CreateDetails($board_id: uuid!) {\n  insert_board_details(objects: {board_id: $board_id}) {\n    returning {\n      id\n      board_id\n    }\n  }\n}\n\nmutation UpdateDetails($id: uuid!, $changes: board_details_set_input) {\n  update_board_details(where: {id: {_eq: $id}}, _set: $changes) {\n    returning {\n      id\n    }\n  }\n}": types.CreateTeamDocument,
+    "query GetBoardLibraries {\n  board_details {\n    id\n    framework\n    css_library\n    ui_library\n  }\n}": types.GetBoardLibrariesDocument,
 };
 
 /**
@@ -34,6 +35,10 @@ export function graphql(source: string): unknown;
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(source: "mutation CreateTeam($name: String!) {\n  insert_teams(objects: {name: $name}) {\n    returning {\n      admin_id\n      name\n      id\n    }\n  }\n}\n\nmutation CreateBoard($is_public: Boolean!, $team_id: uuid!) {\n  insert_boards(objects: {is_public: $is_public, team_id: $team_id}) {\n    returning {\n      id\n      created_at\n      is_public\n      user_id\n      team_id\n    }\n  }\n}\n\nmutation CreateDetails($board_id: uuid!) {\n  insert_board_details(objects: {board_id: $board_id}) {\n    returning {\n      id\n      board_id\n    }\n  }\n}\n\nmutation UpdateDetails($id: uuid!, $changes: board_details_set_input) {\n  update_board_details(where: {id: {_eq: $id}}, _set: $changes) {\n    returning {\n      id\n    }\n  }\n}"): (typeof documents)["mutation CreateTeam($name: String!) {\n  insert_teams(objects: {name: $name}) {\n    returning {\n      admin_id\n      name\n      id\n    }\n  }\n}\n\nmutation CreateBoard($is_public: Boolean!, $team_id: uuid!) {\n  insert_boards(objects: {is_public: $is_public, team_id: $team_id}) {\n    returning {\n      id\n      created_at\n      is_public\n      user_id\n      team_id\n    }\n  }\n}\n\nmutation CreateDetails($board_id: uuid!) {\n  insert_board_details(objects: {board_id: $board_id}) {\n    returning {\n      id\n      board_id\n    }\n  }\n}\n\nmutation UpdateDetails($id: uuid!, $changes: board_details_set_input) {\n  update_board_details(where: {id: {_eq: $id}}, _set: $changes) {\n    returning {\n      id\n    }\n  }\n}"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "query GetBoardLibraries {\n  board_details {\n    id\n    framework\n    css_library\n    ui_library\n  }\n}"): (typeof documents)["query GetBoardLibraries {\n  board_details {\n    id\n    framework\n    css_library\n    ui_library\n  }\n}"];
 
 export function graphql(source: string) {
   return (documents as any)[source] ?? {};

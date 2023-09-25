@@ -1,0 +1,8 @@
+query GetBoardLibraries {
+  board_details {
+    id
+    framework
+    css_library
+    ui_library
+  }
+}
