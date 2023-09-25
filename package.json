@@ -7,6 +7,8 @@
     "dev": "next dev -p 3000",
     "build": "next build",
     "start": "next start",
+    "generate": "graphql-codegen --require dotenv/config --config codegen.ts dotenv_config_path=./.env.local",
+    "gen": "pnpm generate",
     "commit": "cz",
     "check:lint": "next lint",
     "check:typecheck": "tsc --noEmit",
