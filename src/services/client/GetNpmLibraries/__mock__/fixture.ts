@@ -1,6 +1,6 @@
 import { GetType } from '@/app/api/get/frameworks/route'
 
-export const getLibrariesData: GetType = {
+export const getNpmLibrariesData: GetType = {
   data: {
     objects: [
       {

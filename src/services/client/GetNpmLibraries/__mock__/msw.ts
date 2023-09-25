@@ -2,9 +2,9 @@ import { rest } from 'msw'
 
 import { path } from '..'
 
-import { getLibrariesData } from './fixture'
+import { getNpmLibrariesData } from './fixture'
 
-export function handleGetLibraries(args?: {
+export function handleGetNpmLibraries(args?: {
   mock?: jest.Mock<any, any>
   status?: number
   query: string
@@ -14,6 +14,6 @@ export function handleGetLibraries(args?: {
     if (args?.status) {
       return res(ctx.status(args.status))
     }
-    return res(ctx.status(200), ctx.json(getLibrariesData))
+    return res(ctx.status(200), ctx.json(getNpmLibrariesData))
   })
 }
