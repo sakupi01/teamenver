@@ -3,7 +3,7 @@ import React, { useState } from 'react'
 import { nodeInfo } from '@/types/custom/nodeInfo'
 import { sidebarData } from '@/types/custom/sidebarData'
 
-import { getTopics } from '@/services/client/GetTopics'
+import { WhichLibrary, getLibraries } from '@/services/client/GetLibraries'
 import { updateBoardDetail } from '@/services/client/UpdateBoardDetail'
 import { css } from 'styled-system/css'
 
@@ -35,11 +35,11 @@ export const SideBar = ({ frameworks }: SideBarProps) => {
     const nextCategory = categories[prevCategoryId + 1]
     const isDataFetchNeeded = categories.slice(0, 3).indexOf(nextCategory) // 0 ~ 2までがデータフェッチが必要
     if (isDataFetchNeeded != -1) {
-      const json = await getTopics(nextCategory)
-      const nodes = json.topic?.repositories.nodes?.map((node) => {
-        return { name: node?.name }
+      const json = (await getLibraries(nextCategory as WhichLibrary))?.data || []
+      const nodes = json.map((name) => {
+        return { name: name }
       })
-      const data = JSON.stringify({ name: json.topic?.name, nodes: nodes })
+      const data = JSON.stringify({ name: nextCategory, nodes: nodes })
       return data
     } else {
       switch (nextCategory) {

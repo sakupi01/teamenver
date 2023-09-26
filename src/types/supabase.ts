@@ -462,19 +462,19 @@ export interface Database {
           commandToInstall: string | null
           created_at: string
           id: number
-          name: string | null
+          name: string
         }
         Insert: {
           commandToInstall?: string | null
           created_at?: string
           id?: number
-          name?: string | null
+          name: string
         }
         Update: {
           commandToInstall?: string | null
           created_at?: string
           id?: number
-          name?: string | null
+          name?: string
         }
         Relationships: []
       }

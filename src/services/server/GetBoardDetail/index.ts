@@ -22,6 +22,7 @@ export const getBoardDetail = async () => {
     }
     gqlHasuraClient.setHeader(`authorization`, `Bearer ${access_token}`)
     const { board_details } = await gqlHasuraClient.request(GetBoardLibrariesDocument)
+
     return { board_details }
   } catch (error) {
     return handleServerError(error)

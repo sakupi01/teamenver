@@ -5,7 +5,7 @@ import { WhichLibrary } from '@/services/client/GetLibraries'
 import { handleServerError } from '..'
 
 export const getLibraries = async ({ which }: { which: WhichLibrary }) => {
-  if (which == 'css') {
+  if (which == 'css-framework') {
     try {
       const { data: css_libraries, error } = await supabaseClient
         .from('css_libraries')
@@ -14,7 +14,7 @@ export const getLibraries = async ({ which }: { which: WhichLibrary }) => {
     } catch (error) {
       return handleServerError(error)
     }
-  } else if (which == 'ui') {
+  } else if (which == 'ui-framework') {
     try {
       const { data: ui_libraries, error } = await supabaseClient
         .from('ui_libraries')
