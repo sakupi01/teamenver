@@ -35,7 +35,7 @@ const BoardPage = async ({ params: { team_id, board_id } }: TeamPageProps) => {
       <a href='/api/auth/logout'>Logout</a>
       <Flow
         frameworks={
-          frameworks ? { name: 'framework', nodes: frameworks } : ({} as sidebarData)
+          frameworks ? { category: 'framework', nodes: frameworks } : ({} as sidebarData)
         }
       />
     </main>

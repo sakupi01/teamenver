@@ -19,7 +19,7 @@
     "storybook": "storybook dev -p 6006",
     "storybook:build": "storybook build",
     "storybook:serve": "pnpm dlx http-server storybook-static -a localhost -p 6006 -s",
-    "storybook:test": "pnpm dlx wait-on http://localhost:6006 && pnpm run test:storybook",
+    "storybook:test": "bunx wait-on http://localhost:6006 && bun run test:storybook",
     "storybook:ci": "bunx concurrently -k -s first \"bun run storybook:serve\" \"bun run storybook:test\"",
     "chromatic": "chromatic --exit-zero-on-changes ---build-script-name \"storybook:build\"",
     "precommit": "lint-staged",

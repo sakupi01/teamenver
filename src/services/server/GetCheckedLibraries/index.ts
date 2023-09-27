@@ -45,12 +45,6 @@ export const getCheckedLibraries = async (
           // @ts-ignore
           const peerDeps = peerDep[library]
 
-          // if (Object.keys(cssPeerDeps).length > 0) {
-          // css peerDepsがある場合: frameworkのpeerDependency(フレームワークにpeerDepsがない場合はそのフレームワークのバージョン)
-          // にcssのpeerDependencyが該当するなら，インストールされるべきframeworkのセマンティックバージョンとともにcssを返す
-          console.log('##################################')
-          console.log('checkArr: ', checkArray)
-          console.log('##################################')
           compatibleCssLibs = checkDeps(
             library,
             peerDeps,
@@ -100,10 +94,6 @@ export const getCheckedLibraries = async (
           const library = Object.keys(peerDep || {})[0]
           // @ts-ignore
           const peerDeps = peerDep[library]
-
-          console.log('##################################')
-          console.log('checkArr: ', checkArray)
-          console.log('##################################')
 
           compatibleUiLibs = checkDeps(
             library,
