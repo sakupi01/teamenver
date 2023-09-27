@@ -8,7 +8,7 @@ export const appGeneratorHandler = async () => {
   try {
     // ファイルを非同期的に読み込む
     // ファイルの内容を文字列として格納
-    const jsCodeAsString: string = await fs.readFile(`../../app/appGen.mjs`, 'utf8')
+    const jsCodeAsString: string = await fs.readFile('../../app/appGen.mjs', 'utf8')
     console.log('**********')
     console.log(jsCodeAsString)
     console.log('**********')

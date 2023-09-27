@@ -5,7 +5,7 @@ import { Flow } from './Flow';
 
 
 const meta = {
-  title: "Flow",
+  title: 'Flow',
   component: Flow,
   tags: ['autodocs'],
   parameters: {

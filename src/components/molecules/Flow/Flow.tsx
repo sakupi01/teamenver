@@ -74,12 +74,15 @@ const InnerFlow = ({ frameworks }: FlowProps) => {
     [setEdges],
   )
 
-  const onConnect = useCallback(async (params: Edge | Connection) => {
-    console.log('onConnect called')
+  const onConnect = useCallback(
+    async (params: Edge | Connection) => {
+      console.log('onConnect called')
 
-    // await checkDependency(nodes.map((node) => node.data.label))
-    setEdges((eds) => addEdge(params, eds))
-  }, [])
+      // await checkDependency(nodes.map((node) => node.data.label))
+      setEdges((eds) => addEdge(params, eds))
+    },
+    [setEdges],
+  )
 
   const onDragOver = useCallback(
     (event: { preventDefault: () => void; dataTransfer: { dropEffect: string } }) => {

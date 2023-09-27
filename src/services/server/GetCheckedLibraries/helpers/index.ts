@@ -9,11 +9,11 @@ import { Json } from '@/types/supabase'
 import { getBoardDetail } from '../../GetBoardDetail'
 
 export const getPeerDependenciesInfo = (library: string) => {
-  if (library !== `CSS Modules`) {
+  if (library !== 'CSS Modules') {
     const command = `npm info ${library} peerDependencies --json`
 
     try {
-      const stdout = execSync(command, { encoding: `utf8`, stdio: `pipe` })
+      const stdout = execSync(command, { encoding: 'utf8', stdio: 'pipe' })
 
       // if there're peer dependencies, return error
       if (stdout) {
@@ -34,8 +34,8 @@ export const getPeerDependency = (libraries: string | Array<string>): Array<Json
 
   let arrLibraries: Array<string>
 
-  if (typeof libraries === `string`) {
-    arrLibraries = libraries.replace(/[\[\]']+/g, ``).split(`, `)
+  if (typeof libraries === 'string') {
+    arrLibraries = libraries.replace(/[\[\]']+/g, '').split(', ')
   } else {
     arrLibraries = libraries
   }
@@ -50,9 +50,9 @@ export const getPeerDependency = (libraries: string | Array<string>): Array<Json
     peerDepsOfLibraries.push(peerDeps)
   })
   // peerDepsOfLibraries.shift()
-  console.log(`**************************`)
-  console.log(`peerDepsOfLibraries: `, peerDepsOfLibraries)
-  console.log(`**************************`)
+  console.log('**************************')
+  console.log('peerDepsOfLibraries: ', peerDepsOfLibraries)
+  console.log('**************************')
   return peerDepsOfLibraries
 }
 
@@ -64,21 +64,21 @@ export const getPeerDepsOfSelectedFw = async (): Promise<{
 }> => {
   const { framework } = (await getBoardDetail()).board_details[0]
   if (framework === null || framework === undefined) {
-    throw new Error(`framework is null or undefined`)
+    throw new Error('framework is null or undefined')
   }
 
-  console.log(`**************************`)
-  console.log(`Your framework: `, framework)
-  console.log(`**************************`)
+  console.log('**************************')
+  console.log('Your framework: ', framework)
+  console.log('**************************')
 
   const { data: peerDependenciesOfFw, error } = await supabaseClient
-    .from(`frameworks`)
-    .select(`peerDependencies`)
-    .eq(`name`, framework)
+    .from('frameworks')
+    .select('peerDependencies')
+    .eq('name', framework)
     .limit(1)
     .single()
   if (peerDependenciesOfFw === null) {
-    throw new Error(`peerDependenciesOfFw is null`) // もしくは適切なエラーハンドリングを行う
+    throw new Error('peerDependenciesOfFw is null') // もしくは適切なエラーハンドリングを行う
   }
   return { framework, peerDependenciesOfFw }
 }
@@ -91,7 +91,7 @@ export const getPeerDepsOfSelectedCss = async (): Promise<{
 }> => {
   const { css_library } = (await getBoardDetail()).board_details[0]
   if (css_library === null || css_library === undefined) {
-    throw new Error(`framework is null or undefined`)
+    throw new Error('framework is null or undefined')
   }
   const peerDependenciesOfCss = { peerDependencies: getPeerDependency([css_library]) } // css libs with peerDeps
 
@@ -126,7 +126,7 @@ export const checkDeps = (
           if (checkArrPeerDeps[pkg] && pkgs[pkg]) {
             isSatisfied = semver.satisfies(
               // @ts-ignore
-              checkArrPeerDeps[pkg].replace(/^\^/, ``),
+              checkArrPeerDeps[pkg].replace(/^\^/, ''),
               // @ts-ignore
               pkgs[pkg],
             )

@@ -16,7 +16,7 @@ export function handleApiRouteError(err: unknown): NextResponse<ErrorType> {
         return NextResponse.json({ message: err.message, status: 400 }, { status: 400 })
         break
       case 401:
-        redirect(`/api/auth/login`)
+        redirect('/api/auth/login')
         // return NextResponse.json({ message: err.message, status: 401 }, { status: 401 })
         break
       case 404:

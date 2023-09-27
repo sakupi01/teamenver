@@ -36,16 +36,16 @@ export interface Database {
         }
         Relationships: [
           {
-            foreignKeyName: "agreements_team_board_id_fkey"
-            columns: ["team_board_id"]
-            referencedRelation: "team_boards"
-            referencedColumns: ["id"]
+            foreignKeyName: 'agreements_team_board_id_fkey'
+            columns: ['team_board_id']
+            referencedRelation: 'team_boards'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "agreements_user_id_fkey"
-            columns: ["user_id"]
-            referencedRelation: "users"
-            referencedColumns: ["id"]
+            foreignKeyName: 'agreements_user_id_fkey'
+            columns: ['user_id']
+            referencedRelation: 'users'
+            referencedColumns: ['id']
           }
         ]
       }
@@ -106,10 +106,10 @@ export interface Database {
         }
         Relationships: [
           {
-            foreignKeyName: "board_details_board_id_fkey"
-            columns: ["board_id"]
-            referencedRelation: "boards"
-            referencedColumns: ["id"]
+            foreignKeyName: 'board_details_board_id_fkey'
+            columns: ['board_id']
+            referencedRelation: 'boards'
+            referencedColumns: ['id']
           }
         ]
       }
@@ -140,16 +140,16 @@ export interface Database {
         }
         Relationships: [
           {
-            foreignKeyName: "boards_team_id_fkey"
-            columns: ["team_id"]
-            referencedRelation: "teams"
-            referencedColumns: ["id"]
+            foreignKeyName: 'boards_team_id_fkey'
+            columns: ['team_id']
+            referencedRelation: 'teams'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "boards_user_id_fkey"
-            columns: ["user_id"]
-            referencedRelation: "users"
-            referencedColumns: ["id"]
+            foreignKeyName: 'boards_user_id_fkey'
+            columns: ['user_id']
+            referencedRelation: 'users'
+            referencedColumns: ['id']
           }
         ]
       }
@@ -180,16 +180,16 @@ export interface Database {
         }
         Relationships: [
           {
-            foreignKeyName: "comments_board_id_fkey"
-            columns: ["board_id"]
-            referencedRelation: "boards"
-            referencedColumns: ["id"]
+            foreignKeyName: 'comments_board_id_fkey'
+            columns: ['board_id']
+            referencedRelation: 'boards'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "comments_user_id_fkey"
-            columns: ["user_id"]
-            referencedRelation: "users"
-            referencedColumns: ["id"]
+            foreignKeyName: 'comments_user_id_fkey'
+            columns: ['user_id']
+            referencedRelation: 'users'
+            referencedColumns: ['id']
           }
         ]
       }
@@ -262,16 +262,16 @@ export interface Database {
         }
         Relationships: [
           {
-            foreignKeyName: "likes_comment_id_fkey"
-            columns: ["comment_id"]
-            referencedRelation: "comments"
-            referencedColumns: ["id"]
+            foreignKeyName: 'likes_comment_id_fkey'
+            columns: ['comment_id']
+            referencedRelation: 'comments'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "likes_user_id_fkey"
-            columns: ["user_id"]
-            referencedRelation: "users"
-            referencedColumns: ["id"]
+            foreignKeyName: 'likes_user_id_fkey'
+            columns: ['user_id']
+            referencedRelation: 'users'
+            referencedColumns: ['id']
           }
         ]
       }
@@ -314,10 +314,10 @@ export interface Database {
         }
         Relationships: [
           {
-            foreignKeyName: "project_details_team_id_fkey"
-            columns: ["team_id"]
-            referencedRelation: "teams"
-            referencedColumns: ["id"]
+            foreignKeyName: 'project_details_team_id_fkey'
+            columns: ['team_id']
+            referencedRelation: 'teams'
+            referencedColumns: ['id']
           }
         ]
       }
@@ -357,10 +357,10 @@ export interface Database {
         }
         Relationships: [
           {
-            foreignKeyName: "team_board_details_team_board_id_fkey"
-            columns: ["team_board_id"]
-            referencedRelation: "team_boards"
-            referencedColumns: ["id"]
+            foreignKeyName: 'team_board_details_team_board_id_fkey'
+            columns: ['team_board_id']
+            referencedRelation: 'team_boards'
+            referencedColumns: ['id']
           }
         ]
       }
@@ -385,10 +385,10 @@ export interface Database {
         }
         Relationships: [
           {
-            foreignKeyName: "team_boards_team_id_fkey"
-            columns: ["team_id"]
-            referencedRelation: "teams"
-            referencedColumns: ["id"]
+            foreignKeyName: 'team_boards_team_id_fkey'
+            columns: ['team_id']
+            referencedRelation: 'teams'
+            referencedColumns: ['id']
           }
         ]
       }
@@ -413,16 +413,16 @@ export interface Database {
         }
         Relationships: [
           {
-            foreignKeyName: "team_member_team_id_fkey"
-            columns: ["team_id"]
-            referencedRelation: "teams"
-            referencedColumns: ["id"]
+            foreignKeyName: 'team_member_team_id_fkey'
+            columns: ['team_id']
+            referencedRelation: 'teams'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "team_member_user_id_fkey"
-            columns: ["user_id"]
-            referencedRelation: "users"
-            referencedColumns: ["id"]
+            foreignKeyName: 'team_member_user_id_fkey'
+            columns: ['user_id']
+            referencedRelation: 'users'
+            referencedColumns: ['id']
           }
         ]
       }
@@ -450,10 +450,10 @@ export interface Database {
         }
         Relationships: [
           {
-            foreignKeyName: "teams_admin_id_fkey"
-            columns: ["admin_id"]
-            referencedRelation: "users"
-            referencedColumns: ["id"]
+            foreignKeyName: 'teams_admin_id_fkey'
+            columns: ['admin_id']
+            referencedRelation: 'users'
+            referencedColumns: ['id']
           }
         ]
       }

@@ -27,7 +27,7 @@
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
-      "check:lint --fix",
+      "check:lint --dir src --fix",
       "check:markuplint",
       "check:typecheck",
       "format"

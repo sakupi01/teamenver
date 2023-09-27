@@ -16,24 +16,24 @@ export type GetCheckedLibrariesType = { data: { name: string }[] }
 export const getCheckedLibraries = async (
   which: WhichLibrary,
 ): Promise<GetCheckedLibrariesType> => {
-  if (which === `css-framework`) {
+  if (which === 'css-framework') {
     let compatibleCssLibs: Array<{ name: string }> = []
 
     // get peerDependency of all css
     // get css from database
     try {
       const { data: css_libraries, error } = await supabaseClient
-        .from(`css_libraries`)
-        .select(`name`)
+        .from('css_libraries')
+        .select('name')
 
       if (css_libraries === null) {
         return { data: compatibleCssLibs }
       } else {
         // frameworkのpeerDependenciesを取得する
         const { framework, peerDependenciesOfFw } = await getPeerDepsOfSelectedFw()
-        console.log(`**********************`)
+        console.log('**********************')
         console.log(peerDependenciesOfFw)
-        console.log(`**********************`)
+        console.log('**********************')
         const checkArray = [peerDependenciesOfFw]
 
         const cssLibrariesArr = css_libraries.map((library) => library.name)
@@ -48,9 +48,9 @@ export const getCheckedLibraries = async (
           // if (Object.keys(cssPeerDeps).length > 0) {
           // css peerDepsがある場合: frameworkのpeerDependency(フレームワークにpeerDepsがない場合はそのフレームワークのバージョン)
           // にcssのpeerDependencyが該当するなら，インストールされるべきframeworkのセマンティックバージョンとともにcssを返す
-          console.log(`##################################`)
-          console.log(`checkArr: `, checkArray)
-          console.log(`##################################`)
+          console.log('##################################')
+          console.log('checkArr: ', checkArray)
+          console.log('##################################')
           compatibleCssLibs = checkDeps(
             library,
             peerDeps,
@@ -60,36 +60,36 @@ export const getCheckedLibraries = async (
             framework,
           )
         }
-        console.log(`##################################`)
-        console.log(`compatibleCssLibs: `, compatibleCssLibs)
-        console.log(`##################################`)
+        console.log('##################################')
+        console.log('compatibleCssLibs: ', compatibleCssLibs)
+        console.log('##################################')
         return { data: compatibleCssLibs }
       }
     } catch (error) {
       throw error
     }
-  } else if (which === `ui-framework`) {
+  } else if (which === 'ui-framework') {
     let compatibleUiLibs: Array<{ name: string }> = []
 
     // get peerDependency of all css
     // get css from database
     try {
       const { data: ui_libraries, error } = await supabaseClient
-        .from(`ui_libraries`)
-        .select(`name`)
+        .from('ui_libraries')
+        .select('name')
 
       if (ui_libraries === null) {
         return { data: compatibleUiLibs }
       } else {
         const { framework, peerDependenciesOfFw } = await getPeerDepsOfSelectedFw()
-        console.log(`**********************`)
-        console.log(`peerDependenciesOfFw: `, peerDependenciesOfFw)
-        console.log(`**********************`)
+        console.log('**********************')
+        console.log('peerDependenciesOfFw: ', peerDependenciesOfFw)
+        console.log('**********************')
 
         const { css_library, peerDependenciesOfCss } = await getPeerDepsOfSelectedCss()
-        console.log(`**********************`)
-        console.log(`peerDependenciesOfCss: `, peerDependenciesOfCss)
-        console.log(`**********************`)
+        console.log('**********************')
+        console.log('peerDependenciesOfCss: ', peerDependenciesOfCss)
+        console.log('**********************')
         const checkArray = [peerDependenciesOfFw, peerDependenciesOfCss]
 
         const uiLibrariesArr = ui_libraries.map((library) => library.name)
@@ -101,9 +101,9 @@ export const getCheckedLibraries = async (
           // @ts-ignore
           const peerDeps = peerDep[library]
 
-          console.log(`##################################`)
-          console.log(`checkArr: `, checkArray)
-          console.log(`##################################`)
+          console.log('##################################')
+          console.log('checkArr: ', checkArray)
+          console.log('##################################')
 
           compatibleUiLibs = checkDeps(
             library,
@@ -115,9 +115,9 @@ export const getCheckedLibraries = async (
             css_library,
           )
         }
-        console.log(`##################################`)
-        console.log(`compatibleUiLibs: `, compatibleUiLibs)
-        console.log(`##################################`)
+        console.log('##################################')
+        console.log('compatibleUiLibs: ', compatibleUiLibs)
+        console.log('##################################')
         return { data: compatibleUiLibs }
       }
     } catch (error) {

@@ -7,14 +7,14 @@ import { css } from 'styled-system/css'
 export default function Join() {
   const createTeamHandler = async (data: FormData) => {
     'use server'
-    const name = data.get(`name`) as string
+    const name = data.get('name') as string
     const res = await createTeam({ name })
     console.log(res)
-    redirect(`/select/board`)
+    redirect('/select/board')
   }
 
   return (
-    <main className={css({ padding: `5%` })}>
+    <main className={css({ padding: '5%' })}>
       <form action={createTeamHandler} method='POST'>
         <input type='text' name='name' placeholder='Input a team name' />
         <button type='submit'>Create</button>

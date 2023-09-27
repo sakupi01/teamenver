@@ -8,11 +8,11 @@ import { createBoardDetail } from '@/services/server/CreateBoardDetail'
 import { css } from 'styled-system/css'
 
 export default function Board() {
-  const current_team_id = cookies().get(`current_team_id`)
+  const current_team_id = cookies().get('current_team_id')
 
   const handleCreateBoardAndDetails = async () => {
     'use server'
-    console.log(`clicked!`)
+    console.log('clicked!')
 
     const { insert_boards } = await createBoard()
 
@@ -20,7 +20,7 @@ export default function Board() {
     redirect(`/dashboard/${current_team_id}/board/${insert_boards?.returning[0].id}`)
   }
   return (
-    <main className={css({ padding: `5%` })}>
+    <main className={css({ padding: '5%' })}>
       <p>Your current team is: {current_team_id!.value}</p>
       <AsyncButton label='Create Board' clickAction={handleCreateBoardAndDetails} />
     </main>

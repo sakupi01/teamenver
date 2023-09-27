@@ -11,7 +11,7 @@ export function handleServerError(err: unknown): never {
   if (err instanceof ClientError) {
     const gqlErrorCode = err.response.errors?.map((error) => error.extensions?.code)
     gqlErrorCode?.forEach((code) => {
-      if (code === `invalid-jwt`) {
+      if (code === 'invalid-jwt') {
         throw new UnAuthorizedError()
       }
     })

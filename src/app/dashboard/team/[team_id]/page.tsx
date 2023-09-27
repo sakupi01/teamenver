@@ -15,10 +15,10 @@ const TeamPage = async ({ params: { team_id } }: TeamPageProps) => {
   const get = async () => {
     try {
       const { data: frameworks, error } = await supabaseClient
-        .from(`frameworks`)
-        .select(`name`)
-        .order(`webframe_want_to_work_with_count`, { ascending: false })
-        .eq(`ableToSetWithNode`, true)
+        .from('frameworks')
+        .select('name')
+        .order('webframe_want_to_work_with_count', { ascending: false })
+        .eq('ableToSetWithNode', true)
       return frameworks
     } catch (error) {
       console.log(error)
@@ -27,7 +27,7 @@ const TeamPage = async ({ params: { team_id } }: TeamPageProps) => {
 
   const frameworks = await get()
   return (
-    <main className={css({ padding: `5%` })}>
+    <main className={css({ padding: '5%' })}>
       <h1>Team {team_id}`&apos;`s Page</h1>
 
       <button>create board</button>
@@ -35,7 +35,7 @@ const TeamPage = async ({ params: { team_id } }: TeamPageProps) => {
       <a href='/api/auth/logout'>Logout</a>
       <Flow
         frameworks={
-          frameworks ? { name: `framework`, nodes: frameworks } : ({} as sidebarData)
+          frameworks ? { name: 'framework', nodes: frameworks } : ({} as sidebarData)
         }
       />
     </main>

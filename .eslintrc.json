@@ -2,7 +2,7 @@
   "extends": ["next/core-web-vitals", "prettier"],
   "plugins": ["import", "unused-imports", "@stylistic"],
   "rules": {
-    "@stylistic/quotes": ["error", "backtick"],
+    "@stylistic/quotes": ["error", "single"],
     "@stylistic/arrow-spacing": ["error", { "before": true, "after": true }],
     "@typescript-eslint/no-unused-vars": "off",
     "unused-imports/no-unused-imports": "warn",
