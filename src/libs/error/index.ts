@@ -1,4 +1,5 @@
 import { ClientError } from 'graphql-request'
+import { redirect } from 'next/navigation'
 import { NextResponse } from 'next/server'
 
 import { CustomError } from './custom'
@@ -15,7 +16,8 @@ export function handleApiRouteError(err: unknown): NextResponse<ErrorType> {
         return NextResponse.json({ message: err.message, status: 400 }, { status: 400 })
         break
       case 401:
-        return NextResponse.json({ message: err.message, status: 401 }, { status: 401 })
+        redirect(`/api/auth/login`)
+        // return NextResponse.json({ message: err.message, status: 401 }, { status: 401 })
         break
       case 404:
         return NextResponse.json({ message: err.message, status: 404 }, { status: 404 })
@@ -31,7 +33,10 @@ export function handleApiRouteError(err: unknown): NextResponse<ErrorType> {
     }
   }
   if (err instanceof CustomError) {
-    return NextResponse.json({ message: err.message, status: err.status }, { status: err.status })
+    return NextResponse.json(
+      { message: err.message, status: err.status },
+      { status: err.status },
+    )
   }
   const status = 500
   const { message } = errors[status]

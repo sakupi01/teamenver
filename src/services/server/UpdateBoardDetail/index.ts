@@ -26,7 +26,7 @@ export const updateBoardDetail = async ({
 }) => {
   const session = await getSession()
   const access_token = session?.accessToken
-  const board_detail_id = cookies().get('current_board_detail_id')?.value
+  const board_detail_id = cookies().get(`current_board_detail_id`)?.value
 
   try {
     if (board_detail_id === undefined || null) {

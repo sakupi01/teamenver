@@ -1,9 +1,9 @@
 export const errors = {
-  400: { message: 'Invalid Request Error.' },
-  401: { message: 'Unauthorized Error.' },
-  404: { message: 'Not Found Error.' },
-  405: { message: 'Method Not Allowed Error.' },
-  500: { message: 'Internal Server Error.' },
+  400: { message: `Invalid Request Error.` },
+  401: { message: `Unauthorized Error.` },
+  404: { message: `Not Found Error.` },
+  405: { message: `Method Not Allowed Error.` },
+  500: { message: `Internal Server Error.` },
 }
 
 export type Errors = typeof errors

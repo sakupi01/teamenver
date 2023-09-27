@@ -11,12 +11,12 @@ import { handleServerError } from '..'
 export const createTeam = async ({ name }: { name: string | null }) => {
   const session = await getSession()
   const access_token = session?.accessToken
-  console.log('***************************')
+  console.log(`***************************`)
   console.log(
-    'access_token',
+    `access_token`,
     JSON.stringify({ accessToken: session?.accessToken }, null, 2),
   )
-  console.log('***************************')
+  console.log(`***************************`)
   try {
     if (name === null) {
       throw new BadRequestError()
@@ -28,15 +28,15 @@ export const createTeam = async ({ name }: { name: string | null }) => {
     const { insert_teams } = await gqlHasuraClient.request(CreateTeamDocument, {
       name: name,
     })
-    cookies().set('current_team_id', insert_teams?.returning[0].id)
-    console.log('***************************')
+    cookies().set(`current_team_id`, insert_teams?.returning[0].id)
+    console.log(`***************************`)
     console.log(insert_teams)
-    console.log('***************************')
+    console.log(`***************************`)
     return { insert_teams }
   } catch (error) {
-    console.log('***************************')
+    console.log(`***************************`)
     console.log(error)
-    console.log('***************************')
+    console.log(`***************************`)
     return handleServerError(error)
   }
 }

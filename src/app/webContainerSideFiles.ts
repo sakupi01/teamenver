@@ -20,15 +20,15 @@ type fileGeneratorProps = appGeneratorProps & readmeGeneratorProps
 
 // evalで実行可能な文字列に変換
 function escapeForEval(code: string) {
-  console.log('**********')
+  console.log(`**********`)
   console.log(code)
-  console.log('**********')
+  console.log(`**********`)
 
   // JavaScriptコード内のバックスラッシュと引用符をエスケープします
   const escapedCode = code
-    .replace(/\\/g, '\\\\')
-    .replace(/'/g, "\\'")
-    .replace(/"/g, '\\"')
+    .replace(/\\/g, `\\\\`)
+    .replace(/'/g, `\\'`)
+    .replace(/"/g, `\\"`)
 
   return escapedCode
 }
@@ -648,17 +648,17 @@ const fileGenerator = async ({
 // type FileSystemTree cannot operate Promise, so I couldnt able to use 'fs', which means I cannot read the file from out programatically.
 export const getFiles = async () => {
   const files: FileSystemTree = await fileGenerator({
-    fw_name: 'vue',
+    fw_name: `vue`,
     ui_name: null,
     css_name: null,
-    eslint: 'yes',
-    prettier: 'template',
+    eslint: `yes`,
+    prettier: `template`,
     isTs: true,
-    manager: 'pnpm',
+    manager: `pnpm`,
     isGit: false,
   })
-  console.log('**********')
+  console.log(`**********`)
   console.log(files)
-  console.log('**********')
+  console.log(`**********`)
   return files
 }

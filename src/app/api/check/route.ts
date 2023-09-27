@@ -16,7 +16,7 @@ export async function GET(
 ): Promise<NextResponse<GetType | ErrorType>> {
   try {
     const { searchParams } = new URL(request.url!)
-    const which = searchParams.get('which') as WhichLibrary
+    const which = searchParams.get(`which`) as WhichLibrary
 
     const res = await getCheckedLibraries(which)
     return NextResponse.json(res)

@@ -1,7 +1,7 @@
 import { ClientError } from 'graphql-request'
 
 import { CustomError, DependenciesInvalidError } from '@/libs/error/custom'
-import { InternalServerError } from '@/libs/error/http'
+import { InternalServerError, UnAuthorizedError } from '@/libs/error/http'
 import { HttpError } from '@/libs/error/http'
 
 export function handleServerError(err: unknown): never {
@@ -9,7 +9,12 @@ export function handleServerError(err: unknown): never {
     throw new InternalServerError()
   }
   if (err instanceof ClientError) {
-    throw err
+    const gqlErrorCode = err.response.errors?.map((error) => error.extensions?.code)
+    gqlErrorCode?.forEach((code) => {
+      if (code === `invalid-jwt`) {
+        throw new UnAuthorizedError()
+      }
+    })
   }
   throw err
 }

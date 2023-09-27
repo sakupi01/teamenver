@@ -9,34 +9,33 @@ import { Json } from '@/types/supabase'
 import { getBoardDetail } from '../../GetBoardDetail'
 
 export const getPeerDependenciesInfo = (library: string) => {
-  const command = `npm info ${library} peerDependencies --json`
+  if (library !== `CSS Modules`) {
+    const command = `npm info ${library} peerDependencies --json`
 
-  try {
-    const stdout = execSync(command, { encoding: 'utf8', stdio: 'pipe' })
+    try {
+      const stdout = execSync(command, { encoding: `utf8`, stdio: `pipe` })
 
-    // if there're peer dependencies, return error
-    if (stdout) {
-      const peerDeps = JSON.parse(stdout)
-      console.log(`Peer Dependencies for ${library}:`)
-      for (const [dep, version] of Object.entries(peerDeps)) {
-        console.log(`${dep}: ${version}`)
+      // if there're peer dependencies, return error
+      if (stdout) {
+        const peerDeps = JSON.parse(stdout)
+        return { [library]: peerDeps }
       }
-      return { [library]: peerDeps }
+      return { [library]: {} }
+    } catch (error: unknown) {
+      console.error(`Error: ${error}`)
+      return {}
     }
+  } else {
     return { [library]: {} }
-  } catch (error: unknown) {
-    console.error(`Error: ${error}`)
-    return {}
   }
 }
-
 export const getPeerDependency = (libraries: string | Array<string>): Array<Json> => {
   // array in string form
 
   let arrLibraries: Array<string>
 
-  if (typeof libraries === 'string') {
-    arrLibraries = libraries.replace(/[\[\]']+/g, '').split(', ')
+  if (typeof libraries === `string`) {
+    arrLibraries = libraries.replace(/[\[\]']+/g, ``).split(`, `)
   } else {
     arrLibraries = libraries
   }
@@ -50,10 +49,10 @@ export const getPeerDependency = (libraries: string | Array<string>): Array<Json
     const peerDeps = getPeerDependenciesInfo(library)
     peerDepsOfLibraries.push(peerDeps)
   })
-  peerDepsOfLibraries.shift()
-  console.log('**************************')
-  console.log('peerDepsOfLibraries: ', peerDepsOfLibraries)
-  console.log('**************************')
+  // peerDepsOfLibraries.shift()
+  console.log(`**************************`)
+  console.log(`peerDepsOfLibraries: `, peerDepsOfLibraries)
+  console.log(`**************************`)
   return peerDepsOfLibraries
 }
 
@@ -65,16 +64,21 @@ export const getPeerDepsOfSelectedFw = async (): Promise<{
 }> => {
   const { framework } = (await getBoardDetail()).board_details[0]
   if (framework === null || framework === undefined) {
-    throw new Error('framework is null or undefined')
+    throw new Error(`framework is null or undefined`)
   }
+
+  console.log(`**************************`)
+  console.log(`Your framework: `, framework)
+  console.log(`**************************`)
+
   const { data: peerDependenciesOfFw, error } = await supabaseClient
-    .from('frameworks')
-    .select('peerDependencies')
-    .eq('name', framework)
+    .from(`frameworks`)
+    .select(`peerDependencies`)
+    .eq(`name`, framework)
     .limit(1)
     .single()
   if (peerDependenciesOfFw === null) {
-    throw new Error('peerDependenciesOfFw is null') // もしくは適切なエラーハンドリングを行う
+    throw new Error(`peerDependenciesOfFw is null`) // もしくは適切なエラーハンドリングを行う
   }
   return { framework, peerDependenciesOfFw }
 }
@@ -87,7 +91,7 @@ export const getPeerDepsOfSelectedCss = async (): Promise<{
 }> => {
   const { css_library } = (await getBoardDetail()).board_details[0]
   if (css_library === null || css_library === undefined) {
-    throw new Error('framework is null or undefined')
+    throw new Error(`framework is null or undefined`)
   }
   const peerDependenciesOfCss = { peerDependencies: getPeerDependency([css_library]) } // css libs with peerDeps
 
@@ -111,50 +115,50 @@ export const checkDeps = (
   } else {
     // ui libraryのpeerDepsがある場合
     let isSatisfied = false
+    const checkArrPeerDeps = checkArr[index].peerDependencies
     Object.keys(pkgs).some((pkg) => {
       // それぞれのui libraryのpeerDepsが上位のpeerDepsにあるかどうかを確認する
-      // @ts-ignore
-      const checkArrPeerDeps = checkArr[index].peerDependencies
 
-      // @ts-ignore
-      if (pkg in checkArrPeerDeps) {
+      if (checkArrPeerDeps !== null) {
         // @ts-ignore
-        if (checkArrPeerDeps[pkg] && pkgs[pkg]) {
-          isSatisfied = semver.satisfies(
-            // @ts-ignore
-            checkArrPeerDeps[pkg].replace(/^\^/, ''),
-            // @ts-ignore
-            pkgs[pkg],
-          )
+        if (pkg in checkArrPeerDeps) {
+          // @ts-ignore
+          if (checkArrPeerDeps[pkg] && pkgs[pkg]) {
+            isSatisfied = semver.satisfies(
+              // @ts-ignore
+              checkArrPeerDeps[pkg].replace(/^\^/, ``),
+              // @ts-ignore
+              pkgs[pkg],
+            )
+          }
+          if (!isSatisfied) {
+            return true // break if the version is not satisfied
+          }
         }
-        if (!isSatisfied) {
-          return true // break if the version is not satisfied
-        }
+      }
+      // 上位のpeerDepsの名前自身と互換性があるかどうかを確認する
+      if (framework in pkgs) {
+        console.log(
+          // @ts-ignore
+          `You need to adjust the version of ${framework} to ${pkgs[framework]} in order to use this css library`,
+        )
+        isSatisfied = true // バージョンの喚起のみしてtrue
+      } else if (css_library && css_library in pkgs) {
+        console.log(
+          // @ts-ignore
+          `You need to adjust the version of ${css_library} to ${pkgs[framework]} in order to use this css library`,
+        )
+        isSatisfied = true // バージョンの喚起のみしてtrue
       } else {
-        // 上位のpeerDepsの名前自身と互換性があるかどうかを確認する
-        if (framework in pkgs) {
-          console.log(
-            // @ts-ignore
-            `You need to adjust the version of ${framework} to ${pkgs[framework]} in order to use this css library`,
-          )
-          isSatisfied = true // バージョンの喚起のみしてtrue
-        } else if (css_library && css_library in pkgs) {
-          console.log(
-            // @ts-ignore
-            `You need to adjust the version of ${css_library} to ${pkgs[framework]} in order to use this css library`,
-          )
-          isSatisfied = true // バージョンの喚起のみしてtrue
-        } else {
-          checkDeps(
-            library,
-            pkgs,
-            checkArr,
-            index + 1,
-            compatibleLibs,
-            framework,
-            css_library,
-          ) // go to the next checkArr layer
-        }
+        checkDeps(
+          library,
+          pkgs,
+          checkArr,
+          index + 1,
+          compatibleLibs,
+          framework,
+          css_library,
+        ) // go to the next checkArr layer
       }
     })
     isSatisfied && compatibleLibs.push({ name: library })
