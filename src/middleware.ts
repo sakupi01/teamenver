@@ -5,6 +5,7 @@ import { NextRequest, NextResponse } from 'next/server'
 export default withMiddlewareAuthRequired(async function middleware(
   request: NextRequest,
 ) {
+  const appSession = request.cookies.has(`appSession`)
   const is_team_id = request.cookies.has(`current_team_id`)
   const is_board_id = request.cookies.has(`current_board_id`)
 
@@ -17,7 +18,9 @@ export default withMiddlewareAuthRequired(async function middleware(
         new URL(`/dashboard/team/${current_team_id}`, request.url),
       )
     }
-    return NextResponse.rewrite(new URL(`/select/board`, request.url))
+    if (request.nextUrl.pathname.startsWith(`/`)) {
+      return NextResponse.rewrite(new URL(`/profile`, request.url))
+    }
   } else {
     const current_team_id = request.cookies.get(`current_team_id`)?.value
     const current_board_id = request.cookies.get(`current_board_id`)?.value
@@ -49,11 +52,13 @@ export default withMiddlewareAuthRequired(async function middleware(
         new URL(`/dashboard/team/${current_team_id}`, request.url),
       )
     }
+    if (request.nextUrl.pathname.startsWith(`/`)) {
+      return NextResponse.rewrite(new URL(`/profile`, request.url))
+    }
   }
-  const appSession = request.cookies.has(`appSession`)
 
   if (appSession) {
-    if (request.nextUrl.pathname.startsWith(`/profile`)) {
+    if (request.nextUrl.pathname.startsWith(`/`)) {
       return NextResponse.rewrite(new URL(`/profile`, request.url))
     }
   } else {
