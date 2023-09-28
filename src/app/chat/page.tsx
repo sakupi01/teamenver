@@ -1,19 +1,20 @@
-import { getSession } from '@auth0/nextjs-auth0'
-
-import { gqlHasuraClient } from '@/libs/graphql/clientLegacy'
+import { useSuspenseQuery } from '@apollo/client'
 
 import { GetLastMessagesDocument } from '@/gql/codegen/hasura/graphql'
 import { css } from 'styled-system/css'
 
-export default async function Chat() {
+type ChatProps = {
+  id: string
+  name: string
+  email: string
+}
+export default function Chat({ id, name, email }: ChatProps) {
   // get the login user info
-  const session = await getSession()
-  const userName = session?.user.nickname
-  const email = session?.user.email
-
-  const messages = gqlHasuraClient.request(GetLastMessagesDocument, {
-    last_received_id: 'lastReceivedId',
-    last_received_ts: 'now()',
+  const { data } = useSuspenseQuery(GetLastMessagesDocument, {
+    variables: {
+      last_received_id: 0,
+      last_received_ts: '',
+    },
   })
 
   return (
@@ -36,7 +37,9 @@ export default async function Chat() {
         })}
       >
         <h1>Chat Room</h1>
-        <p>{userName}&apos;s chat room</p>
+        {data.comments.map((comment, key) => (
+          <p key={key}>{comment.content}</p>
+        ))}
         <a href='/api/auth/logout'>Logout</a>
       </div>
       <div>

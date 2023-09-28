@@ -2,6 +2,7 @@ import { GraphQLClient } from 'graphql-request'
 
 export { gql } from 'graphql-request'
 
+// graphql-requestはhttp post requestのみしかできない
 export const gqlGhClient = new GraphQLClient(
   process.env.GITHUB_GRAPHQL_API_ENDPOINT as string,
   {
