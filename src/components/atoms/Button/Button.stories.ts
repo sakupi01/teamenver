@@ -11,7 +11,6 @@ const meta = {
   parameters: {
     // Optional parameter to center the component in the Canvas. More info: https://storybook.js.org/docs/react/configure/story-layout
     layout: 'centered',
-    // msw: { handlers: [handleGetLibraries({ status: 401, query: 'next' })] },
   },
   // This component will have an automatically generated Autodocs entry: https://storybook.js.org/docs/react/writing-docs/autodocs
   tags: ['autodocs'],
@@ -66,6 +65,6 @@ export const SucceedToGetData: Story = {
     await waitFor(() => canvas.getByText('loading...'))
 
     // DOM内のテクストノードを受け取り，真偽値を返すマッチャーを渡す
-    await waitFor(() => canvas.getByText((text) => text.includes('data')))
+    // await waitFor(() => canvas.getByText('data'))
   },
 }

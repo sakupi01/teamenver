@@ -21,7 +21,7 @@ export const createBoard = async () => {
     if (access_token === undefined) {
       throw new UnAuthorizedError()
     }
-    gqlHasuraClient.setHeader(`authorization`, `Bearer ${access_token}`)
+    gqlHasuraClient.setHeader('authorization', `Bearer ${access_token}`)
     const { insert_boards } = await gqlHasuraClient.request(CreateBoardDocument, {
       is_public: false,
       team_id: cookies().get('current_team_id')?.value,

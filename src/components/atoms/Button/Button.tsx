@@ -1,13 +1,10 @@
 'use client'
 import React, { useTransition } from 'react'
-
-// import './button.css'
 import { useState } from 'react'
 
-import { getLibraries } from '@/services/client/GetLibraries'
+import { getNpmLibraries } from '@/services/client/GetNpmLibraries'
 
 import { button } from './button.css'
-
 
 interface ButtonProps {
   /**
@@ -54,7 +51,7 @@ export const Button = ({
         onClick={() =>
           startTransition(() => {
             setRes('roading')
-            getLibraries(label).then((res) => setRes(JSON.stringify(res)))
+            getNpmLibraries(label).then((res) => setRes(JSON.stringify(res)))
           })
         }
       >

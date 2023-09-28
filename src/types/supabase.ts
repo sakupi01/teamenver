@@ -36,59 +36,80 @@ export interface Database {
         }
         Relationships: [
           {
-            foreignKeyName: "agreements_team_board_id_fkey"
-            columns: ["team_board_id"]
-            referencedRelation: "team_boards"
-            referencedColumns: ["id"]
+            foreignKeyName: 'agreements_team_board_id_fkey'
+            columns: ['team_board_id']
+            referencedRelation: 'team_boards'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "agreements_user_id_fkey"
-            columns: ["user_id"]
-            referencedRelation: "users"
-            referencedColumns: ["id"]
+            foreignKeyName: 'agreements_user_id_fkey'
+            columns: ['user_id']
+            referencedRelation: 'users'
+            referencedColumns: ['id']
           }
         ]
       }
       board_details: {
         Row: {
           board_id: string
+          builder: string | null
           created_at: string
-          css_library: string
-          formatter: string
-          framework: string
+          css_library: string | null
+          formatter: string | null
+          framework: string | null
+          hygen: string | null
           id: string
-          linter: string
-          ui_library: string
+          isGit: string | null
+          lint_staged_husky: string | null
+          linter: string | null
+          manager: string | null
+          ui_library: string | null
           updated_at: string
+          volta: string | null
+          vscode: string | null
         }
         Insert: {
           board_id: string
+          builder?: string | null
           created_at?: string
-          css_library: string
-          formatter: string
-          framework: string
+          css_library?: string | null
+          formatter?: string | null
+          framework?: string | null
+          hygen?: string | null
           id?: string
-          linter: string
-          ui_library: string
+          isGit?: string | null
+          lint_staged_husky?: string | null
+          linter?: string | null
+          manager?: string | null
+          ui_library?: string | null
           updated_at?: string
+          volta?: string | null
+          vscode?: string | null
         }
         Update: {
           board_id?: string
+          builder?: string | null
           created_at?: string
-          css_library?: string
-          formatter?: string
-          framework?: string
+          css_library?: string | null
+          formatter?: string | null
+          framework?: string | null
+          hygen?: string | null
           id?: string
-          linter?: string
-          ui_library?: string
+          isGit?: string | null
+          lint_staged_husky?: string | null
+          linter?: string | null
+          manager?: string | null
+          ui_library?: string | null
           updated_at?: string
+          volta?: string | null
+          vscode?: string | null
         }
         Relationships: [
           {
-            foreignKeyName: "board_details_board_id_fkey"
-            columns: ["board_id"]
-            referencedRelation: "boards"
-            referencedColumns: ["id"]
+            foreignKeyName: 'board_details_board_id_fkey'
+            columns: ['board_id']
+            referencedRelation: 'boards'
+            referencedColumns: ['id']
           }
         ]
       }
@@ -119,16 +140,16 @@ export interface Database {
         }
         Relationships: [
           {
-            foreignKeyName: "boards_team_id_fkey"
-            columns: ["team_id"]
-            referencedRelation: "teams"
-            referencedColumns: ["id"]
+            foreignKeyName: 'boards_team_id_fkey'
+            columns: ['team_id']
+            referencedRelation: 'teams'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "boards_user_id_fkey"
-            columns: ["user_id"]
-            referencedRelation: "users"
-            referencedColumns: ["id"]
+            foreignKeyName: 'boards_user_id_fkey'
+            columns: ['user_id']
+            referencedRelation: 'users'
+            referencedColumns: ['id']
           }
         ]
       }
@@ -159,35 +180,62 @@ export interface Database {
         }
         Relationships: [
           {
-            foreignKeyName: "comments_board_id_fkey"
-            columns: ["board_id"]
-            referencedRelation: "boards"
-            referencedColumns: ["id"]
+            foreignKeyName: 'comments_board_id_fkey'
+            columns: ['board_id']
+            referencedRelation: 'boards'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "comments_user_id_fkey"
-            columns: ["user_id"]
-            referencedRelation: "users"
-            referencedColumns: ["id"]
+            foreignKeyName: 'comments_user_id_fkey'
+            columns: ['user_id']
+            referencedRelation: 'users'
+            referencedColumns: ['id']
           }
         ]
       }
+      css_libraries: {
+        Row: {
+          commandToRun: string | null
+          created_at: string
+          id: number
+          name: string
+        }
+        Insert: {
+          commandToRun?: string | null
+          created_at?: string
+          id?: number
+          name: string
+        }
+        Update: {
+          commandToRun?: string | null
+          created_at?: string
+          id?: number
+          name?: string
+        }
+        Relationships: []
+      }
       frameworks: {
         Row: {
+          ableToSetWithNode: boolean
           id: string
           name: string | null
+          peerDependencies: Json | null
           webframe_have_worked_with_count: number | null
           webframe_want_to_work_with_count: number | null
         }
         Insert: {
+          ableToSetWithNode?: boolean
           id: string
           name?: string | null
+          peerDependencies?: Json | null
           webframe_have_worked_with_count?: number | null
           webframe_want_to_work_with_count?: number | null
         }
         Update: {
+          ableToSetWithNode?: boolean
           id?: string
           name?: string | null
+          peerDependencies?: Json | null
           webframe_have_worked_with_count?: number | null
           webframe_want_to_work_with_count?: number | null
         }
@@ -214,16 +262,16 @@ export interface Database {
         }
         Relationships: [
           {
-            foreignKeyName: "likes_comment_id_fkey"
-            columns: ["comment_id"]
-            referencedRelation: "comments"
-            referencedColumns: ["id"]
+            foreignKeyName: 'likes_comment_id_fkey'
+            columns: ['comment_id']
+            referencedRelation: 'comments'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "likes_user_id_fkey"
-            columns: ["user_id"]
-            referencedRelation: "users"
-            referencedColumns: ["id"]
+            foreignKeyName: 'likes_user_id_fkey'
+            columns: ['user_id']
+            referencedRelation: 'users'
+            referencedColumns: ['id']
           }
         ]
       }
@@ -266,10 +314,10 @@ export interface Database {
         }
         Relationships: [
           {
-            foreignKeyName: "project_details_team_id_fkey"
-            columns: ["team_id"]
-            referencedRelation: "teams"
-            referencedColumns: ["id"]
+            foreignKeyName: 'project_details_team_id_fkey'
+            columns: ['team_id']
+            referencedRelation: 'teams'
+            referencedColumns: ['id']
           }
         ]
       }
@@ -309,10 +357,10 @@ export interface Database {
         }
         Relationships: [
           {
-            foreignKeyName: "team_board_details_team_board_id_fkey"
-            columns: ["team_board_id"]
-            referencedRelation: "team_boards"
-            referencedColumns: ["id"]
+            foreignKeyName: 'team_board_details_team_board_id_fkey'
+            columns: ['team_board_id']
+            referencedRelation: 'team_boards'
+            referencedColumns: ['id']
           }
         ]
       }
@@ -337,10 +385,10 @@ export interface Database {
         }
         Relationships: [
           {
-            foreignKeyName: "team_boards_team_id_fkey"
-            columns: ["team_id"]
-            referencedRelation: "teams"
-            referencedColumns: ["id"]
+            foreignKeyName: 'team_boards_team_id_fkey'
+            columns: ['team_id']
+            referencedRelation: 'teams'
+            referencedColumns: ['id']
           }
         ]
       }
@@ -365,16 +413,16 @@ export interface Database {
         }
         Relationships: [
           {
-            foreignKeyName: "team_member_team_id_fkey"
-            columns: ["team_id"]
-            referencedRelation: "teams"
-            referencedColumns: ["id"]
+            foreignKeyName: 'team_member_team_id_fkey'
+            columns: ['team_id']
+            referencedRelation: 'teams'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "team_member_user_id_fkey"
-            columns: ["user_id"]
-            referencedRelation: "users"
-            referencedColumns: ["id"]
+            foreignKeyName: 'team_member_user_id_fkey'
+            columns: ['user_id']
+            referencedRelation: 'users'
+            referencedColumns: ['id']
           }
         ]
       }
@@ -402,12 +450,33 @@ export interface Database {
         }
         Relationships: [
           {
-            foreignKeyName: "teams_admin_id_fkey"
-            columns: ["admin_id"]
-            referencedRelation: "users"
-            referencedColumns: ["id"]
+            foreignKeyName: 'teams_admin_id_fkey'
+            columns: ['admin_id']
+            referencedRelation: 'users'
+            referencedColumns: ['id']
           }
         ]
+      }
+      ui_libraries: {
+        Row: {
+          commandToInstall: string | null
+          created_at: string
+          id: number
+          name: string
+        }
+        Insert: {
+          commandToInstall?: string | null
+          created_at?: string
+          id?: number
+          name: string
+        }
+        Update: {
+          commandToInstall?: string | null
+          created_at?: string
+          id?: number
+          name?: string
+        }
+        Relationships: []
       }
       users: {
         Row: {

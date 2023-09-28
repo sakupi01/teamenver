@@ -1,11 +1,12 @@
-import * as ApiGetFrameworks from '@/api/get/frameworks/route'
+import * as ApiGetLibraries from '@/api/get/libraries/route'
 
-import { defaultHeaders, handleResolve, host } from '..'
+import { handleResolve, host } from '..'
 
-export const path = host('/get/frameworks')
+export const path = host('/get/libraries')
 
-export const getLibraries = async (query: string | null): Promise<ApiGetFrameworks.GetType> => {
-  return fetch(`${path}?query=${query}`, {
-    headers: defaultHeaders,
-  }).then(handleResolve)
+export type WhichLibrary = 'css-framework' | 'ui-framework'
+export const getLibraries = async (
+  which: WhichLibrary,
+): Promise<ApiGetLibraries.GetType> => {
+  return fetch(`${path}?which=${which}`).then(handleResolve)
 }

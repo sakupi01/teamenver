@@ -1,5 +1,5 @@
 #!/usr/bin/env sh
 . "$(dirname -- "$0")/_/husky.sh"
 
-pnpm exec lint-staged
-pnpm test:storybook
+pnpm run precommit --config .lintstagedrc.mjs
+pnpm run storybook:test

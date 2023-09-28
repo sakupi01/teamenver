@@ -7,8 +7,7 @@ export const defaultHeaders = {
 
 export const handleResolve = async (res: Response) => {
   if (!res.ok) {
-    const status = res.status
-    console.log(status)
+    console.log('Hit to the error', res)
     return
   }
   return await res.json()

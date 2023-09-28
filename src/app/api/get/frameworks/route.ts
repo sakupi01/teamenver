@@ -3,9 +3,9 @@ import { NextRequest, NextResponse } from 'next/server'
 import { handleApiRouteError } from '@/libs/error'
 import { ErrorType } from '@/libs/error/http'
 
-import { GetLibrariesType, getLibraries } from '@/services/server/GetLibraries'
+import { GetNpmLibrariesType, getNpmLibraries } from '@/services/server/GetNpmLibraries'
 
-export type GetType = GetLibrariesType
+export type GetType = GetNpmLibrariesType
 
 export async function GET(
   request: NextRequest,
@@ -13,7 +13,7 @@ export async function GET(
   try {
     const { searchParams } = new URL(request.url!)
     const query = searchParams.get('query')
-    const res = await getLibraries({ query })
+    const res = await getNpmLibraries({ query })
     return NextResponse.json(res)
   } catch (error) {
     return handleApiRouteError(error)

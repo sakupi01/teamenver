@@ -1,0 +1,44 @@
+# .github/workflows/chromatic.yml
+
+# Workflow name
+name: 'Chromatic'
+
+env:
+  # 👇 Chromatic projectToken, refer to the manage page to obtain it.
+  CHROMATIC_PROJECT_TOKEN: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
+
+# Event for the workflow
+on: push
+
+# List of jobs
+jobs:
+  chromatic-deployment: # This job is for deploying to Chromatic and executing VRT on Chromatic.
+    # Operating System
+    runs-on: ubuntu-latest
+    # Job steps
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0 # 👈 Required to retrieve git history
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v1
+
+      - name: Install dependencies
+        # 👇 Install dependencies with the same package manager used in the project (replace it as needed), e.g. yarn, npm, pnpm
+        run: bun install && bun run prepare
+        # 👇 Adds Chromatic as a step in the workflow
+      - name: Publish to Chromatic
+        uses: chromaui/action@v1
+        # Chromatic GitHub Action options
+        with:
+          # 👇 Chromatic projectToken, refer to the manage page to obtain it.
+          projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
+          # 👇 The workflow sate will keep pending until once you accept all the changes. Re-run the workflow, and the chromatic-deployment job will pass.
+          exitZeroOnChanges: true
+          onlyChanged: true
+          # 👇Runs Chromatic with the option to compress the build output.
+          zip: true
+          # 👇Runs with custom build command.
+          buildScriptName: 'storybook:build'

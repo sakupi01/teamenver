@@ -1,7 +1,9 @@
 {
   "extends": ["next/core-web-vitals", "prettier"],
-  "plugins": ["import", "unused-imports"], // eslint-plugin- 接頭辞は省略
+  "plugins": ["import", "unused-imports", "@stylistic"],
   "rules": {
+    "@stylistic/quotes": ["error", "single"],
+    "@stylistic/arrow-spacing": ["error", { "before": true, "after": true }],
     "@typescript-eslint/no-unused-vars": "off",
     "unused-imports/no-unused-imports": "warn",
     "import/order": [
@@ -17,7 +19,7 @@
           "object",
           "type"
         ],
-        "newlines-between": "always", // import groups の間 1行あける
+        "newlines-between": "always", // import groupsの間1行あける
         "pathGroupsExcludedImportTypes": ["builtin"],
         "alphabetize": { "order": "asc", "caseInsensitive": true }, // 大文字小文字関係なくアルファベット順にしたい
         "pathGroups": [

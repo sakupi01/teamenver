@@ -1,7 +1,9 @@
-import { getSession } from "@auth0/nextjs-auth0";
+import { getSession } from '@auth0/nextjs-auth0'
 
+// million-ignore
 export default async function Profile() {
-  const session = await getSession();
+  // million-ignore
+  const session = await getSession()
 
   return (
     <main>
@@ -12,5 +14,5 @@ export default async function Profile() {
       <h3>User</h3>
       <pre>{JSON.stringify(session?.user, null, 2)}</pre>
     </main>
-  );
+  )
 }

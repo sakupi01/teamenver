@@ -1,29 +1,26 @@
 import { Meta, StoryObj } from '@storybook/react'
 import { within } from '@storybook/testing-library'
 
-import { Flow } from './Flow';
-
+import { Flow } from './Flow'
 
 const meta = {
-  title: "Flow",
+  title: 'Flow',
   component: Flow,
   tags: ['autodocs'],
   parameters: {
     layout: 'fullscreen',
   },
-  argTypes: {
-  },
-} satisfies Meta<typeof Flow>;
-
+  argTypes: {},
+} satisfies Meta<typeof Flow>
 
 export default meta
 type Story = StoryObj<typeof meta>
 
 export const Default: Story = {
   args: {
-    frameworks: {name: 'frameworks', nodes: []}
+    frameworks: { category: 'frameworks', nodes: [] },
   },
   play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
+    const canvas = within(canvasElement)
   },
-};
+}

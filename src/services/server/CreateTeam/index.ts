@@ -24,7 +24,7 @@ export const createTeam = async ({ name }: { name: string | null }) => {
     if (access_token === undefined) {
       throw new UnAuthorizedError()
     }
-    gqlHasuraClient.setHeader(`authorization`, `Bearer ${access_token}`)
+    gqlHasuraClient.setHeader('authorization', `Bearer ${access_token}`)
     const { insert_teams } = await gqlHasuraClient.request(CreateTeamDocument, {
       name: name,
     })

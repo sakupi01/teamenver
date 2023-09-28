@@ -25,7 +25,7 @@ export const createBoardDetail = async () => {
     if (access_token === undefined) {
       throw new UnAuthorizedError()
     }
-    gqlHasuraClient.setHeader(`authorization`, `Bearer ${access_token}`)
+    gqlHasuraClient.setHeader('authorization', `Bearer ${access_token}`)
     const { insert_board_details } = await gqlHasuraClient.request(
       CreateDetailsDocument,
       {
