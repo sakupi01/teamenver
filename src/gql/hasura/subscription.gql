@@ -1,0 +1,12 @@
+subscription SubscribeMessage {
+  comments(limit: 1, order_by: { updated_at: desc }) {
+    id
+    content
+    user {
+      id
+      email
+    }
+    board_id
+    updated_at
+  }
+}

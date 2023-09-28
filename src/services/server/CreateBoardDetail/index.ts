@@ -2,7 +2,7 @@ import { getSession } from '@auth0/nextjs-auth0'
 import { cookies } from 'next/headers'
 
 import { BadRequestError, UnAuthorizedError } from '@/libs/error/http'
-import { gqlHasuraClient } from '@/libs/graphql/client'
+import { gqlHasuraClient } from '@/libs/graphql/clientLegacy'
 
 import { CreateDetailsDocument } from '@/gql/codegen/hasura/graphql'
 

@@ -1,4 +1,4 @@
-import { gqlGhClient } from '@/libs/graphql/client'
+import { gqlGhClient } from '@/libs/graphql/clientLegacy'
 
 import { GetCssFrameworksDocument } from '@/gql/codegen/github/graphql'
 

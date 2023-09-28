@@ -1501,6 +1501,8 @@ export type Mutation_Root = {
   delete_teams?: Maybe<Teams_Mutation_Response>;
   /** delete single row from the table: "teams" */
   delete_teams_by_pk?: Maybe<Teams>;
+  /** delete data from the table: "user_online" */
+  delete_user_online?: Maybe<User_Online_Mutation_Response>;
   /** delete data from the table: "users" */
   delete_users?: Maybe<Users_Mutation_Response>;
   /** delete single row from the table: "users" */
@@ -1545,6 +1547,10 @@ export type Mutation_Root = {
   insert_teams?: Maybe<Teams_Mutation_Response>;
   /** insert a single row into the table: "teams" */
   insert_teams_one?: Maybe<Teams>;
+  /** insert data into the table: "user_online" */
+  insert_user_online?: Maybe<User_Online_Mutation_Response>;
+  /** insert a single row into the table: "user_online" */
+  insert_user_online_one?: Maybe<User_Online>;
   /** insert data into the table: "users" */
   insert_users?: Maybe<Users_Mutation_Response>;
   /** insert a single row into the table: "users" */
@@ -1609,6 +1615,10 @@ export type Mutation_Root = {
   update_teams_by_pk?: Maybe<Teams>;
   /** update multiples rows of table: "teams" */
   update_teams_many?: Maybe<Array<Maybe<Teams_Mutation_Response>>>;
+  /** update data of the table: "user_online" */
+  update_user_online?: Maybe<User_Online_Mutation_Response>;
+  /** update multiples rows of table: "user_online" */
+  update_user_online_many?: Maybe<Array<Maybe<User_Online_Mutation_Response>>>;
   /** update data of the table: "users" */
   update_users?: Maybe<Users_Mutation_Response>;
   /** update single row of the table: "users" */
@@ -1737,6 +1747,12 @@ export type Mutation_RootDelete_TeamsArgs = {
 /** mutation root */
 export type Mutation_RootDelete_Teams_By_PkArgs = {
   id: Scalars['uuid']['input'];
+};
+
+
+/** mutation root */
+export type Mutation_RootDelete_User_OnlineArgs = {
+  where: User_Online_Bool_Exp;
 };
 
 
@@ -1889,6 +1905,18 @@ export type Mutation_RootInsert_TeamsArgs = {
 export type Mutation_RootInsert_Teams_OneArgs = {
   object: Teams_Insert_Input;
   on_conflict?: InputMaybe<Teams_On_Conflict>;
+};
+
+
+/** mutation root */
+export type Mutation_RootInsert_User_OnlineArgs = {
+  objects: Array<User_Online_Insert_Input>;
+};
+
+
+/** mutation root */
+export type Mutation_RootInsert_User_Online_OneArgs = {
+  object: User_Online_Insert_Input;
 };
 
 
@@ -2103,6 +2131,19 @@ export type Mutation_RootUpdate_Teams_By_PkArgs = {
 /** mutation root */
 export type Mutation_RootUpdate_Teams_ManyArgs = {
   updates: Array<Teams_Updates>;
+};
+
+
+/** mutation root */
+export type Mutation_RootUpdate_User_OnlineArgs = {
+  _set?: InputMaybe<User_Online_Set_Input>;
+  where: User_Online_Bool_Exp;
+};
+
+
+/** mutation root */
+export type Mutation_RootUpdate_User_Online_ManyArgs = {
+  updates: Array<User_Online_Updates>;
 };
 
 
@@ -2448,6 +2489,10 @@ export type Query_Root = {
   teams_aggregate: Teams_Aggregate;
   /** fetch data from the table: "teams" using primary key columns */
   teams_by_pk?: Maybe<Teams>;
+  /** fetch data from the table: "user_online" */
+  user_online: Array<User_Online>;
+  /** fetch aggregated fields from the table: "user_online" */
+  user_online_aggregate: User_Online_Aggregate;
   /** fetch data from the table: "users" */
   users: Array<Users>;
   /** fetch aggregated fields from the table: "users" */
@@ -2689,6 +2734,24 @@ export type Query_RootTeams_By_PkArgs = {
 };
 
 
+export type Query_RootUser_OnlineArgs = {
+  distinct_on?: InputMaybe<Array<User_Online_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<User_Online_Order_By>>;
+  where?: InputMaybe<User_Online_Bool_Exp>;
+};
+
+
+export type Query_RootUser_Online_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<User_Online_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<User_Online_Order_By>>;
+  where?: InputMaybe<User_Online_Bool_Exp>;
+};
+
+
 export type Query_RootUsersArgs = {
   distinct_on?: InputMaybe<Array<Users_Select_Column>>;
   limit?: InputMaybe<Scalars['Int']['input']>;
@@ -2793,6 +2856,12 @@ export type Subscription_Root = {
   teams_by_pk?: Maybe<Teams>;
   /** fetch data from the table in a streaming manner: "teams" */
   teams_stream: Array<Teams>;
+  /** fetch data from the table: "user_online" */
+  user_online: Array<User_Online>;
+  /** fetch aggregated fields from the table: "user_online" */
+  user_online_aggregate: User_Online_Aggregate;
+  /** fetch data from the table in a streaming manner: "user_online" */
+  user_online_stream: Array<User_Online>;
   /** fetch data from the table: "users" */
   users: Array<Users>;
   /** fetch aggregated fields from the table: "users" */
@@ -3103,6 +3172,31 @@ export type Subscription_RootTeams_StreamArgs = {
   batch_size: Scalars['Int']['input'];
   cursor: Array<InputMaybe<Teams_Stream_Cursor_Input>>;
   where?: InputMaybe<Teams_Bool_Exp>;
+};
+
+
+export type Subscription_RootUser_OnlineArgs = {
+  distinct_on?: InputMaybe<Array<User_Online_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<User_Online_Order_By>>;
+  where?: InputMaybe<User_Online_Bool_Exp>;
+};
+
+
+export type Subscription_RootUser_Online_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<User_Online_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<User_Online_Order_By>>;
+  where?: InputMaybe<User_Online_Bool_Exp>;
+};
+
+
+export type Subscription_RootUser_Online_StreamArgs = {
+  batch_size: Scalars['Int']['input'];
+  cursor: Array<InputMaybe<User_Online_Stream_Cursor_Input>>;
+  where?: InputMaybe<User_Online_Bool_Exp>;
 };
 
 
@@ -4086,6 +4180,124 @@ export type Timestamptz_Comparison_Exp = {
   _nin?: InputMaybe<Array<Scalars['timestamptz']['input']>>;
 };
 
+/** columns and relationships of "user_online" */
+export type User_Online = {
+  __typename?: 'user_online';
+  id?: Maybe<Scalars['String']['output']>;
+  last_seen?: Maybe<Scalars['timestamptz']['output']>;
+  name?: Maybe<Scalars['String']['output']>;
+};
+
+/** aggregated selection of "user_online" */
+export type User_Online_Aggregate = {
+  __typename?: 'user_online_aggregate';
+  aggregate?: Maybe<User_Online_Aggregate_Fields>;
+  nodes: Array<User_Online>;
+};
+
+/** aggregate fields of "user_online" */
+export type User_Online_Aggregate_Fields = {
+  __typename?: 'user_online_aggregate_fields';
+  count: Scalars['Int']['output'];
+  max?: Maybe<User_Online_Max_Fields>;
+  min?: Maybe<User_Online_Min_Fields>;
+};
+
+
+/** aggregate fields of "user_online" */
+export type User_Online_Aggregate_FieldsCountArgs = {
+  columns?: InputMaybe<Array<User_Online_Select_Column>>;
+  distinct?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+/** Boolean expression to filter rows from the table "user_online". All fields are combined with a logical 'AND'. */
+export type User_Online_Bool_Exp = {
+  _and?: InputMaybe<Array<User_Online_Bool_Exp>>;
+  _not?: InputMaybe<User_Online_Bool_Exp>;
+  _or?: InputMaybe<Array<User_Online_Bool_Exp>>;
+  id?: InputMaybe<String_Comparison_Exp>;
+  last_seen?: InputMaybe<Timestamptz_Comparison_Exp>;
+  name?: InputMaybe<String_Comparison_Exp>;
+};
+
+/** input type for inserting data into table "user_online" */
+export type User_Online_Insert_Input = {
+  id?: InputMaybe<Scalars['String']['input']>;
+  last_seen?: InputMaybe<Scalars['timestamptz']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
+};
+
+/** aggregate max on columns */
+export type User_Online_Max_Fields = {
+  __typename?: 'user_online_max_fields';
+  id?: Maybe<Scalars['String']['output']>;
+  last_seen?: Maybe<Scalars['timestamptz']['output']>;
+  name?: Maybe<Scalars['String']['output']>;
+};
+
+/** aggregate min on columns */
+export type User_Online_Min_Fields = {
+  __typename?: 'user_online_min_fields';
+  id?: Maybe<Scalars['String']['output']>;
+  last_seen?: Maybe<Scalars['timestamptz']['output']>;
+  name?: Maybe<Scalars['String']['output']>;
+};
+
+/** response of any mutation on the table "user_online" */
+export type User_Online_Mutation_Response = {
+  __typename?: 'user_online_mutation_response';
+  /** number of rows affected by the mutation */
+  affected_rows: Scalars['Int']['output'];
+  /** data from the rows affected by the mutation */
+  returning: Array<User_Online>;
+};
+
+/** Ordering options when selecting data from "user_online". */
+export type User_Online_Order_By = {
+  id?: InputMaybe<Order_By>;
+  last_seen?: InputMaybe<Order_By>;
+  name?: InputMaybe<Order_By>;
+};
+
+/** select columns of table "user_online" */
+export enum User_Online_Select_Column {
+  /** column name */
+  Id = 'id',
+  /** column name */
+  LastSeen = 'last_seen',
+  /** column name */
+  Name = 'name'
+}
+
+/** input type for updating data in table "user_online" */
+export type User_Online_Set_Input = {
+  id?: InputMaybe<Scalars['String']['input']>;
+  last_seen?: InputMaybe<Scalars['timestamptz']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
+};
+
+/** Streaming cursor of the table "user_online" */
+export type User_Online_Stream_Cursor_Input = {
+  /** Stream column input with initial value */
+  initial_value: User_Online_Stream_Cursor_Value_Input;
+  /** cursor ordering */
+  ordering?: InputMaybe<Cursor_Ordering>;
+};
+
+/** Initial value of the column from where the streaming should start */
+export type User_Online_Stream_Cursor_Value_Input = {
+  id?: InputMaybe<Scalars['String']['input']>;
+  last_seen?: InputMaybe<Scalars['timestamptz']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type User_Online_Updates = {
+  /** sets the columns of the filtered rows to the given values */
+  _set?: InputMaybe<User_Online_Set_Input>;
+  /** filter the rows which have to be updated */
+  where: User_Online_Bool_Exp;
+};
+
 /** collection of user */
 export type Users = {
   __typename?: 'users';
@@ -4532,14 +4744,46 @@ export type UpdateDetailsMutationVariables = Exact<{
 
 export type UpdateDetailsMutation = { __typename?: 'mutation_root', update_board_details?: { __typename?: 'board_details_mutation_response', returning: Array<{ __typename?: 'board_details', id: any }> } | null };
 
+export type InsertMessageMutationVariables = Exact<{
+  board_id: Scalars['uuid']['input'];
+  content: Scalars['String']['input'];
+}>;
+
+
+export type InsertMessageMutation = { __typename?: 'mutation_root', insert_comments_one?: { __typename?: 'comments', id: any, content: string, updated_at: any, user: { __typename?: 'users', id: string, name: string } } | null };
+
+export type SetLastSeenTimestampMutationVariables = Exact<{
+  userId: Scalars['String']['input'];
+}>;
+
+
+export type SetLastSeenTimestampMutation = { __typename?: 'mutation_root', update_users_by_pk?: { __typename?: 'users', id: string, updated_at: any, last_seen?: any | null } | null };
+
 export type GetBoardLibrariesQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type GetBoardLibrariesQuery = { __typename?: 'query_root', board_details: Array<{ __typename?: 'board_details', id: any, framework?: string | null, css_library?: string | null, ui_library?: string | null }> };
+
+export type GetLastMessagesQueryVariables = Exact<{
+  last_received_id: Scalars['uuid']['input'];
+  last_received_ts?: InputMaybe<Scalars['timestamptz']['input']>;
+}>;
+
+
+export type GetLastMessagesQuery = { __typename?: 'query_root', comments: Array<{ __typename?: 'comments', id: any, content: string, board_id: any, updated_at: any, user: { __typename?: 'users', name: string, id: string } }> };
+
+export type SubscribeMessageSubscriptionVariables = Exact<{ [key: string]: never; }>;
+
+
+export type SubscribeMessageSubscription = { __typename?: 'subscription_root', comments: Array<{ __typename?: 'comments', id: any, content: string, board_id: any, updated_at: any, user: { __typename?: 'users', id: string, email: string } }> };
 
 
 export const CreateTeamDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"CreateTeam"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"name"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"insert_teams"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"objects"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"name"},"value":{"kind":"Variable","name":{"kind":"Name","value":"name"}}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"returning"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"admin_id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]}}]} as unknown as DocumentNode<CreateTeamMutation, CreateTeamMutationVariables>;
 export const CreateBoardDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"CreateBoard"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"is_public"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Boolean"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"team_id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"uuid"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"insert_boards"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"objects"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"is_public"},"value":{"kind":"Variable","name":{"kind":"Name","value":"is_public"}}},{"kind":"ObjectField","name":{"kind":"Name","value":"team_id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"team_id"}}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"returning"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"created_at"}},{"kind":"Field","name":{"kind":"Name","value":"is_public"}},{"kind":"Field","name":{"kind":"Name","value":"user_id"}},{"kind":"Field","name":{"kind":"Name","value":"team_id"}}]}}]}}]}}]} as unknown as DocumentNode<CreateBoardMutation, CreateBoardMutationVariables>;
 export const CreateDetailsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"CreateDetails"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"board_id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"uuid"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"insert_board_details"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"objects"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"board_id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"board_id"}}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"returning"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"board_id"}}]}}]}}]}}]} as unknown as DocumentNode<CreateDetailsMutation, CreateDetailsMutationVariables>;
 export const UpdateDetailsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"UpdateDetails"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"uuid"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"changes"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"board_details_set_input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"update_board_details"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"id"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"_eq"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}]}}]}},{"kind":"Argument","name":{"kind":"Name","value":"_set"},"value":{"kind":"Variable","name":{"kind":"Name","value":"changes"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"returning"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]}}]} as unknown as DocumentNode<UpdateDetailsMutation, UpdateDetailsMutationVariables>;
+export const InsertMessageDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"InsertMessage"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"board_id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"uuid"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"content"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"insert_comments_one"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"object"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"board_id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"board_id"}}},{"kind":"ObjectField","name":{"kind":"Name","value":"content"},"value":{"kind":"Variable","name":{"kind":"Name","value":"content"}}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"content"}},{"kind":"Field","name":{"kind":"Name","value":"updated_at"}},{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}}]}}]}}]} as unknown as DocumentNode<InsertMessageMutation, InsertMessageMutationVariables>;
+export const SetLastSeenTimestampDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"SetLastSeenTimestamp"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"userId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"update_users_by_pk"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"pk_columns"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"userId"}}}]}},{"kind":"Argument","name":{"kind":"Name","value":"_set"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"last_seen"},"value":{"kind":"StringValue","value":"now()","block":false}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"updated_at"}},{"kind":"Field","name":{"kind":"Name","value":"last_seen"}}]}}]}}]} as unknown as DocumentNode<SetLastSeenTimestampMutation, SetLastSeenTimestampMutationVariables>;
 export const GetBoardLibrariesDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetBoardLibraries"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"board_details"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"framework"}},{"kind":"Field","name":{"kind":"Name","value":"css_library"}},{"kind":"Field","name":{"kind":"Name","value":"ui_library"}}]}}]}}]} as unknown as DocumentNode<GetBoardLibrariesQuery, GetBoardLibrariesQueryVariables>;
+export const GetLastMessagesDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetLastMessages"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"last_received_id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"uuid"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"last_received_ts"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"timestamptz"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"comments"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"order_by"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"updated_at"},"value":{"kind":"EnumValue","value":"asc"}}]}},{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"_and"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"id"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"_neq"},"value":{"kind":"Variable","name":{"kind":"Name","value":"last_received_id"}}}]}},{"kind":"ObjectField","name":{"kind":"Name","value":"updated_at"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"_gte"},"value":{"kind":"Variable","name":{"kind":"Name","value":"last_received_ts"}}}]}}]}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"content"}},{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"id"}}]}},{"kind":"Field","name":{"kind":"Name","value":"board_id"}},{"kind":"Field","name":{"kind":"Name","value":"updated_at"}}]}}]}}]} as unknown as DocumentNode<GetLastMessagesQuery, GetLastMessagesQueryVariables>;
+export const SubscribeMessageDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"subscription","name":{"kind":"Name","value":"SubscribeMessage"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"comments"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"limit"},"value":{"kind":"IntValue","value":"1"}},{"kind":"Argument","name":{"kind":"Name","value":"order_by"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"updated_at"},"value":{"kind":"EnumValue","value":"desc"}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"content"}},{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"email"}}]}},{"kind":"Field","name":{"kind":"Name","value":"board_id"}},{"kind":"Field","name":{"kind":"Name","value":"updated_at"}}]}}]}}]} as unknown as DocumentNode<SubscribeMessageSubscription, SubscribeMessageSubscriptionVariables>;

@@ -38,3 +38,23 @@ mutation UpdateDetails($id: uuid!, $changes: board_details_set_input) {
     }
   }
 }
+
+mutation InsertMessage($board_id: uuid!, $content: String!) {
+  insert_comments_one(object: { board_id: $board_id, content: $content }) {
+    id
+    content
+    updated_at
+    user {
+      id
+      name
+    }
+  }
+}
+
+mutation SetLastSeenTimestamp($userId: String!) {
+  update_users_by_pk(pk_columns: { id: $userId }, _set: { last_seen: "now()" }) {
+    id
+    updated_at
+    last_seen
+  }
+}
