@@ -6,9 +6,10 @@ const config: CodegenConfig = {
     './src/gql/codegen/hasura/': {
       schema: [
         {
-          [process.env.HASURA_GRAPHQL_API_ENDPOINT || '']: {
+          [process.env.NEXT_PUBLIC_HASURA_GRAPHQL_API_ENDPOINT || '']: {
             headers: {
-              'x-hasura-admin-secret': process.env.HASURA_GRAPHQL_API_ADMIN_SECRET || '',
+              'x-hasura-admin-secret':
+                process.env.NEXT_PUBLIC_HASURA_GRAPHQL_API_ADMIN_SECRET || '',
             },
           },
         },

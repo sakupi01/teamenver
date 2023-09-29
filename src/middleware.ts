@@ -52,9 +52,9 @@ export default withMiddlewareAuthRequired(async function middleware(
         new URL(`/dashboard/team/${current_team_id}`, request.url),
       )
     }
-    if (request.nextUrl.pathname.startsWith('/')) {
-      return NextResponse.rewrite(new URL('/profile', request.url))
-    }
+    return NextResponse.rewrite(
+      new URL(request.url, request.url),
+    )
   }
 
   if (appSession) {
