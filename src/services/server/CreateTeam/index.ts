@@ -11,27 +11,20 @@ import { handleServerError } from '..'
 export const createTeam = async ({ name }: { name: string | null }) => {
   const session = await getSession()
   const access_token = session?.accessToken
-  console.log('***************************')
-  console.log(
-    'access_token',
-    JSON.stringify({ accessToken: session?.accessToken }, null, 2),
-  )
-  console.log('***************************')
+  if (name === null) {
+    throw new BadRequestError()
+  }
+  if (access_token === undefined) {
+    throw new UnAuthorizedError()
+  }
+
   try {
-    if (name === null) {
-      throw new BadRequestError()
-    }
-    if (access_token === undefined) {
-      throw new UnAuthorizedError()
-    }
     gqlHasuraClient.setHeader('authorization', `Bearer ${access_token}`)
     const { insert_teams } = await gqlHasuraClient.request(CreateTeamDocument, {
       name: name,
     })
-    cookies().set('current_team_id', insert_teams?.returning[0].id)
-    console.log('***************************')
-    console.log(insert_teams)
-    console.log('***************************')
+    insert_teams ? cookies().set('current_team_id', insert_teams?.returning[0].id) : ''
+
     return { insert_teams }
   } catch (error) {
     console.log('***************************')
