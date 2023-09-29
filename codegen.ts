@@ -23,6 +23,19 @@ const config: CodegenConfig = {
       preset: 'client',
     },
   },
+  config: {
+    scalars: {
+      // Setting custom scalar type:
+      uuid: {
+        input: 'string', // this means our server can take CustomScalar as string
+        output: 'string', // this means our server will return CustomScalar as number
+      },
+      timestamptz: {
+        input: 'string', // this means our server can take CustomScalar as string
+        output: 'string', // this means our server will return CustomScalar as number
+      },
+    },
+  },
   ignoreNoDocuments: true, // for better experience with the watcher
 }
 

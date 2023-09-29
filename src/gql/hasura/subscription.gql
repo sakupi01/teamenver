@@ -1,5 +1,9 @@
-subscription SubscribeMessage {
-  comments(limit: 1, order_by: { updated_at: desc }) {
+subscription SubscribeMessage($board_id: uuid) {
+  comments(
+    limit: 1
+    order_by: { updated_at: desc }
+    where: { board_id: { _eq: $board_id } }
+  ) {
     id
     content
     user {

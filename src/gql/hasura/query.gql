@@ -7,12 +7,10 @@ query GetBoardLibraries {
   }
 }
 
-query GetLastMessages($last_received_id: uuid!, $last_received_ts: timestamptz) {
+query GetLastMessages($board_id: uuid, $from_ts: timestamptz) {
   comments(
     order_by: { updated_at: asc }
-    where: {
-      _and: { id: { _neq: $last_received_id }, updated_at: { _gte: $last_received_ts } }
-    }
+    where: { updated_at: { _gte: $from_ts }, board_id: { _eq: $board_id } }
   ) {
     id
     content
