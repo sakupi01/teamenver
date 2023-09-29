@@ -9,7 +9,9 @@ import { InsertMessageDocument } from '@/gql/codegen/hasura/graphql'
 import { handleServerError } from '..'
 
 export const insertMessage = async (content: string | null) => {
-  if (content == null) {
+  const current_board_id = cookies().get('current_board_id')?.value // safari で cookie が取得できない
+
+  if (content == null || current_board_id === undefined) {
     return null
   }
 
@@ -21,7 +23,6 @@ export const insertMessage = async (content: string | null) => {
       throw new UnAuthorizedError()
     }
     gqlHasuraClient.setHeader('authorization', `Bearer ${access_token}`)
-    const current_board_id = cookies().get('current_board_id')?.value
     const { insert_comments_one } = await gqlHasuraClient.request(InsertMessageDocument, {
       board_id: current_board_id,
       content: content,
