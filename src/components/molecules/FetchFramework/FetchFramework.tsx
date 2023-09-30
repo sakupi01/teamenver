@@ -7,8 +7,7 @@ export const FetchFramework = async () => {
       const { data: frameworks, error } = await supabaseClient
         .from('frameworks')
         .select('*')
-      console.log(JSON.stringify(frameworks))
-      console.log('here')
+
       return frameworks
     } catch (error) {
       console.log(error)

@@ -19,7 +19,7 @@ export default withMiddlewareAuthRequired(async function middleware(
       )
     }
     if (request.nextUrl.pathname.startsWith('/')) {
-      return NextResponse.rewrite(new URL('/profile', request.url))
+      return NextResponse.rewrite(new URL('/select/board', request.url))
     }
   } else {
     const current_team_id = request.cookies.get('current_team_id')?.value
@@ -52,9 +52,7 @@ export default withMiddlewareAuthRequired(async function middleware(
         new URL(`/dashboard/team/${current_team_id}`, request.url),
       )
     }
-    if (request.nextUrl.pathname.startsWith('/')) {
-      return NextResponse.rewrite(new URL('/profile', request.url))
-    }
+    return NextResponse.rewrite(new URL(request.url, request.url))
   }
 
   if (appSession) {

@@ -6,3 +6,19 @@ query GetBoardLibraries {
     ui_library
   }
 }
+
+query GetLastMessages($board_id: uuid, $from_ts: timestamptz) {
+  comments(
+    order_by: { updated_at: asc }
+    where: { updated_at: { _gte: $from_ts }, board_id: { _eq: $board_id } }
+  ) {
+    id
+    content
+    user {
+      name
+      id
+    }
+    board_id
+    updated_at
+  }
+}

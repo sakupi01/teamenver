@@ -17,8 +17,8 @@
     "format": "prettier \"./src/**/*.{ts,tsx}\" --write",
     "test:storybook": "test-storybook --url http://localhost:6006",
     "storybook": "storybook dev -p 6006",
-    "storybook:build": "storybook build -o storybook_static",
-    "storybook:serve": "bunx http-server storybook_static -a localhost -p 6006 -s",
+    "storybook:build": "storybook build",
+    "storybook:serve": "bunx http-server storybook-static -a localhost -p 6006 -s",
     "storybook:test": "bunx wait-on http://localhost:6006 && bun run test:storybook",
     "storybook:ci": "bunx concurrently -k -s first \"bun run storybook:serve\" \"bun run storybook:test\"",
     "chromatic": "chromatic --exit-zero-on-changes ---build-script-name \"storybook:build\"",
@@ -39,6 +39,8 @@
     }
   },
   "dependencies": {
+    "@apollo/client": "^3.8.4",
+    "@apollo/experimental-nextjs-app-support": "^0.4.3",
     "@auth0/nextjs-auth0": "^3.0.0-beta.3",
     "@commitlint/config-conventional": "^17.7.0",
     "@graphql-typed-document-node/core": "^3.2.0",
@@ -53,6 +55,7 @@
     "eslint-config-next": "13.4.12",
     "graphql": "^16.7.1",
     "graphql-request": "^6.1.0",
+    "graphql-ws": "^5.14.0",
     "hygen": "^6.2.11",
     "markuplint": "^3.12.1",
     "million": "latest",
@@ -62,6 +65,7 @@
     "react-dom": "18.2.0",
     "reactflow": "^11.7.4",
     "semver": "^7.5.4",
+    "subscriptions-transport-ws": "^0.11.0",
     "swr": "^2.2.0",
     "xterm": "^5.2.1",
     "xterm-addon-fit": "^0.8.0"

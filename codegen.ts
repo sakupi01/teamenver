@@ -6,9 +6,10 @@ const config: CodegenConfig = {
     './src/gql/codegen/hasura/': {
       schema: [
         {
-          [process.env.HASURA_GRAPHQL_API_ENDPOINT || '']: {
+          [process.env.NEXT_PUBLIC_HASURA_GRAPHQL_API_ENDPOINT || '']: {
             headers: {
-              'x-hasura-admin-secret': process.env.HASURA_GRAPHQL_API_ADMIN_SECRET || '',
+              'x-hasura-admin-secret':
+                process.env.NEXT_PUBLIC_HASURA_GRAPHQL_API_ADMIN_SECRET || '',
             },
           },
         },
@@ -20,6 +21,19 @@ const config: CodegenConfig = {
       schema: './src/gql/github/github.schema.graphql',
       documents: ['./src/gql/github/*.gql'],
       preset: 'client',
+    },
+  },
+  config: {
+    scalars: {
+      // Setting custom scalar type:
+      uuid: {
+        input: 'string', // this means our server can take CustomScalar as string
+        output: 'string', // this means our server will return CustomScalar as number
+      },
+      timestamptz: {
+        input: 'string', // this means our server can take CustomScalar as string
+        output: 'string', // this means our server will return CustomScalar as number
+      },
     },
   },
   ignoreNoDocuments: true, // for better experience with the watcher
