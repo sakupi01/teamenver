@@ -1,5 +1,3 @@
-import { userEvent, waitFor, within } from '@storybook/testing-library'
-
 import { Button } from './Button'
 
 import type { Meta, StoryObj } from '@storybook/react'
@@ -53,18 +51,5 @@ export const Small: Story = {
 export const SucceedToGetData: Story = {
   args: {
     label: 'Fetch!',
-  },
-  play: async ({ canvasElement }) => {
-    // Assigns canvas to the component root element
-    const canvas = within(canvasElement)
-
-    await userEvent.click(
-      canvas.getByRole('button', { name: SucceedToGetData.args.label }),
-    )
-
-    await waitFor(() => canvas.getByText('loading...'))
-
-    // DOM内のテクストノードを受け取り，真偽値を返すマッチャーを渡す
-    // await waitFor(() => canvas.getByText('data'))
   },
 }

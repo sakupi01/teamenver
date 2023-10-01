@@ -12,6 +12,9 @@ export const getBoardDetail = async () => {
   const session = await getSession()
   const access_token = session?.accessToken
   const board_detail_id = cookies().get('current_board_detail_id')?.value
+  console.log('*****************')
+  console.log('access_token', access_token)
+  console.log('*****************')
 
   try {
     if (board_detail_id === undefined || null) {
