@@ -10,6 +10,9 @@ const meta = {
   tags: ['autodocs'],
   parameters: {
     layout: 'fullscreen',
+    nextjs: {
+      appDirectory: true,
+    },
   },
   argTypes: {},
 } satisfies Meta<typeof ChatPage>

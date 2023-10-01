@@ -1,6 +1,12 @@
 'use client'
 import { createClient } from 'graphql-ws'
+import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
+
+import { Button } from '@/components/atoms/Button/Button'
+
+import { deleteCookies } from '@/libs/actions/deleteCookies'
+import { HttpError } from '@/libs/error/http'
 
 import { GetLastMessagesQuery } from '@/gql/codegen/hasura/graphql'
 import { getMessage } from '@/services/client/GetMessage'
@@ -25,58 +31,73 @@ export const ChatPage = ({ current_board_id, accessToken }: ChatPageProps) => {
     },
   })
 
-  const [messages, setMessages] = useState<GetLastMessagesQuery['comments']>([])
+  const route = useRouter()
 
+  const [messages, setMessages] = useState<GetLastMessagesQuery['comments']>([])
   async function instantFn(board_id: string) {
-    const res = await getMessage({
-      board_id: board_id,
-      from_ts: '2018-08-21T19:58:46.987552+00:00', // 十分な過去の日付
-    })
-    setMessages(res.comments)
+    try {
+      const res = await getMessage({
+        board_id: board_id,
+        from_ts: '2018-08-21T19:58:46.987552+00:00', // 十分な過去の日付
+      })
+      setMessages(res.comments)
+    } catch (error) {
+      if (error instanceof HttpError && error.status == 401) {
+        deleteCookies()
+        route.push('/api/auth/logout')
+      }
+    }
   }
   useEffect(() => {
     instantFn(current_board_id)
-    if (messages.length > 0) {
-      const unsubscribe = wsClient.subscribe(
-        {
-          query: `subscription SubscribeMessage($board_id: uuid) {
-              comments(limit: 1, order_by: { updated_at: desc }, where: {board_id: {_eq: $board_id}}) {
-                id
-                content
-                user {
-                  id
-                  email
-                }
-                board_id
-                updated_at
+    const unsubscribe = wsClient.subscribe(
+      {
+        query: `subscription SubscribeMessage($board_id: uuid) {
+          comments(limit: 1, order_by: { updated_at: desc }, where: {board_id: {_eq: $board_id}}) {
+            id
+            content
+            user {
+              id
+              email
+            }
+            board_id
+            updated_at
+          }
+        }
+        `,
+        variables: {
+          board_id: current_board_id,
+        },
+      },
+      {
+        next: async ({ data }: { data: GetLastMessagesQuery }) => {
+          if (messages.length > 0) {
+            try {
+              const res = await getMessage({
+                board_id: current_board_id,
+                from_ts: messages[messages.length - 1].updated_at,
+              })
+
+              setMessages((prev) => prev.concat(res.comments))
+            } catch (error) {
+              if (error instanceof HttpError && error.status == 401) {
+                deleteCookies()
+                route.push('/api/auth/logout')
               }
             }
-            `,
-          variables: {
-            board_id: current_board_id,
-          },
+          }
         },
-        {
-          next: async ({ data }: { data: GetLastMessagesQuery }) => {
-            const res = await getMessage({
-              board_id: current_board_id,
-              from_ts: messages[messages.length - 1].updated_at,
-            })
 
-            setMessages((prev) => prev.concat(res.comments))
-          },
-
-          error: (error) => {
-            console.log(error)
-          },
-          complete: () => {
-            console.log('completed')
-          },
+        error: (error) => {
+          console.log(error)
         },
-      )
-      return () => {
-        unsubscribe()
-      }
+        complete: () => {
+          console.log('completed')
+        },
+      },
+    )
+    return () => {
+      unsubscribe()
     }
   }, [])
 
@@ -84,7 +105,19 @@ export const ChatPage = ({ current_board_id, accessToken }: ChatPageProps) => {
     e.preventDefault()
     const content = e.currentTarget.content.value
 
-    const res = await insertMessage(content)
+    try {
+      await insertMessage(content)
+    } catch (error) {
+      if (error instanceof HttpError && error.status == 401) {
+        deleteCookies()
+        route.push('/api/auth/logout')
+      }
+    }
+  }
+
+  const handleLogout = () => {
+    deleteCookies()
+    route.push('/api/auth/logout')
   }
 
   return (
@@ -107,7 +140,7 @@ export const ChatPage = ({ current_board_id, accessToken }: ChatPageProps) => {
         })}
       >
         <h1>Chat Room</h1>
-        <a href='/api/auth/logout'>Logout</a>
+        <Button label='Logout' backgroundColor='red' onClick={handleLogout} />
       </div>
       <div className={css({ display: 'flex', justifyContent: 'space-around' })}>
         <div>

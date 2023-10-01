@@ -1,3 +1,5 @@
+import { ErrorStatus, HttpError } from '@/libs/error/http'
+
 export const host = (path: string) => `/api${path}`
 
 export const defaultHeaders = {
@@ -7,8 +9,8 @@ export const defaultHeaders = {
 
 export const handleResolve = async (res: Response) => {
   if (!res.ok) {
-    console.log('Hit to the error', res)
-    return
+    const status = res.status as ErrorStatus
+    throw new HttpError(status)
   }
   return await res.json()
 }

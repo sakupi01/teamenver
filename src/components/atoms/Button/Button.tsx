@@ -1,10 +1,5 @@
 'use client'
-import React, { useTransition } from 'react'
-import { useState } from 'react'
-
-import { getNpmLibraries } from '@/services/client/GetNpmLibraries'
-
-import { button } from './button.css'
+import React from 'react'
 
 interface ButtonProps {
   /**
@@ -26,6 +21,7 @@ interface ButtonProps {
   /**
    * Optional click handler
    */
+  onClick?: () => void
 }
 
 /**
@@ -38,31 +34,12 @@ export const Button = ({
   label,
   ...props
 }: ButtonProps) => {
-  const [isPending, startTransition] = useTransition()
-  const [res, setRes] = useState('')
-
   const mode = primary ? 'primary' : 'secondary'
   return (
     <>
-      <button
-        disabled={isPending}
-        type='button'
-        className={button({ type: mode, size: size })}
-        onClick={() =>
-          startTransition(() => {
-            setRes('roading')
-            getNpmLibraries(label).then((res) => setRes(JSON.stringify(res)))
-          })
-        }
-      >
+      <button type='button' className={`bg-${backgroundColor}`} onClick={props.onClick}>
         {label}
-        <style jsx>{`
-          button {
-            background-color: ${backgroundColor};
-          }
-        `}</style>
       </button>
-      {res === 'roading' || isPending ? <p>loading...</p> : <p>{res}</p>}
     </>
   )
 }
