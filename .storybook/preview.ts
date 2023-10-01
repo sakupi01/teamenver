@@ -11,7 +11,7 @@ const preview: Preview = {
         date: /Date$/,
       },
     },
-    msw: { handlers: [handleGetNpmLibraries()] },
+    // msw: { handlers: [handleGetNpmLibraries()] },
   },
 }
 
