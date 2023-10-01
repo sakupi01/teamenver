@@ -23,7 +23,7 @@ export const createTeam = async ({ name }: { name: string | null }) => {
     const { insert_teams } = await gqlHasuraClient.request(CreateTeamDocument, {
       name: name,
     })
-    insert_teams ? cookies().set('current_team_id', insert_teams?.returning[0].id) : ''
+    insert_teams && cookies().set('current_team_id', insert_teams?.returning[0].id)
 
     return { insert_teams }
   } catch (error) {

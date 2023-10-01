@@ -25,7 +25,7 @@ export const createBoard = async () => {
       is_public: false,
       team_id: current_team_id,
     })
-    insert_boards ? cookies().set('current_board_id', insert_boards?.returning[0].id) : ''
+    insert_boards && cookies().set('current_board_id', insert_boards?.returning[0].id)
     return { insert_boards }
   } catch (error) {
     console.log('***************************')
