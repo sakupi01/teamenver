@@ -4,8 +4,6 @@ import supabaseClient from '@/libs/supabase/supabaseClient'
 
 import { sidebarData } from '@/types/custom/sidebarData'
 
-import { css } from 'styled-system/css'
-
 export type TeamPageProps = {
   params: {
     team_id: string
@@ -27,7 +25,7 @@ const TeamPage = async ({ params: { team_id } }: TeamPageProps) => {
 
   const frameworks = await get()
   return (
-    <main className={css({ padding: '5%' })}>
+    <main className={'p-[5%]'}>
       <h1>Team {team_id}`&apos;`s Page</h1>
 
       <button>create board</button>

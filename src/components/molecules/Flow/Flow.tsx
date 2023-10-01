@@ -11,8 +11,6 @@ import 'reactflow/dist/style.css'
 
 import { sidebarData } from '@/types/custom/sidebarData'
 
-import { css } from 'styled-system/css'
-
 import { useReactFlowFunctions } from './hooks'
 import { SideBar } from './sidebar'
 
@@ -37,18 +35,8 @@ const InnerFlow = ({ frameworks }: FlowProps) => {
   } = useReactFlowFunctions()
 
   return (
-    <div
-      className={css({
-        flexDirection: 'column',
-        display: 'flex',
-        flexGrow: '1',
-        height: '100%',
-        md: {
-          flexDirection: 'row',
-        },
-      })}
-    >
-      <div className={css({ width: '100vw', height: '100vh' })} ref={reactFlowWrapper}>
+    <div className='flex flex-col flex-grow h-screen md:flex-row'>
+      <div className={'w-full h-full'} ref={reactFlowWrapper}>
         <ReactFlow
           nodes={nodes}
           edges={edges}

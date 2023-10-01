@@ -1,23 +1,18 @@
-import { redirect } from 'next/navigation'
+'use client'
+import { useUser } from '@auth0/nextjs-auth0/client'
 
-import { createTeam } from '@/services/server/CreateTeam'
-import { css } from 'styled-system/css'
+import { Button } from '@/components/ui/button'
 
+import { createTeamHandler } from '@/libs/actions/createTeamHandler'
 // million-ignore
 export default function Join() {
-  const createTeamHandler = async (data: FormData) => {
-    'use server'
-    const name = data.get('name') as string
-    const res = await createTeam({ name })
-    console.log(res)
-    redirect('/select/board')
-  }
-
+  const { user, isLoading, error } = useUser()
   return (
-    <main className={css({ padding: '5%' })}>
+    <main className={'p-[5%]'}>
+      <p>Hello, {user?.nickname}</p>
       <form action={createTeamHandler} method='POST'>
         <input type='text' name='name' placeholder='Input a team name' />
-        <button type='submit'>Create</button>
+        <Button type='submit'>Crate Team</Button>
       </form>
     </main>
   )

@@ -4,8 +4,6 @@ import supabaseClient from '@/libs/supabase/supabaseClient'
 
 import { sidebarData } from '@/types/custom/sidebarData'
 
-import { css } from 'styled-system/css'
-
 export type TeamPageProps = {
   params: {
     team_id: string
@@ -28,7 +26,7 @@ const BoardPage = async ({ params: { team_id, board_id } }: TeamPageProps) => {
 
   const frameworks = await get()
   return (
-    <main className={css({ padding: '5%' })}>
+    <main className={'p-[5%]'}>
       <h1>Team&apos;s {board_id} Board</h1>
 
       {/* Next linting rules might suggest using the Link component instead of an anchor tag. The Link component is meant to perform client-side transitions between pages. As the links point to an API route and not to a page, you should keep them as anchor tags. */}

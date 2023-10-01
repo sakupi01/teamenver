@@ -5,18 +5,14 @@ import { Terminal } from 'xterm'
 import { FitAddon } from 'xterm-addon-fit'
 
 import { getFiles } from '@/app/webContainerSideFiles'
-import { css } from 'styled-system/css'
 
-import { textarea } from './NodeContainer.css'
-
-import 'xterm/css/xterm.css';
-
+import 'xterm/css/xterm.css'
 
 export const NodeContainer = () => {
   const [webcontainer, setWebcontainer] = useState<WebContainer | null>(null)
 
   useEffect(() => {
-    let ignore = false;
+    let ignore = false
     const initWebContainer = async () => {
       const wc = await WebContainer.boot()
       setWebcontainer(wc)
@@ -25,10 +21,9 @@ export const NodeContainer = () => {
       initWebContainer()
     }
     return () => {
-      ignore = true;
-    };
+      ignore = true
+    }
   }, [])
-
 
   useMemo(() => {
     if (!webcontainer) return
@@ -39,15 +34,15 @@ export const NodeContainer = () => {
 
     if (textarea) {
       // 即時関数
-      (async () => {
+      ;(async () => {
         const files = await getFiles()
-        console.log('**********');
-        console.log(files);
-        console.log('**********');
+        console.log('**********')
+        console.log(files)
+        console.log('**********')
 
         // @ts-ignore
         textarea.value = files['README.md'].file.contents
-      })();
+      })()
       textarea.addEventListener('input', (event: Event) => {
         if (event.currentTarget) {
           // @ts-ignore
@@ -65,42 +60,41 @@ export const NodeContainer = () => {
           cols: terminal.cols,
           rows: terminal.rows,
         },
-      });
+      })
 
       shellProcess.output.pipeTo(
         new WritableStream({
           write(data) {
-            terminal.write(data);
+            terminal.write(data)
           },
-        })
-      );
+        }),
+      )
 
-      const input = shellProcess.input.getWriter();
+      const input = shellProcess.input.getWriter()
       terminal.onData((data) => {
-        input.write(data);
-      });
-      return shellProcess;
-    };
+        input.write(data)
+      })
+      return shellProcess
+    }
 
     const bootWebContainer = async () => {
-      const fitAddon = new FitAddon();
+      const fitAddon = new FitAddon()
       const initTerminal = (terminalEl: HTMLElement) => {
-
         const terminal = new Terminal({
           convertEol: true,
-        });
-        terminal.loadAddon(fitAddon);
-        terminal.open(terminalEl);
+        })
+        terminal.loadAddon(fitAddon)
+        terminal.open(terminalEl)
 
-        fitAddon.fit();
-        return terminal;
+        fitAddon.fit()
+        return terminal
       }
 
-      const terminal = initTerminal(terminalEl);
+      const terminal = initTerminal(terminalEl)
       // 即時関数
-      (async () => {
+      ;(async () => {
         await webcontainer.mount(await getFiles())
-      })();
+      })()
 
       // Wait for server ready event
       webcontainer.on('server-ready', (port, url) => {
@@ -108,51 +102,37 @@ export const NodeContainer = () => {
           iframe.src = url
         }
       })
-      const shellProcess = await startShell(terminal);
+      const shellProcess = await startShell(terminal)
       window.addEventListener('resize', () => {
-        fitAddon.fit();
+        fitAddon.fit()
         shellProcess.resize({
           cols: terminal.cols,
           rows: terminal.rows,
-        });
-      });
+        })
+      })
     }
 
     bootWebContainer()
   }, [webcontainer])
 
   return (
-    <div
-      className={css({
-        display: 'grid',
-        gridTemplateRows: '1fr 1fr',
-        gap: '1rem',
-        height: '100%',
-        width: '100%',
-      })}
-    >
-      <div
-        className={css({
-          display: 'grid',
-          gridTemplateColumns: '1fr 1fr',
-          gap: '1rem',
-          marginBottom: '20px',
-        })}
-      >
+    <div className={'grid grid-rows-2 gap-4 h-full w-full'}>
+      <div className={'grid grid-cols-2 gap-4 mb-5'}>
         <div>
           <p>📝 Information</p>
-          <textarea readOnly className={textarea()} defaultValue='⛅️ Reading the instructions...'></textarea>
+          <textarea
+            readOnly
+            className={'full-container rounded-lg bg-black text-white py-2 px-4'}
+            defaultValue='⛅️ Reading the instructions...'
+          ></textarea>
         </div>
-        <div className={css({ width: '100%', height: '100%' })}>
+        <div className={'full-container'}>
           <p>✨ Output</p>
-          <iframe
-            src='/loading'
-            className={css({ height: '100%', width: '100%', borderRadius: '0.5rem' })}
-          ></iframe>
+          <iframe src='/loading' className={'full-container rounded-lg'}></iframe>
         </div>
       </div>
-      <div className={css({ width: '100%', height: '100%' })}>
-        <p className={css({ marginTop: '20px' })}>🤖 Terminal</p>
+      <div className={'full-container'}>
+        <p className='mt-5'>🤖 Terminal</p>
         <div className='terminal'></div>
       </div>
     </div>

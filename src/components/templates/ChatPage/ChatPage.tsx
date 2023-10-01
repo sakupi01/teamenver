@@ -3,7 +3,7 @@ import { createClient } from 'graphql-ws'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 
-import { Button } from '@/components/atoms/Button/Button'
+import { Button } from '@/components/ui/button'
 
 import { deleteCookies } from '@/libs/actions/deleteCookies'
 import { HttpError } from '@/libs/error/http'
@@ -11,7 +11,6 @@ import { HttpError } from '@/libs/error/http'
 import { GetLastMessagesQuery } from '@/gql/codegen/hasura/graphql'
 import { getMessage } from '@/services/client/GetMessage'
 import { insertMessage } from '@/services/client/InsertMessage'
-import { css } from 'styled-system/css'
 
 type ChatPageProps = {
   current_board_id: string
@@ -122,27 +121,13 @@ export const ChatPage = ({ current_board_id, accessToken }: ChatPageProps) => {
 
   return (
     <>
-      <div
-        className={css({
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          padding: '5%',
-          width: '100vw',
-          height: '5vh',
-          backgroundColor: 'white',
-          borderBottom: '1px solid black',
-          position: 'sticky',
-          top: '0',
-          md: {
-            height: '7vh',
-          },
-        })}
-      >
+      <div className='flex justify-between items-center p-5 w-full h-5vh bg-white border-b-2 border-black sticky top-0 md:h-7vh'>
         <h1>Chat Room</h1>
-        <Button label='Logout' backgroundColor='red' onClick={handleLogout} />
+        <Button variant='outline' onClick={handleLogout}>
+          Logout
+        </Button>
       </div>
-      <div className={css({ display: 'flex', justifyContent: 'space-around' })}>
+      <div className='flex justify-around'>
         <div>
           <p>Conversation</p>
           {messages.map((message) => (
@@ -153,7 +138,7 @@ export const ChatPage = ({ current_board_id, accessToken }: ChatPageProps) => {
           <p>Send Message</p>
           <form onSubmit={handleSendMessage} method='POST'>
             <input type='text' name='content' placeholder='Input a message' />
-            <button type='submit'>Send</button>
+            <Button type='submit'>Send</Button>
           </form>
         </div>
       </div>

@@ -1,8 +1,9 @@
-'use client'
-import { useRouter } from 'next/navigation'
-import { useTransition } from 'react'
+import { redirect } from 'next/navigation'
 
-import { handleCreateBoardAndDetails } from '@/libs/actions/handleCreateBoardAndDetails'
+import { Button } from '@/components/ui/button'
+
+import { createBoard } from '@/services/server/CreateBoard'
+import { createBoardDetail } from '@/services/server/CreateBoardDetail'
 
 type BoardProps = {
   params: {
@@ -10,24 +11,22 @@ type BoardProps = {
   }
 }
 
-// million-ignore
 export default function Board({ params }: BoardProps) {
-  const router = useRouter()
-  const [isPending, startTransition] = useTransition()
   if (!params.team_id) {
-    router.push('/select/team')
+    redirect('/select/team')
+  }
+
+  const handleCreateBoardAndDetails = async () => {
+    'use server'
+    console.log('clicked!')
+    await createBoard()
+    await createBoardDetail()
   }
 
   return (
     <main className={'p-[5%]'}>
       <p>Your current team is: {params.team_id}</p>
-      <button
-        onClick={() =>
-          startTransition(async () => await handleCreateBoardAndDetails(params.team_id))
-        }
-      >
-        Create Board
-      </button>
+      <Button onClick={handleCreateBoardAndDetails}>Create Board</Button>
     </main>
   )
 }
