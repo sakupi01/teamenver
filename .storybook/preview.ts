@@ -12,6 +12,13 @@ const preview: Preview = {
       },
     },
     // msw: { handlers: [handleGetNpmLibraries()] },
+    layout: 'fullscreen',
+    nextjs: {
+      appDirectory: true,
+      navigation: {
+        pathname: '/api/auth/logout',
+      },
+    },
   },
 }
 

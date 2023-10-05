@@ -12,6 +12,9 @@ const meta = {
     layout: 'fullscreen',
     nextjs: {
       appDirectory: true,
+      navigation: {
+        pathname: '/api/auth/logout',
+      },
     },
   },
   argTypes: {},
