@@ -8,15 +8,7 @@ const meta = {
   title: 'ChatPage',
   component: ChatPage,
   tags: ['autodocs'],
-  parameters: {
-    layout: 'fullscreen',
-    nextjs: {
-      appDirectory: true,
-      navigation: {
-        pathname: '/api/auth/logout',
-      },
-    },
-  },
+  parameters: {},
   argTypes: {},
 } satisfies Meta<typeof ChatPage>
 

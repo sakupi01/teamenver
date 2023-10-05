@@ -22,3 +22,42 @@ query GetLastMessages($board_id: uuid, $from_ts: timestamptz) {
     updated_at
   }
 }
+
+query GetTeamInfo($id: uuid!) {
+  teams_by_pk(id: $id) {
+    team_boards {
+      id
+      team_board_detail {
+        ui_library
+        id
+        linter
+        framework
+        formatter
+        css_library
+      }
+    }
+    team_members {
+      users {
+        id
+        name
+      }
+    }
+  }
+}
+
+query GetJoinedTeams($id: String!) {
+  users_by_pk(id: $id) {
+    teams {
+      id
+      name
+      created_at
+      team_members {
+        user_id
+      }
+      admin_user {
+        id
+        name
+      }
+    }
+  }
+}

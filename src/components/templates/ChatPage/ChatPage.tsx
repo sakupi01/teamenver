@@ -33,6 +33,7 @@ export const ChatPage = ({ current_board_id, accessToken }: ChatPageProps) => {
   const route = useRouter()
 
   const [messages, setMessages] = useState<GetLastMessagesQuery['comments']>([])
+
   async function instantFn(board_id: string) {
     try {
       const res = await getMessage({
@@ -47,8 +48,9 @@ export const ChatPage = ({ current_board_id, accessToken }: ChatPageProps) => {
       }
     }
   }
+
+  instantFn(current_board_id)
   useEffect(() => {
-    instantFn(current_board_id)
     const unsubscribe = wsClient.subscribe(
       {
         query: `subscription SubscribeMessage($board_id: uuid) {
@@ -86,7 +88,6 @@ export const ChatPage = ({ current_board_id, accessToken }: ChatPageProps) => {
             }
           }
         },
-
         error: (error) => {
           console.log(error)
         },

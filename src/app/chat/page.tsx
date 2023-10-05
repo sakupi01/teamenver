@@ -15,9 +15,5 @@ export default async function Chat() {
     redirect('/select/board')
   }
 
-  return (
-    <>
-      <ChatPage current_board_id={current_board_id} accessToken={accessToken} />
-    </>
-  )
+  return <ChatPage current_board_id={current_board_id} accessToken={accessToken} />
 }
