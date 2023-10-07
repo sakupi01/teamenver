@@ -31,6 +31,9 @@ export default withMiddlewareAuthRequired(async function middleware(
         ),
       )
     }
+    if (request.nextUrl.pathname == '/') {
+      return NextResponse.rewrite(new URL('/account', request.url))
+    }
   }
 
   console.log(request.url)

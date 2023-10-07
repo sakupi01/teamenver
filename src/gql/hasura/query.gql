@@ -36,6 +36,13 @@ query GetTeamInfo($id: uuid!) {
         css_library
       }
     }
+    boards(where: { is_public: { _eq: true } }) {
+      id
+      user {
+        id
+        name
+      }
+    }
     team_members {
       users {
         id
@@ -50,7 +57,6 @@ query GetJoinedTeams($id: String!) {
     teams {
       id
       name
-      created_at
       team_members {
         user_id
       }
