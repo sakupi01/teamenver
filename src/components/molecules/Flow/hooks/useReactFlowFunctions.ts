@@ -47,10 +47,6 @@ export const useReactFlowFunctions = () => {
   const [reactFlowInstance, setReactFlowInstance] = useState<any>(null)
   const { deleteElements } = useReactFlow()
 
-  console.log('################')
-  console.log('edges:', edges)
-  console.log('################')
-
   // When you drag or select a node, the onNodeChange handler gets called.
   // With help of the applyNodeChanges function you can then apply those changes to your current node state.
   const onNodesChange = useCallback(
@@ -116,9 +112,6 @@ export const useReactFlowFunctions = () => {
         data: { label: data.label ? data.label : 'N/A' },
       }
 
-      console.log('################')
-      console.log('newNode:', newNode)
-      console.log('################')
       setNodes((nds) => nds.concat(newNode))
     },
     [reactFlowInstance],

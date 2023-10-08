@@ -25,18 +25,17 @@ const TeamPage = async ({ params: { team_id } }: TeamPageProps) => {
 
   const frameworks = await get()
   return (
-    <main className={'p-[5%]'}>
-      <h1>Team {team_id}`&apos;`s Page</h1>
+    <div className='w-full h-full'>
+      <h1>Team {team_id}&apos;s Page</h1>
 
-      <button>create board</button>
-      {/* Next linting rules might suggest using the Link component instead of an anchor tag. The Link component is meant to perform client-side transitions between pages. As the links point to an API route and not to a page, you should keep them as anchor tags. */}
       <a href='/api/auth/logout'>Logout</a>
+
       <Flow
         frameworks={
           frameworks ? { category: 'framework', nodes: frameworks } : ({} as sidebarData)
         }
       />
-    </main>
+    </div>
   )
 }
 

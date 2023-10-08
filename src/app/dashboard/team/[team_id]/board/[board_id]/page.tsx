@@ -26,7 +26,7 @@ const BoardPage = async ({ params: { team_id, board_id } }: TeamPageProps) => {
 
   const frameworks = await get()
   return (
-    <main className={'p-[5%]'}>
+    <div className='w-full h-full'>
       <h1>Team&apos;s {board_id} Board</h1>
 
       {/* Next linting rules might suggest using the Link component instead of an anchor tag. The Link component is meant to perform client-side transitions between pages. As the links point to an API route and not to a page, you should keep them as anchor tags. */}
@@ -36,7 +36,7 @@ const BoardPage = async ({ params: { team_id, board_id } }: TeamPageProps) => {
           frameworks ? { category: 'framework', nodes: frameworks } : ({} as sidebarData)
         }
       />
-    </main>
+    </div>
   )
 }
 

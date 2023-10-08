@@ -1,6 +1,7 @@
 'use client'
 
 import { useUser } from '@auth0/nextjs-auth0/client'
+import { useRouter } from 'next/navigation'
 import useSWR from 'swr'
 
 import { Button } from '@/components/ui/button'
@@ -8,11 +9,12 @@ import { Button } from '@/components/ui/button'
 import * as GetJoinedTeamsApi from '@/api/get/joined_teams/route'
 
 import { createTeamHandler } from '@/libs/actions/createTeamHandler'
-import { handleSelectTeam } from '@/libs/actions/handleSelectTeam'
+import { handleSetCookies } from '@/libs/actions/handleSetCookies'
 
 // million-ignore
 export default function Join() {
   const { user, isLoading, error } = useUser()
+  const router = useRouter()
   // fetch created teams and update the team_member of that if the user selects the team from select box
 
   // fetch the teams that the user already joined in and redirect them to the designated team page.
@@ -25,6 +27,11 @@ export default function Join() {
     `/api/get/joined_teams?user_id=${user?.sub}`,
     fetcher,
   ).data?.users_by_pk?.teams
+
+  const handleSelectTeam = (team_id: string) => {
+    handleSetCookies(team_id)
+    router.push(`/dashboard/team/${team_id}`)
+  }
 
   return (
     <main className={'p-[5%]'}>
