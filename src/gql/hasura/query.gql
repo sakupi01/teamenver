@@ -91,3 +91,15 @@ query GetJoinedTeams($id: String!) {
     }
   }
 }
+
+query GetUserInfo($id: String!) {
+  users_by_pk(id: $id) {
+    id
+    email
+    github_url
+    is_online
+    image_url
+    name
+    twitter_url
+  }
+}

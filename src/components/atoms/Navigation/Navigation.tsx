@@ -17,6 +17,8 @@ import * as GetMyBoardInTeamApi from '@/api/get/myboard_in_team/route'
 import { handleCreateBoardAndDetails } from '@/libs/actions/handleCreateBoardAndDetails'
 
 import { NavBoardProps } from '@/app/dashboard/team/[team_id]/layout'
+
+import { NavRight } from '../../organisms/NavRight/NavRight'
 export type NavigationProps = {
   current_team_id: string | undefined
   public_boards_info: Array<NavBoardProps> | undefined
@@ -84,6 +86,8 @@ export const Navigation = ({ current_team_id, public_boards_info }: NavigationPr
             </NavigationMenuItem>
           )}
         </NavigationMenuList>
+
+        <NavRight />
       </NavigationMenu>
     </div>
   )
