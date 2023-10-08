@@ -30,7 +30,7 @@ export function DropDown() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant='link' size='icon'>
+        <Button variant='ghost' size='icon'>
           <Avatar>
             <AvatarImage
               src={

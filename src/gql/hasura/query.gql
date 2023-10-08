@@ -43,12 +43,6 @@ query GetTeamInfo($id: uuid!, $user_id: String!) {
         name
       }
     }
-    team_members {
-      users {
-        id
-        name
-      }
-    }
   }
 }
 
@@ -99,5 +93,18 @@ query GetUserInfo($id: String!) {
     image_url
     name
     twitter_url
+  }
+}
+
+query GetTeamMember($team_id: uuid!) {
+  team_member(where: { team_id: { _eq: $team_id } }) {
+    users {
+      id
+      name
+      email
+      image_url
+      github_url
+      twitter_url
+    }
   }
 }

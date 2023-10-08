@@ -87,7 +87,7 @@ export const Navigation = ({ current_team_id, public_boards_info }: NavigationPr
           )}
         </NavigationMenuList>
 
-        <NavRight />
+        <NavRight current_team_id={current_team_id} />
       </NavigationMenu>
     </div>
   )

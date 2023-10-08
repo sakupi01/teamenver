@@ -31,7 +31,7 @@ export default async function DashBoardLayout({
       {team_id && (
         <Navigation current_team_id={team_id} public_boards_info={public_boards_info} />
       )}
-      <div className='py-10'>
+      <div className='min-h-screen py-10 mt-10'>
         <main className='px-1'>{children}</main>
         <Toaster />
       </div>
