@@ -76,18 +76,16 @@ query GetMyBoardInTeam($team_id: uuid!, $user_id: String!) {
   }
 }
 
-query GetJoinedTeams($id: String!) {
-  users_by_pk(id: $id) {
-    teams {
+query GetJoinedTeams($user_id: String!) {
+  teams(where: { team_members: { user_id: { _eq: $user_id } } }) {
+    id
+    name
+    team_members {
+      user_id
+    }
+    admin_user {
       id
       name
-      team_members {
-        user_id
-      }
-      admin_user {
-        id
-        name
-      }
     }
   }
 }

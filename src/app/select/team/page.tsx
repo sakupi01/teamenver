@@ -26,7 +26,7 @@ export default function Join() {
   const joined_teams = useSWR<GetJoinedTeamsApi.GetType>(
     `/api/get/joined_teams?user_id=${user?.sub}`,
     fetcher,
-  ).data?.users_by_pk?.teams
+  ).data?.teams
 
   const handleSelectTeam = (team_id: string) => {
     handleSetCookies(team_id)
@@ -42,7 +42,9 @@ export default function Join() {
         <input type='text' name='name' placeholder='Input a team name' />
         <Button type='submit'>Crate Team</Button>
       </form>
-
+      <div className='text-lg font-semibold'>
+        or, you can join the team that you already joined in.
+      </div>
       {joined_teams &&
         joined_teams?.map((team) => (
           <Button onClick={() => handleSelectTeam(team.id)} key={team.id}>
