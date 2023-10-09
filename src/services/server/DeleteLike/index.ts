@@ -3,16 +3,11 @@ import { getSession } from '@auth0/nextjs-auth0'
 import { UnAuthorizedError } from '@/libs/error/http'
 import { gqlHasuraClient } from '@/libs/graphql/clientLegacy'
 
-import { GetLastMessagesDocument } from '@/gql/codegen/hasura/graphql'
+import { DeleteLikeDocument } from '@/gql/codegen/hasura/graphql'
 
 import { handleServerError } from '..'
 
-export type GetMessageProps = {
-  board_id: string
-  from_ts: string
-}
-
-export const getMessage = async ({ board_id, from_ts }: GetMessageProps) => {
+export const deleteLike = async (comment_id: string) => {
   const session = await getSession()
   const access_token = session?.accessToken
 
@@ -21,17 +16,18 @@ export const getMessage = async ({ board_id, from_ts }: GetMessageProps) => {
       throw new UnAuthorizedError()
     }
     gqlHasuraClient.setHeader('authorization', `Bearer ${access_token}`)
-
-    const { comments } = await gqlHasuraClient.request(GetLastMessagesDocument, {
+    const { delete_likes } = await gqlHasuraClient.request(DeleteLikeDocument, {
+      comment_id: comment_id,
       user_id: session?.user.sub,
-      board_id: board_id,
-      from_ts: from_ts,
     })
 
-    return { comments }
+    return { delete_likes }
   } catch (error) {
+    console.log('***************************')
+    console.log(error)
+    console.log('***************************')
     return handleServerError(error)
   }
 }
 
-export type ReturnGetMessageType = Awaited<ReturnType<typeof getMessage>>
+export type ReturnDeleteLikeType = Awaited<ReturnType<typeof deleteLike>>

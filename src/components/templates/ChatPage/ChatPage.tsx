@@ -22,10 +22,6 @@ type ChatPageProps = {
 }
 
 export const ChatPage = ({ current_board_id, accessToken }: ChatPageProps) => {
-  console.log('**********')
-  console.log(current_board_id)
-  console.log('**********')
-
   const wsClient = createClient({
     url: process.env.NEXT_PUBLIC_HASURA_GRAPHQL_API_ENDPOINT
       ? process.env.NEXT_PUBLIC_HASURA_GRAPHQL_API_ENDPOINT.replace('https', 'wss')
@@ -44,6 +40,7 @@ export const ChatPage = ({ current_board_id, accessToken }: ChatPageProps) => {
         board_id: board_id,
         from_ts: '2018-08-21T19:58:46.987552+00:00', // 十分な過去の日付
       })
+
       setMessages(res.comments)
     } catch (error) {
       if (error instanceof HttpError && error.status == 401) {
@@ -56,8 +53,6 @@ export const ChatPage = ({ current_board_id, accessToken }: ChatPageProps) => {
   const route = useRouter()
   const [messages, setMessages] = useState<GetLastMessagesQuery['comments']>([])
   useEffect(() => {
-    // [messages]: 何度もconnectionが張られ、completedが量産される
-    // []: 一回しかコネクションが張られず、リロードしなければならない
     instantFn(current_board_id)
   }, [])
   wsClient.subscribe(
