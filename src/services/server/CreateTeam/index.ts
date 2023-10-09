@@ -5,6 +5,8 @@ import { BadRequestError, UnAuthorizedError } from '@/libs/error/http'
 import { gqlHasuraClient } from '@/libs/graphql/clientLegacy'
 
 import {
+  CreateTeamBoardDetailsDocument,
+  CreateTeamBoardDocument,
   CreateTeamDocument,
   InsertTeamMemberDocument,
 } from '@/gql/codegen/hasura/graphql'
@@ -38,7 +40,29 @@ export const createTeam = async ({ name }: { name: string | null }) => {
         user_id: session?.user.sub,
       },
     )
-    insert_teams && cookies().set('current_team_id', insert_teams?.returning[0].id)
+
+    const { insert_team_boards_one } = await gqlHasuraClient.request(
+      CreateTeamBoardDocument,
+      {
+        team_id: insert_teams?.returning[0].id,
+      },
+    )
+
+    if (!insert_team_boards_one) {
+      throw new BadRequestError()
+    }
+
+    const { insert_team_board_details_one } = await gqlHasuraClient.request(
+      CreateTeamBoardDetailsDocument,
+      {
+        team_board_id: insert_team_boards_one.id,
+      },
+    )
+
+    insert_teams && cookies().set('current_team_id', insert_teams.returning[0].id)
+    insert_teams && cookies().set('current_team_board_id', insert_team_boards_one.id)
+    insert_teams &&
+      cookies().set('current_team_board_detail_id', insert_team_board_details_one!.id)
 
     return { insert_teams, insert_team_member_one }
   } catch (error) {

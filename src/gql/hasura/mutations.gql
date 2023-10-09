@@ -65,3 +65,15 @@ mutation InsertTeamMember($team_id: uuid!, $user_id: String!) {
     user_id
   }
 }
+
+mutation CreateTeamBoard($team_id: uuid!) {
+  insert_team_boards_one(object: { team_id: $team_id }) {
+    id
+  }
+}
+
+mutation CreateTeamBoardDetails($team_board_id: uuid!) {
+  insert_team_board_details_one(object: { team_board_id: $team_board_id }) {
+    id
+  }
+}

@@ -4,13 +4,17 @@ import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 
 import { Button } from '@/components/ui/button'
+import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'
+import { Separator } from '@/components/ui/separator'
 
 import { deleteCookies } from '@/libs/actions/deleteCookies'
 import { HttpError } from '@/libs/error/http'
 
 import { GetLastMessagesQuery } from '@/gql/codegen/hasura/graphql'
 import { getMessage } from '@/services/client/GetMessage'
-import { insertMessage } from '@/services/client/InsertMessage'
+
+import { InputFormCard } from './InputFormCard'
+import { MessageCard } from './MessageCard'
 
 type ChatPageProps = {
   current_board_id: string
@@ -30,10 +34,6 @@ export const ChatPage = ({ current_board_id, accessToken }: ChatPageProps) => {
     },
   })
 
-  const route = useRouter()
-
-  const [messages, setMessages] = useState<GetLastMessagesQuery['comments']>([])
-
   async function instantFn(board_id: string) {
     try {
       const res = await getMessage({
@@ -49,71 +49,66 @@ export const ChatPage = ({ current_board_id, accessToken }: ChatPageProps) => {
     }
   }
 
-  instantFn(current_board_id)
+  const route = useRouter()
+  const [messages, setMessages] = useState<GetLastMessagesQuery['comments']>([])
   useEffect(() => {
-    const unsubscribe = wsClient.subscribe(
-      {
-        query: `subscription SubscribeMessage($board_id: uuid) {
-          comments(limit: 1, order_by: { updated_at: desc }, where: {board_id: {_eq: $board_id}}) {
-            id
-            content
-            user {
-              id
-              email
-            }
-            board_id
-            updated_at
-          }
-        }
-        `,
-        variables: {
-          board_id: current_board_id,
-        },
-      },
-      {
-        next: async ({ data }: { data: GetLastMessagesQuery }) => {
-          if (messages.length > 0) {
-            try {
-              const res = await getMessage({
-                board_id: current_board_id,
-                from_ts: messages[messages.length - 1].updated_at,
-              })
-
-              setMessages((prev) => prev.concat(res.comments))
-            } catch (error) {
-              if (error instanceof HttpError && error.status == 401) {
-                deleteCookies()
-                route.push('/api/auth/logout')
-              }
-            }
-          }
-        },
-        error: (error) => {
-          console.log(error)
-        },
-        complete: () => {
-          console.log('completed')
-        },
-      },
-    )
-    return () => {
-      unsubscribe()
-    }
+    // [messages]: 何度もconnectionが張られ、completedが量産される
+    // []: 一回しかコネクションが張られず、リロードしなければならない
+    instantFn(current_board_id)
   }, [])
-
-  const handleSendMessage = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    const content = e.currentTarget.content.value
-
-    try {
-      await insertMessage(content)
-    } catch (error) {
-      if (error instanceof HttpError && error.status == 401) {
-        deleteCookies()
-        route.push('/api/auth/logout')
+  wsClient.subscribe(
+    {
+      query: `subscription SubscribeMessage($board_id: uuid) {
+      comments(limit: 1, order_by: { updated_at: desc }, where: {board_id: {_eq: $board_id}}) {
+        id
+        content
+        user {
+          id
+          email
+        }
+        board_id
+        updated_at
       }
     }
-  }
+    `,
+      variables: {
+        board_id: current_board_id,
+      },
+    },
+    {
+      next: async ({ data }: { data: GetLastMessagesQuery }) => {
+        // next valueが届く→その値を元に新しいメッセージを取得する→取得したメッセージをmessagesに追加する→再レンダリング→再びnext valueが届く→...
+        // →永遠に同じ値がレンダリングされる
+        if (messages.length > 0) {
+          try {
+            const res = await getMessage({
+              board_id: current_board_id,
+              from_ts: messages[messages.length - 1].updated_at,
+            })
+            // コメントが登録されていた場合のみ、messagesを更新してレンダリングを許可
+            if (res.comments.length) {
+              console.log(res.comments.length)
+              const newMessages = [...messages, ...res.comments]
+              setMessages(() => {
+                return newMessages
+              })
+            }
+          } catch (error) {
+            if (error instanceof HttpError && error.status == 401) {
+              deleteCookies()
+              route.push('/api/auth/logout')
+            }
+          }
+        }
+      },
+      error: (error) => {
+        console.log(error)
+      },
+      complete: () => {
+        console.log('completed')
+      },
+    },
+  )
 
   const handleLogout = () => {
     deleteCookies()
@@ -128,20 +123,21 @@ export const ChatPage = ({ current_board_id, accessToken }: ChatPageProps) => {
           Logout
         </Button>
       </div>
-      <div className='flex justify-around'>
-        <div>
-          <p>Conversation</p>
-          {messages.map((message) => (
-            <p key={message.id}>{message.content}</p>
-          ))}
-        </div>
-        <div>
-          <p>Send Message</p>
-          <form onSubmit={handleSendMessage} method='POST'>
-            <input type='text' name='content' placeholder='Input a message' />
-            <Button type='submit'>Send</Button>
-          </form>
-        </div>
+      <div className='mt-6 space-y-1'>
+        <h2 className='text-2xl font-semibold tracking-tight'>Conversation</h2>
+        <p className='text-sm text-muted-foreground'>Leave the comment on the board.</p>
+      </div>
+      <Separator className='my-4' />
+      <div className='relative'>
+        <ScrollArea>
+          <div className='flex space-x-4 pb-4'>
+            {messages.map((message) => (
+              <MessageCard key={message.id} message={message} />
+            ))}
+            <InputFormCard />
+          </div>
+          <ScrollBar orientation='horizontal' />
+        </ScrollArea>
       </div>
     </>
   )

@@ -10,7 +10,6 @@ export default withMiddlewareAuthRequired(async function middleware(
   const appSession = request.cookies.has('appSession')
   const current_team_id = request.cookies.get('current_team_id')?.value
   const current_board_id = request.cookies.get('current_board_id')?.value
-  console.log(current_team_id, current_board_id)
 
   if (!appSession) {
     if (request.nextUrl.pathname.startsWith('/')) {
@@ -18,10 +17,16 @@ export default withMiddlewareAuthRequired(async function middleware(
     }
   } else if (current_board_id) {
     // board_idがあるならteam_idもあるという前提
+    if (request.nextUrl.pathname.includes('chat')) {
+      return NextResponse.rewrite(`${process.env.NEXT_PUBLIC_BASE_URL}/chat`)
+    }
     return NextResponse.rewrite(
       `${process.env.NEXT_PUBLIC_BASE_URL}/dashboard/team/${current_team_id}/board/${current_board_id}`,
     )
   } else if (current_team_id) {
+    if (request.nextUrl.pathname.includes('chat')) {
+      return NextResponse.rewrite(`${process.env.NEXT_PUBLIC_BASE_URL}/chat`)
+    }
     if (request.nextUrl.pathname.includes('people')) {
       return NextResponse.rewrite(
         `${process.env.NEXT_PUBLIC_BASE_URL}/dashboard/team/${current_team_id}/people`,
@@ -34,6 +39,7 @@ export default withMiddlewareAuthRequired(async function middleware(
       `${process.env.NEXT_PUBLIC_BASE_URL}/dashboard/team/${current_team_id}`,
     )
   }
+
   return NextResponse.rewrite(`${process.env.NEXT_PUBLIC_BASE_URL}/select/team`)
 })
 

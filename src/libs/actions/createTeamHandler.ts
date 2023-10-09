@@ -7,5 +7,5 @@ export const createTeamHandler = async (data: FormData) => {
   const name = data.get('name') as string
   const res = await createTeam({ name })
 
-  redirect(`/select/team/${res.insert_teams?.returning[0].id}/board`)
+  redirect(`/dashboard/team/${res.insert_teams?.returning[0].id}`)
 }

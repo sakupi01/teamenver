@@ -52,7 +52,6 @@ export const useReactFlowFunctions = () => {
   const onNodesChange = useCallback(
     (changes: NodeChange[]) => {
       setNodes((nds) => applyNodeChanges(changes, nds))
-      console.log('onNodesChange called')
     },
     [setNodes],
   )

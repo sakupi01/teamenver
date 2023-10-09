@@ -10,7 +10,7 @@ query GetBoardLibraries {
 query GetLastMessages($board_id: uuid, $from_ts: timestamptz) {
   comments(
     order_by: { updated_at: asc }
-    where: { updated_at: { _gte: $from_ts }, board_id: { _eq: $board_id } }
+    where: { updated_at: { _gt: $from_ts }, board_id: { _eq: $board_id } }
   ) {
     id
     content
@@ -84,6 +84,12 @@ query GetJoinedTeams($user_id: String!) {
     boards(where: { user_id: { _eq: $user_id } }) {
       id
       board_detail {
+        id
+      }
+    }
+    team_boards {
+      id
+      team_board_detail {
         id
       }
     }
