@@ -1,9 +1,9 @@
 'use client'
+// import { createClient } from 'graphql-ws'
 import { createClient } from 'graphql-ws'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 
-import { Button } from '@/components/ui/button'
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'
 import { Separator } from '@/components/ui/separator'
 
@@ -117,12 +117,6 @@ export const ChatPage = ({ current_board_id, accessToken }: ChatPageProps) => {
 
   return (
     <>
-      <div className='flex justify-between items-center p-5 w-full h-5vh bg-white border-b-2 border-black sticky top-0 md:h-7vh'>
-        <h1>Chat Room</h1>
-        <Button variant='outline' onClick={handleLogout}>
-          Logout
-        </Button>
-      </div>
       <div className='mt-6 space-y-1'>
         <h2 className='text-2xl font-semibold tracking-tight'>Conversation</h2>
         <p className='text-sm text-muted-foreground'>Leave the comment on the board.</p>

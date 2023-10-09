@@ -13,34 +13,11 @@ export default withMiddlewareAuthRequired(async function middleware(
 
   if (!appSession) {
     if (request.nextUrl.pathname.startsWith('/')) {
-      return NextResponse.rewrite(new URL('/api/auth/login', request.url))
+      return NextResponse.redirect(new URL('/api/auth/login', request.url))
     }
-  } else if (current_board_id) {
-    // board_idがあるならteam_idもあるという前提
-    if (request.nextUrl.pathname.includes('chat')) {
-      return NextResponse.rewrite(`${process.env.NEXT_PUBLIC_BASE_URL}/chat`)
-    }
-    return NextResponse.rewrite(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/dashboard/team/${current_team_id}/board/${current_board_id}`,
-    )
-  } else if (current_team_id) {
-    if (request.nextUrl.pathname.includes('chat')) {
-      return NextResponse.rewrite(`${process.env.NEXT_PUBLIC_BASE_URL}/chat`)
-    }
-    if (request.nextUrl.pathname.includes('people')) {
-      return NextResponse.rewrite(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/dashboard/team/${current_team_id}/people`,
-      )
-    }
-    if (request.nextUrl.pathname.includes('account')) {
-      return NextResponse.rewrite(`${process.env.NEXT_PUBLIC_BASE_URL}/account`)
-    }
-    return NextResponse.rewrite(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/dashboard/team/${current_team_id}`,
-    )
+  } else if (!current_team_id) {
+    return NextResponse.redirect(new URL('/select/team', request.url))
   }
-
-  return NextResponse.rewrite(`${process.env.NEXT_PUBLIC_BASE_URL}/select/team`)
 })
 
 export const config = {

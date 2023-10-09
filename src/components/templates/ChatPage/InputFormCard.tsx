@@ -34,9 +34,8 @@ export const InputFormCard = () => {
           <textarea
             name='content'
             className='h-full resize-none border rounded-lg border-border'
-          >
-            Comment your opinion...
-          </textarea>
+            defaultValue='Comment your opinion...'
+          ></textarea>
           <Button type='submit'>Send</Button>
         </form>
       </CardContent>

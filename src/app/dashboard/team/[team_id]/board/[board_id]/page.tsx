@@ -1,15 +1,20 @@
-import { Flow } from '@/components/molecules/Flow'
+import { getSession } from '@auth0/nextjs-auth0'
+import { redirect } from 'next/navigation'
 
+import { Flow } from '@/components/molecules/Flow'
+import { ChatPage } from '@/components/templates/ChatPage/ChatPage'
+
+import { deleteCookies } from '@/libs/actions/deleteCookies'
 import supabaseClient from '@/libs/supabase/supabaseClient'
 
 import { sidebarData } from '@/types/custom/sidebarData'
-
 export type TeamPageProps = {
   params: {
     team_id: string
     board_id: string
   }
 }
+
 const BoardPage = async ({ params: { team_id, board_id } }: TeamPageProps) => {
   const get = async () => {
     try {
@@ -23,19 +28,23 @@ const BoardPage = async ({ params: { team_id, board_id } }: TeamPageProps) => {
       console.log(error)
     }
   }
-
   const frameworks = await get()
+
+  const accessToken = await getSession().then((session) => session?.accessToken)
+
+  if (!accessToken) {
+    deleteCookies()
+    redirect('/api/auth/login')
+  }
+
   return (
     <div className='w-full h-full'>
-      <h1>Team&apos;s {board_id} Board</h1>
-
-      {/* Next linting rules might suggest using the Link component instead of an anchor tag. The Link component is meant to perform client-side transitions between pages. As the links point to an API route and not to a page, you should keep them as anchor tags. */}
-      <a href='/api/auth/logout'>Logout</a>
       <Flow
         frameworks={
           frameworks ? { category: 'framework', nodes: frameworks } : ({} as sidebarData)
         }
       />
+      <ChatPage current_board_id={board_id} accessToken={accessToken} />
     </div>
   )
 }
