@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 import useSWR from 'node_modules/swr/core/dist/index.mjs'
 import React from 'react'
 
@@ -29,14 +30,17 @@ export const Navigation = ({ current_team_id, public_boards_info }: NavigationPr
     `/api/get/myboard_in_team?team_id=${current_team_id}`,
     fetcher,
   )
-
+  const pathname = usePathname()
   return (
     <div className='fixed top-0 left-0 right-0 z-50 py-10 px-20'>
       <NavigationMenu className='flex max-w-full flex-1 items-center justify-between'>
         <NavigationMenuList>
           <NavigationMenuItem>
             <Link href={`/dashboard/team/${current_team_id}`} legacyBehavior passHref>
-              <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+              <NavigationMenuLink
+                className={navigationMenuTriggerStyle()}
+                active={pathname === `/dashboard/team/${current_team_id}` ? true : false}
+              >
                 👯Team Board
               </NavigationMenuLink>
             </Link>
@@ -50,7 +54,14 @@ export const Navigation = ({ current_team_id, public_boards_info }: NavigationPr
                   legacyBehavior
                   passHref
                 >
-                  <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                  <NavigationMenuLink
+                    className={navigationMenuTriggerStyle()}
+                    active={
+                      pathname === `/dashboard/team/${current_team_id}/board/${board.id}`
+                        ? true
+                        : false
+                    }
+                  >
                     {board.userName}&apos;s Board
                   </NavigationMenuLink>
                 </Link>
@@ -70,7 +81,15 @@ export const Navigation = ({ current_team_id, public_boards_info }: NavigationPr
                 legacyBehavior
                 passHref
               >
-                <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                <NavigationMenuLink
+                  className={navigationMenuTriggerStyle()}
+                  active={
+                    pathname ===
+                    `/dashboard/team/${current_team_id}/board/${data.boards[0].id}`
+                      ? true
+                      : false
+                  }
+                >
                   Your Board
                 </NavigationMenuLink>
               </Link>
