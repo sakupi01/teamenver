@@ -8,13 +8,13 @@ import { HttpError } from '@/libs/error/http'
 
 import { insertMessage } from '@/services/client/InsertMessage'
 
-export const InputFormCard = () => {
+export const InputFormCard = ({ current_board_id }: { current_board_id: string }) => {
   const route = useRouter()
   const handleSendMessage = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     const content = e.currentTarget.content.value
     try {
-      await insertMessage(content)
+      await insertMessage(content, current_board_id)
     } catch (error) {
       if (error instanceof HttpError && error.status == 401) {
         deleteCookies()

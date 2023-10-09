@@ -22,6 +22,10 @@ type ChatPageProps = {
 }
 
 export const ChatPage = ({ current_board_id, accessToken }: ChatPageProps) => {
+  console.log('**********')
+  console.log(current_board_id)
+  console.log('**********')
+
   const wsClient = createClient({
     url: process.env.NEXT_PUBLIC_HASURA_GRAPHQL_API_ENDPOINT
       ? process.env.NEXT_PUBLIC_HASURA_GRAPHQL_API_ENDPOINT.replace('https', 'wss')
@@ -110,11 +114,6 @@ export const ChatPage = ({ current_board_id, accessToken }: ChatPageProps) => {
     },
   )
 
-  const handleLogout = () => {
-    deleteCookies()
-    route.push('/api/auth/logout')
-  }
-
   return (
     <>
       <div className='mt-6 space-y-1'>
@@ -128,7 +127,7 @@ export const ChatPage = ({ current_board_id, accessToken }: ChatPageProps) => {
             {messages.map((message) => (
               <MessageCard key={message.id} message={message} />
             ))}
-            <InputFormCard />
+            <InputFormCard current_board_id={current_board_id} />
           </div>
           <ScrollBar orientation='horizontal' />
         </ScrollArea>
