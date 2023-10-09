@@ -105,6 +105,7 @@ export function DropDown() {
             deleteCookies()
             router.push('/api/auth/logout')
           }}
+          variant={'ghost'}
         >
           <DropdownMenuItem>
             Log out
