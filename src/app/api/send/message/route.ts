@@ -13,9 +13,6 @@ export async function GET(
   try {
     const { searchParams } = new URL(request.url!)
     const content = searchParams.get('content')
-    console.log('********')
-    console.log('api', content)
-    console.log('********')
     const res = await insertMessage(content)
     return NextResponse.json(res)
   } catch (error) {

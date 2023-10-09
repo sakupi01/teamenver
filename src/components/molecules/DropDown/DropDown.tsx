@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import useSWR from 'node_modules/swr/core/dist/index.mjs'
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
@@ -20,7 +21,10 @@ import {
 
 import * as GetUserInfoApi from '@/api/get/user_info/route'
 
+import { deleteCookies } from '@/libs/actions/deleteCookies'
+
 export function DropDown() {
+  const router = useRouter()
   const fetcher = (url: string) => fetch(url).then((res) => res.json())
   const { data, error, isLoading } = useSWR<GetUserInfoApi.GetType>(
     '/api/get/user_info',
@@ -96,10 +100,17 @@ export function DropDown() {
         </Link>
         <DropdownMenuItem disabled>Support</DropdownMenuItem>
         <DropdownMenuSeparator />
-        <DropdownMenuItem>
-          Log out
-          <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
-        </DropdownMenuItem>
+        <Button
+          onClick={() => {
+            deleteCookies()
+            router.push('/api/auth/logout')
+          }}
+        >
+          <DropdownMenuItem>
+            Log out
+            <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
+          </DropdownMenuItem>
+        </Button>
       </DropdownMenuContent>
     </DropdownMenu>
   )

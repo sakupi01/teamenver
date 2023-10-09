@@ -28,8 +28,11 @@ export default function Join() {
     fetcher,
   ).data?.teams
 
-  const handleSelectTeam = (team_id: string) => {
-    handleSetCookies(team_id)
+  const handleSelectTeam = (
+    team_id: string,
+    boards: GetJoinedTeamsApi.GetType['teams'][0]['boards'][0],
+  ) => {
+    handleSetCookies(team_id, boards)
     router.push(`/dashboard/team/${team_id}`)
   }
 
@@ -47,7 +50,7 @@ export default function Join() {
       </div>
       {joined_teams &&
         joined_teams?.map((team) => (
-          <Button onClick={() => handleSelectTeam(team.id)} key={team.id}>
+          <Button onClick={() => handleSelectTeam(team.id, team.boards[0])} key={team.id}>
             {team.name}
           </Button>
         ))}

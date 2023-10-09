@@ -81,6 +81,12 @@ query GetJoinedTeams($user_id: String!) {
       id
       name
     }
+    boards(where: { user_id: { _eq: $user_id } }) {
+      id
+      board_detail {
+        id
+      }
+    }
   }
 }
 

@@ -27,9 +27,6 @@ export const getJoinedTeams = async ({ user_id }: ReturnGetJoinedTeamsProps) => 
     const { teams } = await gqlHasuraClient.request(GetJoinedTeamsDocument, {
       user_id: user_id,
     })
-    console.log('&&&&&&&&&&&&')
-    console.log(teams)
-    console.log('&&&&&&&&&&&&')
 
     return { teams }
   } catch (error) {

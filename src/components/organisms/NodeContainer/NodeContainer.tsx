@@ -36,9 +36,6 @@ export const NodeContainer = () => {
       // 即時関数
       ;(async () => {
         const files = await getFiles()
-        console.log('**********')
-        console.log(files)
-        console.log('**********')
 
         // @ts-ignore
         textarea.value = files['README.md'].file.contents

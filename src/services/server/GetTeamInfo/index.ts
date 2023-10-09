@@ -19,8 +19,6 @@ export const getTeamInfo = async (current_team_id: string | undefined) => {
     }
     gqlHasuraClient.setHeader('authorization', `Bearer ${access_token}`)
 
-    console.log(current_team_id)
-
     const { teams_by_pk } = await gqlHasuraClient.request(GetTeamInfoDocument, {
       id: current_team_id,
       user_id: session?.user.sub,
