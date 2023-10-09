@@ -1,6 +1,8 @@
 // to check if the user is authorized in all the pages.
 import { withMiddlewareAuthRequired } from '@auth0/nextjs-auth0/edge'
-import { NextRequest, NextResponse } from 'next/server'
+import { NextResponse } from 'next/server'
+
+import type { NextRequest } from 'next/server'
 
 export default withMiddlewareAuthRequired(async function middleware(
   request: NextRequest,
@@ -8,37 +10,31 @@ export default withMiddlewareAuthRequired(async function middleware(
   const appSession = request.cookies.has('appSession')
   const current_team_id = request.cookies.get('current_team_id')?.value
   const current_board_id = request.cookies.get('current_board_id')?.value
+  console.log(current_team_id, current_board_id)
 
   if (!appSession) {
     if (request.nextUrl.pathname.startsWith('/')) {
       return NextResponse.rewrite(new URL('/api/auth/login', request.url))
     }
-  } else if (!current_team_id) {
-    return NextResponse.rewrite(new URL('/select/team', request.url))
-  } else if (!current_board_id) {
+  } else if (current_board_id) {
+    // board_idがあるならteam_idもあるという前提
     return NextResponse.rewrite(
-      new URL(`/select/team/${current_team_id}/board`, request.url),
+      `${process.env.NEXT_PUBLIC_BASE_URL}/dashboard/team/${current_team_id}/board/${current_board_id}`,
     )
-  } else {
-    if (
-      request.nextUrl.pathname.startsWith('/select') &&
-      request.nextUrl.pathname.includes('board')
-    ) {
+  } else if (current_team_id) {
+    if (request.nextUrl.pathname.includes('people')) {
       return NextResponse.rewrite(
-        new URL(
-          `/dashboard/team/${current_team_id}/board/${current_board_id}`,
-          request.url,
-        ),
+        `${process.env.NEXT_PUBLIC_BASE_URL}/dashboard/team/${current_team_id}/people`,
       )
     }
-    if (request.nextUrl.pathname == '/') {
-      return NextResponse.rewrite(new URL('/account', request.url))
+    if (request.nextUrl.pathname.includes('account')) {
+      return NextResponse.rewrite(`${process.env.NEXT_PUBLIC_BASE_URL}/account`)
     }
+    return NextResponse.rewrite(
+      `${process.env.NEXT_PUBLIC_BASE_URL}/dashboard/team/${current_team_id}`,
+    )
   }
-
-  console.log(request.url)
-
-  return NextResponse.rewrite(new URL(request.url, process.env.NEXT_PUBLIC_BASE_URL))
+  return NextResponse.rewrite(`${process.env.NEXT_PUBLIC_BASE_URL}/select/team`)
 })
 
 export const config = {
