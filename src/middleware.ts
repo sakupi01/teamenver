@@ -13,11 +13,13 @@ export default withMiddlewareAuthRequired(async function middleware(
 
   if (!appSession) {
     if (request.nextUrl.pathname.startsWith('/')) {
-      return NextResponse.redirect(new URL('/api/auth/login', request.url))
+      NextResponse.redirect(new URL('/api/auth/login', request.url))
     }
   } else if (!current_team_id) {
-    return NextResponse.redirect(new URL('/select/team', request.url))
+    NextResponse.redirect(new URL('/select/team', request.url))
   }
+
+  NextResponse.redirect(new URL('/select/team', request.url))
 })
 
 export const config = {

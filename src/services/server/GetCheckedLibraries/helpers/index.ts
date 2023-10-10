@@ -65,13 +65,12 @@ export const getPeerDepsOfSelectedFw = async (): Promise<{
 }> => {
   try {
     const { framework } = (await getBoardDetail()).board_details[0]
-    if (framework === null || framework === undefined) {
-      throw new BadRequestError()
-    }
-
     console.log('**************************')
     console.log('Your framework: ', framework)
     console.log('**************************')
+    if (framework === null || framework === undefined) {
+      throw new BadRequestError()
+    }
 
     const { data: peerDependenciesOfFw, error } = await supabaseClient
       .from('frameworks')
@@ -96,7 +95,7 @@ export const getPeerDepsOfSelectedCss = async (): Promise<{
 }> => {
   const { css_library } = (await getBoardDetail()).board_details[0]
   if (css_library === null || css_library === undefined) {
-    throw new Error('framework is null or undefined')
+    throw new BadRequestError()
   }
   const peerDependenciesOfCss = { peerDependencies: getPeerDependency([css_library]) } // css libs with peerDeps
 
