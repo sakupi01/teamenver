@@ -89,3 +89,9 @@ mutation DeleteLike($comment_id: uuid!, $user_id: String!) {
     affected_rows
   }
 }
+
+mutation UpdateBoardVisibility($board_id: uuid!, $is_public: Boolean!) {
+  update_boards_by_pk(pk_columns: { id: $board_id }, _set: { is_public: $is_public }) {
+    updated_at
+  }
+}
