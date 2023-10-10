@@ -25,13 +25,13 @@ const PeopleList = async ({ params }: PeopleListProps) => {
 
   return (
     <div className='flex flex-col items-center justify-center flex-1 px-14'>
-      {member.map((person) => (
-        <Card className='px-5 py-3 my-3' key={person.users.id}>
-          <CardHeader>
-            <CardTitle>Team Members</CardTitle>
-            <CardDescription>Invite your team members to collaborate.</CardDescription>
-          </CardHeader>
-          <CardContent className='grid gap-6'>
+      <Card className='px-5 py-3 my-3'>
+        <CardHeader className='mb-5'>
+          <CardTitle>Team Members</CardTitle>
+          <CardDescription>Invite your team members to collaborate.</CardDescription>
+        </CardHeader>
+        {member.map((person) => (
+          <CardContent className='grid gap-6 mb-5' key={person.users.id}>
             <div className='flex items-center justify-between space-x-4'>
               <div className='flex items-center space-x-4'>
                 <Avatar>
@@ -65,8 +65,8 @@ const PeopleList = async ({ params }: PeopleListProps) => {
               </CardFooter>
             </div>
           </CardContent>
-        </Card>
-      ))}
+        ))}
+      </Card>
     </div>
   )
 }
