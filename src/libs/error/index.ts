@@ -1,6 +1,8 @@
 import { ClientError } from 'graphql-request'
 import { NextResponse } from 'next/server'
 
+import { deleteCookies } from '../actions/deleteCookies'
+
 import { CustomError } from './custom'
 import { errors, ErrorType, HttpError } from './http'
 
@@ -11,7 +13,10 @@ export function handleApiRouteError(err: unknown): NextResponse<ErrorType> {
       case 400:
         return NextResponse.json({ message: err.message, status: 400 }, { status: 400 })
       case 401:
-        return NextResponse.json({ message: err.message, status: 401 }, { status: 401 })
+        deleteCookies()
+        NextResponse.redirect(
+          new URL('/api/auth/logout', process.env.NEXT_PUBLIC_BASE_URL),
+        )
       case 404:
         return NextResponse.json({ message: err.message, status: 404 }, { status: 404 })
       case 405:
@@ -27,7 +32,10 @@ export function handleApiRouteError(err: unknown): NextResponse<ErrorType> {
       case 400:
         return NextResponse.json({ message: err.message, status: 400 }, { status: 400 })
       case 401:
-        return NextResponse.json({ message: err.message, status: 401 }, { status: 401 })
+        deleteCookies()
+        NextResponse.redirect(
+          new URL('/api/auth/logout', process.env.NEXT_PUBLIC_BASE_URL),
+        )
       case 404:
         return NextResponse.json({ message: err.message, status: 404 }, { status: 404 })
       case 405:

@@ -23,8 +23,6 @@ export async function GET(
     const res = await getJoinedTeams({ user_id })
     return NextResponse.json(res)
   } catch (error) {
-    console.log(error)
-
     return handleApiRouteError(error)
   }
 }
