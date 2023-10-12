@@ -115,7 +115,7 @@ jobs:
           key: ${{ runner.os }}-${{ github.sha }}
 
       - name: Install Playwright
-        run: bunx playwright install --with-deps chronium
+        run: bunx playwright install --with-deps chromium
 
       - name: Install MSW
         run: bun add msw-storybook-addon
