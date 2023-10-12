@@ -1,5 +1,4 @@
 import { getSession } from '@auth0/nextjs-auth0'
-import { cookies } from 'next/headers'
 
 import { BadRequestError, UnAuthorizedError } from '@/libs/error/http'
 import { gqlHasuraClient } from '@/libs/graphql/clientLegacy'
@@ -8,10 +7,9 @@ import { GetBoardLibrariesDocument } from '@/gql/codegen/hasura/graphql'
 
 import { handleServerError } from '..'
 
-export const getBoardDetail = async () => {
+export const getBoardDetail = async (board_detail_id: string) => {
   const session = await getSession()
   const access_token = session?.accessToken
-  const board_detail_id = cookies().get('current_board_detail_id')?.value
 
   try {
     if (board_detail_id === undefined || null) {
@@ -21,12 +19,17 @@ export const getBoardDetail = async () => {
       throw new UnAuthorizedError()
     }
     gqlHasuraClient.setHeader('authorization', `Bearer ${access_token}`)
-    const { board_details } = await gqlHasuraClient.request(GetBoardLibrariesDocument)
+    const { board_details, boards } = await gqlHasuraClient.request(
+      GetBoardLibrariesDocument,
+      {
+        board_detail_id: board_detail_id,
+      },
+    )
 
-    return { board_details }
+    return { board_details, boards }
   } catch (error) {
     return handleServerError(error)
   }
 }
 
-export type ReturnUpdateBoardDetailType = Awaited<ReturnType<typeof getBoardDetail>>
+export type ReturnGetBoardDetailType = Awaited<ReturnType<typeof getBoardDetail>>
