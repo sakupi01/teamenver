@@ -32,6 +32,7 @@ export const SideBar = ({
       }
       get()
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   return (

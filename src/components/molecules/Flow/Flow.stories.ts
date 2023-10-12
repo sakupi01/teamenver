@@ -1,5 +1,4 @@
 import { Meta, StoryObj } from '@storybook/react'
-import { within } from '@storybook/testing-library'
 
 import { Flow } from './Flow'
 
@@ -22,8 +21,5 @@ export const Default: Story = {
     toFirstOneIndicator: null,
     isTeamBoard: true,
     board_detail: {},
-  },
-  play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement)
   },
 }

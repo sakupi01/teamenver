@@ -1,6 +1,5 @@
-import supabaseClient from '@/libs/supabase/supabaseClient'
-
 import { getCheckedLibraries, WhichLibrary } from '@/services/client/GetCheckedLibraries'
+import { getFrameworks } from '@/services/server/GetFrameworks'
 
 const categories = [
   null,
@@ -28,20 +27,7 @@ export const fetchData = async (
 
   if (nextCategory == 'framework') {
     // framework
-    const get = async () => {
-      try {
-        const { data: frameworks, error } = await supabaseClient
-          .from('frameworks')
-          .select('name')
-          .order('webframe_want_to_work_with_count', { ascending: false })
-          .eq('ableToSetWithNode', true)
-        return frameworks
-      } catch (error) {
-        console.log(error)
-      }
-    }
-
-    const sidebarState = await get()
+    const sidebarState = await getFrameworks()
     return JSON.stringify({
       category: nextCategory,
       nodes: sidebarState,
