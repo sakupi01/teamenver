@@ -113,6 +113,7 @@ export const useReactFlowFunctions = () => {
 
       setNodes((nds) => nds.concat(newNode))
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [reactFlowInstance],
   )
 
@@ -162,6 +163,7 @@ export const useReactFlowFunctions = () => {
         className: '',
       }
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [],
   )
 
@@ -202,6 +204,7 @@ export const useReactFlowFunctions = () => {
         return nextEdges
       })
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [getClosestEdge],
   )
 

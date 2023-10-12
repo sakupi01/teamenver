@@ -54,6 +54,7 @@ export const ChatPage = ({ current_board_id, accessToken }: ChatPageProps) => {
   const [messages, setMessages] = useState<GetLastMessagesQuery['comments']>([])
   useEffect(() => {
     instantFn(current_board_id)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
   wsClient.subscribe(
     {
