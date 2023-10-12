@@ -8,9 +8,7 @@ const meta = {
   title: 'ChatPage',
   component: ChatPage,
   tags: ['autodocs'],
-  parameters: {
-    layout: 'fullscreen',
-  },
+  parameters: {},
   argTypes: {},
 } satisfies Meta<typeof ChatPage>
 

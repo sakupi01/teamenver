@@ -2,6 +2,7 @@ import { execSync } from 'child_process'
 
 import semver from 'semver'
 
+import { BadRequestError, InternalServerError } from '@/libs/error/http'
 import supabaseClient from '@/libs/supabase/supabaseClient'
 
 import { Json } from '@/types/supabase'
@@ -62,25 +63,28 @@ export const getPeerDepsOfSelectedFw = async (): Promise<{
     peerDependencies: Json
   }
 }> => {
-  const { framework } = (await getBoardDetail()).board_details[0]
-  if (framework === null || framework === undefined) {
-    throw new Error('framework is null or undefined')
-  }
+  try {
+    const { framework } = (await getBoardDetail()).board_details[0]
+    console.log('**************************')
+    console.log('Your framework: ', framework)
+    console.log('**************************')
+    if (framework === null || framework === undefined) {
+      throw new BadRequestError()
+    }
 
-  console.log('**************************')
-  console.log('Your framework: ', framework)
-  console.log('**************************')
-
-  const { data: peerDependenciesOfFw, error } = await supabaseClient
-    .from('frameworks')
-    .select('peerDependencies')
-    .eq('name', framework)
-    .limit(1)
-    .single()
-  if (peerDependenciesOfFw === null) {
-    throw new Error('peerDependenciesOfFw is null') // もしくは適切なエラーハンドリングを行う
+    const { data: peerDependenciesOfFw, error } = await supabaseClient
+      .from('frameworks')
+      .select('peerDependencies')
+      .eq('name', framework)
+      .limit(1)
+      .single()
+    if (peerDependenciesOfFw === null) {
+      throw new InternalServerError()
+    }
+    return { framework, peerDependenciesOfFw }
+  } catch (error) {
+    throw error
   }
-  return { framework, peerDependenciesOfFw }
 }
 
 export const getPeerDepsOfSelectedCss = async (): Promise<{
@@ -91,7 +95,7 @@ export const getPeerDepsOfSelectedCss = async (): Promise<{
 }> => {
   const { css_library } = (await getBoardDetail()).board_details[0]
   if (css_library === null || css_library === undefined) {
-    throw new Error('framework is null or undefined')
+    throw new BadRequestError()
   }
   const peerDependenciesOfCss = { peerDependencies: getPeerDependency([css_library]) } // css libs with peerDeps
 

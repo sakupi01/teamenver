@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 
 import { handleApiRouteError } from '@/libs/error'
-import { ErrorType } from '@/libs/error/http'
+import { BadRequestError, ErrorType } from '@/libs/error/http'
 
 import { insertMessage, ReturnInsertMessageType } from '@/services/server/InsertMessage'
 
@@ -13,10 +13,11 @@ export async function GET(
   try {
     const { searchParams } = new URL(request.url!)
     const content = searchParams.get('content')
-    console.log('********')
-    console.log('api', content)
-    console.log('********')
-    const res = await insertMessage(content)
+    const current_board_id = searchParams.get('current_board_id')
+    if (!current_board_id) {
+      throw new BadRequestError()
+    }
+    const res = await insertMessage(content, current_board_id)
     return NextResponse.json(res)
   } catch (error) {
     return handleApiRouteError(error)

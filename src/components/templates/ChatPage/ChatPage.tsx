@@ -1,11 +1,20 @@
 'use client'
+// import { createClient } from 'graphql-ws'
 import { createClient } from 'graphql-ws'
+import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
+
+import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'
+import { Separator } from '@/components/ui/separator'
+
+import { deleteCookies } from '@/libs/actions/deleteCookies'
+import { HttpError } from '@/libs/error/http'
 
 import { GetLastMessagesQuery } from '@/gql/codegen/hasura/graphql'
 import { getMessage } from '@/services/client/GetMessage'
-import { insertMessage } from '@/services/client/InsertMessage'
-import { css } from 'styled-system/css'
+
+import { InputFormCard } from './InputFormCard'
+import { MessageCard } from './MessageCard'
 
 type ChatPageProps = {
   current_board_id: string
@@ -25,104 +34,99 @@ export const ChatPage = ({ current_board_id, accessToken }: ChatPageProps) => {
     },
   })
 
-  const [messages, setMessages] = useState<GetLastMessagesQuery['comments']>([])
-
   async function instantFn(board_id: string) {
-    const res = await getMessage({
-      board_id: board_id,
-      from_ts: '2018-08-21T19:58:46.987552+00:00', // 十分な過去の日付
-    })
-    setMessages(res.comments)
+    try {
+      const res = await getMessage({
+        board_id: board_id,
+        from_ts: '2018-08-21T19:58:46.987552+00:00', // 十分な過去の日付
+      })
+
+      setMessages(res.comments)
+    } catch (error) {
+      if (error instanceof HttpError && error.status == 401) {
+        deleteCookies()
+        route.push('/api/auth/logout')
+      }
+    }
   }
+
+  const route = useRouter()
+  const [messages, setMessages] = useState<GetLastMessagesQuery['comments']>([])
   useEffect(() => {
     instantFn(current_board_id)
-    if (messages.length > 0) {
-      const unsubscribe = wsClient.subscribe(
-        {
-          query: `subscription SubscribeMessage($board_id: uuid) {
-              comments(limit: 1, order_by: { updated_at: desc }, where: {board_id: {_eq: $board_id}}) {
-                id
-                content
-                user {
-                  id
-                  email
-                }
-                board_id
-                updated_at
-              }
-            }
-            `,
-          variables: {
-            board_id: current_board_id,
-          },
-        },
-        {
-          next: async ({ data }: { data: GetLastMessagesQuery }) => {
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+  wsClient.subscribe(
+    {
+      query: `subscription SubscribeMessage($board_id: uuid) {
+      comments(limit: 1, order_by: { updated_at: desc }, where: {board_id: {_eq: $board_id}}) {
+        id
+        content
+        user {
+          id
+          email
+        }
+        board_id
+        updated_at
+      }
+    }
+    `,
+      variables: {
+        board_id: current_board_id,
+      },
+    },
+    {
+      next: async ({ data }: { data: GetLastMessagesQuery }) => {
+        // next valueが届く→その値を元に新しいメッセージを取得する→取得したメッセージをmessagesに追加する→再レンダリング→再びnext valueが届く→...
+        // →永遠に同じ値がレンダリングされる
+        if (messages.length > 0) {
+          try {
             const res = await getMessage({
               board_id: current_board_id,
               from_ts: messages[messages.length - 1].updated_at,
             })
-
-            setMessages((prev) => prev.concat(res.comments))
-          },
-
-          error: (error) => {
-            console.log(error)
-          },
-          complete: () => {
-            console.log('completed')
-          },
-        },
-      )
-      return () => {
-        unsubscribe()
-      }
-    }
-  }, [])
-
-  const handleSendMessage = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    const content = e.currentTarget.content.value
-
-    const res = await insertMessage(content)
-  }
+            // コメントが登録されていた場合のみ、messagesを更新してレンダリングを許可
+            if (res.comments.length) {
+              console.log(res.comments.length)
+              const newMessages = [...messages, ...res.comments]
+              setMessages(() => {
+                return newMessages
+              })
+            }
+          } catch (error) {
+            if (error instanceof HttpError && error.status == 401) {
+              deleteCookies()
+              route.push('/api/auth/logout')
+            }
+          }
+        }
+      },
+      error: (error) => {
+        console.log(error)
+      },
+      complete: () => {
+        console.log('completed')
+      },
+    },
+  )
 
   return (
     <>
-      <div
-        className={css({
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          padding: '5%',
-          width: '100vw',
-          height: '5vh',
-          backgroundColor: 'white',
-          borderBottom: '1px solid black',
-          position: 'sticky',
-          top: '0',
-          md: {
-            height: '7vh',
-          },
-        })}
-      >
-        <h1>Chat Room</h1>
-        <a href='/api/auth/logout'>Logout</a>
+      <div className='mt-6 space-y-1'>
+        <h2 className='text-2xl font-semibold tracking-tight'>Conversation</h2>
+        <p className='text-sm text-muted-foreground'>Leave the comment on the board.</p>
       </div>
-      <div className={css({ display: 'flex', justifyContent: 'space-around' })}>
-        <div>
-          <p>Conversation</p>
-          {messages.map((message) => (
-            <p key={message.id}>{message.content}</p>
-          ))}
-        </div>
-        <div>
-          <p>Send Message</p>
-          <form onSubmit={handleSendMessage} method='POST'>
-            <input type='text' name='content' placeholder='Input a message' />
-            <button type='submit'>Send</button>
-          </form>
-        </div>
+      <Separator className='my-4' />
+      <div className='relative'>
+        <ScrollArea>
+          <div className='flex space-x-4 pb-4'>
+            {messages.map((message) => (
+              <MessageCard key={message.id} message={message} />
+            ))}
+            <InputFormCard current_board_id={current_board_id} />
+          </div>
+          <ScrollBar orientation='horizontal' />
+        </ScrollArea>
       </div>
     </>
   )

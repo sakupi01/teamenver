@@ -54,9 +54,7 @@ export const getCheckedLibraries = async (
             framework,
           )
         }
-        console.log('##################################')
-        console.log('compatibleCssLibs: ', compatibleCssLibs)
-        console.log('##################################')
+
         return { data: compatibleCssLibs }
       }
     } catch (error) {
@@ -105,9 +103,7 @@ export const getCheckedLibraries = async (
             css_library,
           )
         }
-        console.log('##################################')
-        console.log('compatibleUiLibs: ', compatibleUiLibs)
-        console.log('##################################')
+
         return { data: compatibleUiLibs }
       }
     } catch (error) {

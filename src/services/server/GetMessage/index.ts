@@ -21,9 +21,9 @@ export const getMessage = async ({ board_id, from_ts }: GetMessageProps) => {
       throw new UnAuthorizedError()
     }
     gqlHasuraClient.setHeader('authorization', `Bearer ${access_token}`)
-    // translate from_ts to timestamptz type
 
     const { comments } = await gqlHasuraClient.request(GetLastMessagesDocument, {
+      user_id: session?.user.sub,
       board_id: board_id,
       from_ts: from_ts,
     })

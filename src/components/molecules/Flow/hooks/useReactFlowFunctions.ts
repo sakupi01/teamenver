@@ -47,16 +47,11 @@ export const useReactFlowFunctions = () => {
   const [reactFlowInstance, setReactFlowInstance] = useState<any>(null)
   const { deleteElements } = useReactFlow()
 
-  console.log('################')
-  console.log('edges:', edges)
-  console.log('################')
-
   // When you drag or select a node, the onNodeChange handler gets called.
   // With help of the applyNodeChanges function you can then apply those changes to your current node state.
   const onNodesChange = useCallback(
     (changes: NodeChange[]) => {
       setNodes((nds) => applyNodeChanges(changes, nds))
-      console.log('onNodesChange called')
     },
     [setNodes],
   )
@@ -116,11 +111,9 @@ export const useReactFlowFunctions = () => {
         data: { label: data.label ? data.label : 'N/A' },
       }
 
-      console.log('################')
-      console.log('newNode:', newNode)
-      console.log('################')
       setNodes((nds) => nds.concat(newNode))
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [reactFlowInstance],
   )
 
@@ -170,6 +163,7 @@ export const useReactFlowFunctions = () => {
         className: '',
       }
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [],
   )
 
@@ -210,6 +204,7 @@ export const useReactFlowFunctions = () => {
         return nextEdges
       })
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [getClosestEdge],
   )
 

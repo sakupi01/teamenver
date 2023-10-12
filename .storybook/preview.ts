@@ -11,7 +11,14 @@ const preview: Preview = {
         date: /Date$/,
       },
     },
-    msw: { handlers: [handleGetNpmLibraries()] },
+    // msw: { handlers: [handleGetNpmLibraries()] },
+    layout: 'fullscreen',
+    nextjs: {
+      appDirectory: true,
+      navigation: {
+        pathname: '/api/auth/logout',
+      },
+    },
   },
 }
 
