@@ -1,8 +1,8 @@
+import { redirect } from 'next/navigation'
+
 import { Flow } from '@/components/molecules/Flow'
 
-import supabaseClient from '@/libs/supabase/supabaseClient'
-
-import { sidebarData } from '@/types/custom/sidebarData'
+import { getTeamBoardDetail } from '@/services/server/GetTeamBoardDetail'
 
 export type TeamPageProps = {
   params: {
@@ -16,28 +16,22 @@ const TeamPage = async ({
     team_id: string
   }
 }) => {
-  const get = async () => {
-    try {
-      const { data: frameworks, error } = await supabaseClient
-        .from('frameworks')
-        .select('name')
-        .order('webframe_want_to_work_with_count', { ascending: false })
-        .eq('ableToSetWithNode', true)
-      return frameworks
-    } catch (error) {
-      console.log(error)
-    }
+  // TODO: team_id, board_idをもとに現在のボードの状態を取得してくる
+  // TODO: team_id, board_idをもとに次のサイドバーの状態を取得してくるOR指し示す何かを渡す
+  const { id, prevFirstNullKey, teamBoardDetailWithoutTypename } =
+    await getTeamBoardDetail(team_id)
+
+  if (!id) {
+    redirect('/select/team')
   }
 
-  // console.log(params.team_id)
-
-  const frameworks = await get()
   return (
     <div className='w-full h-full'>
       <Flow
-        frameworks={
-          frameworks ? { category: 'framework', nodes: frameworks } : ({} as sidebarData)
-        }
+        board_detail_id={id}
+        toFirstOneIndicator={prevFirstNullKey}
+        isTeamBoard={true}
+        board_detail={teamBoardDetailWithoutTypename}
       />
     </div>
   )
