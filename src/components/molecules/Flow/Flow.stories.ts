@@ -18,7 +18,10 @@ type Story = StoryObj<typeof meta>
 
 export const Default: Story = {
   args: {
-    frameworks: { category: 'frameworks', nodes: [{ name: 'react' }, { name: 'next' }] },
+    board_detail_id: '0',
+    toFirstOneIndicator: null,
+    isTeamBoard: true,
+    board_detail: {},
   },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)

@@ -1,25 +1,60 @@
+import supabaseClient from '@/libs/supabase/supabaseClient'
+
 import { getCheckedLibraries, WhichLibrary } from '@/services/client/GetCheckedLibraries'
 
-export const fetchData = async (prevCategory: string) => {
-  const categories = [
-    'framework',
-    'css-framework',
-    'ui-framework',
-    'linter',
-    'formatter',
-    'lint_staged_husky',
-    'hygen',
-    'builder',
-    'manager',
-    'vscode',
-    'volta',
-    'isGit',
-  ]
-  const prevCategoryId = categories.indexOf(prevCategory)
+const categories = [
+  null,
+  'framework',
+  'css_library',
+  'ui_library',
+  'linter',
+  'formatter',
+  'lint_staged_husky',
+  'hygen',
+  'builder',
+  'manager',
+  'vscode',
+  'volta',
+  'isGit',
+]
+
+export const fetchData = async (
+  prevCategory: string | null,
+  board_detail_id: string,
+  isTeamBoard: boolean,
+) => {
+  const prevCategoryId = categories.indexOf(prevCategory) // prevCategoryがframeworkの場合はcategoryIdを-1で返させたいため
   const nextCategory = categories[prevCategoryId + 1]
-  const isDataFetchNeeded = categories.slice(0, 3).indexOf(nextCategory) // 0 ~ 2までがデータフェッチが必要
-  if (isDataFetchNeeded != -1) {
-    const nodes = (await getCheckedLibraries(nextCategory as WhichLibrary))?.data || []
+
+  if (nextCategory == 'framework') {
+    // framework
+    const get = async () => {
+      try {
+        const { data: frameworks, error } = await supabaseClient
+          .from('frameworks')
+          .select('name')
+          .order('webframe_want_to_work_with_count', { ascending: false })
+          .eq('ableToSetWithNode', true)
+        return frameworks
+      } catch (error) {
+        console.log(error)
+      }
+    }
+
+    const sidebarState = await get()
+    return JSON.stringify({
+      category: nextCategory,
+      nodes: sidebarState,
+    })
+  } else if (nextCategory == 'css_library' || nextCategory == 'ui_library') {
+    const nodes =
+      (
+        await getCheckedLibraries(
+          nextCategory as WhichLibrary,
+          board_detail_id,
+          isTeamBoard,
+        )
+      )?.data || []
     const data = JSON.stringify({ category: nextCategory, nodes: nodes })
     return data
   } else {
