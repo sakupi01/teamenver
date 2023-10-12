@@ -62,7 +62,7 @@ export const getPeerDependency = (libraries: string | Array<string>): Array<Json
 
 export const getPeerDepsOfSelectedFw = async (
   isTeamBoard: boolean,
-  board_detail_id: string,
+  board_id: string,
 ): Promise<{
   framework: string
   peerDependenciesOfFw: {
@@ -76,7 +76,7 @@ export const getPeerDepsOfSelectedFw = async (
     }
     const { framework } = isTeamBoard
       ? (await getTeamBoardDetail(team_id)).teamBoardDetailWithoutTypename
-      : (await getBoardDetail(board_detail_id)).board_details[0]
+      : (await getBoardDetail(board_id)).boardDetailWithoutTypename
     console.log('**************************')
     console.log('Your framework: ', framework)
     console.log('**************************')
@@ -101,7 +101,7 @@ export const getPeerDepsOfSelectedFw = async (
 
 export const getPeerDepsOfSelectedCss = async (
   isTeamBoard: boolean,
-  board_detail_id: string,
+  board_id: string,
 ): Promise<{
   css_library: string
   peerDependenciesOfCss: {
@@ -114,7 +114,7 @@ export const getPeerDepsOfSelectedCss = async (
   }
   const { css_library } = isTeamBoard
     ? (await getTeamBoardDetail(team_id)).teamBoardDetailWithoutTypename
-    : (await getBoardDetail(board_detail_id)).board_details[0]
+    : (await getBoardDetail(board_id)).boardDetailWithoutTypename
 
   if (css_library === null || css_library === undefined) {
     throw new BadRequestError()

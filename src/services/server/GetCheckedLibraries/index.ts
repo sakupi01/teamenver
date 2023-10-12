@@ -15,7 +15,7 @@ export type GetCheckedLibrariesType = { data: { name: string }[] }
 
 export const getCheckedLibraries = async (
   which: WhichLibrary,
-  board_detail_id: string,
+  board_id: string,
   isTeamBoard: boolean,
 ): Promise<GetCheckedLibrariesType> => {
   if (which == 'css_library') {
@@ -34,7 +34,7 @@ export const getCheckedLibraries = async (
         // frameworkのpeerDependenciesを取得する
         const { framework, peerDependenciesOfFw } = await getPeerDepsOfSelectedFw(
           isTeamBoard,
-          board_detail_id,
+          board_id,
         )
         console.log('**********************')
         console.log(peerDependenciesOfFw)
@@ -80,7 +80,7 @@ export const getCheckedLibraries = async (
       } else {
         const { framework, peerDependenciesOfFw } = await getPeerDepsOfSelectedFw(
           isTeamBoard,
-          board_detail_id,
+          board_id,
         )
         console.log('**********************')
         console.log('peerDependenciesOfFw: ', peerDependenciesOfFw)
@@ -88,7 +88,7 @@ export const getCheckedLibraries = async (
 
         const { css_library, peerDependenciesOfCss } = await getPeerDepsOfSelectedCss(
           isTeamBoard,
-          board_detail_id,
+          board_id,
         )
         console.log('**********************')
         console.log('peerDependenciesOfCss: ', peerDependenciesOfCss)
