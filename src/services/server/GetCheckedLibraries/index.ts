@@ -15,8 +15,10 @@ export type GetCheckedLibrariesType = { data: { name: string }[] }
 
 export const getCheckedLibraries = async (
   which: WhichLibrary,
+  board_detail_id: string,
+  isTeamBoard: boolean,
 ): Promise<GetCheckedLibrariesType> => {
-  if (which === 'css-framework') {
+  if (which == 'css_library') {
     let compatibleCssLibs: Array<{ name: string }> = []
 
     // get peerDependency of all css
@@ -30,7 +32,10 @@ export const getCheckedLibraries = async (
         return { data: compatibleCssLibs }
       } else {
         // frameworkのpeerDependenciesを取得する
-        const { framework, peerDependenciesOfFw } = await getPeerDepsOfSelectedFw()
+        const { framework, peerDependenciesOfFw } = await getPeerDepsOfSelectedFw(
+          isTeamBoard,
+          board_detail_id,
+        )
         console.log('**********************')
         console.log(peerDependenciesOfFw)
         console.log('**********************')
@@ -60,7 +65,7 @@ export const getCheckedLibraries = async (
     } catch (error) {
       throw error
     }
-  } else if (which === 'ui-framework') {
+  } else if (which == 'ui_library') {
     let compatibleUiLibs: Array<{ name: string }> = []
 
     // get peerDependency of all css
@@ -73,12 +78,18 @@ export const getCheckedLibraries = async (
       if (ui_libraries === null) {
         return { data: compatibleUiLibs }
       } else {
-        const { framework, peerDependenciesOfFw } = await getPeerDepsOfSelectedFw()
+        const { framework, peerDependenciesOfFw } = await getPeerDepsOfSelectedFw(
+          isTeamBoard,
+          board_detail_id,
+        )
         console.log('**********************')
         console.log('peerDependenciesOfFw: ', peerDependenciesOfFw)
         console.log('**********************')
 
-        const { css_library, peerDependenciesOfCss } = await getPeerDepsOfSelectedCss()
+        const { css_library, peerDependenciesOfCss } = await getPeerDepsOfSelectedCss(
+          isTeamBoard,
+          board_detail_id,
+        )
         console.log('**********************')
         console.log('peerDependenciesOfCss: ', peerDependenciesOfCss)
         console.log('**********************')

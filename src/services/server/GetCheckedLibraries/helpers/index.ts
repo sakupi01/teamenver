@@ -1,5 +1,7 @@
 import { execSync } from 'child_process'
 
+import { cookies } from 'next/headers'
+import { redirect } from 'next/navigation'
 import semver from 'semver'
 
 import { BadRequestError, InternalServerError } from '@/libs/error/http'
@@ -8,6 +10,7 @@ import supabaseClient from '@/libs/supabase/supabaseClient'
 import { Json } from '@/types/supabase'
 
 import { getBoardDetail } from '../../GetBoardDetail'
+import { getTeamBoardDetail } from '../../GetTeamBoardDetail'
 
 export const getPeerDependenciesInfo = (library: string) => {
   if (library !== 'CSS Modules') {
@@ -57,14 +60,23 @@ export const getPeerDependency = (libraries: string | Array<string>): Array<Json
   return peerDepsOfLibraries
 }
 
-export const getPeerDepsOfSelectedFw = async (): Promise<{
+export const getPeerDepsOfSelectedFw = async (
+  isTeamBoard: boolean,
+  board_detail_id: string,
+): Promise<{
   framework: string
   peerDependenciesOfFw: {
     peerDependencies: Json
   }
 }> => {
   try {
-    const { framework } = (await getBoardDetail()).board_details[0]
+    const team_id = cookies().get('current_team_id')?.value
+    if (!team_id) {
+      redirect('/api/auth/login')
+    }
+    const { framework } = isTeamBoard
+      ? (await getTeamBoardDetail(team_id)).teamBoardDetailWithoutTypename
+      : (await getBoardDetail(board_detail_id)).board_details[0]
     console.log('**************************')
     console.log('Your framework: ', framework)
     console.log('**************************')
@@ -87,13 +99,23 @@ export const getPeerDepsOfSelectedFw = async (): Promise<{
   }
 }
 
-export const getPeerDepsOfSelectedCss = async (): Promise<{
+export const getPeerDepsOfSelectedCss = async (
+  isTeamBoard: boolean,
+  board_detail_id: string,
+): Promise<{
   css_library: string
   peerDependenciesOfCss: {
     peerDependencies: Json
   }
 }> => {
-  const { css_library } = (await getBoardDetail()).board_details[0]
+  const team_id = cookies().get('current_team_id')?.value
+  if (!team_id) {
+    redirect('/api/auth/login')
+  }
+  const { css_library } = isTeamBoard
+    ? (await getTeamBoardDetail(team_id)).teamBoardDetailWithoutTypename
+    : (await getBoardDetail(board_detail_id)).board_details[0]
+
   if (css_library === null || css_library === undefined) {
     throw new BadRequestError()
   }
