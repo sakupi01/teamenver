@@ -1,4 +1,4 @@
-import * as ApiCheck from '@/api/get/libraries/route'
+import * as ApiCheck from '@/api/check/route'
 
 import { handleResolve, host } from '..'
 
