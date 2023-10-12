@@ -38,6 +38,13 @@ mutation UpdateDetails($id: uuid!, $changes: board_details_set_input) {
     }
   }
 }
+mutation UpdateTeamBoardDetails($id: uuid!, $changes: team_board_details_set_input) {
+  update_team_board_details(where: { id: { _eq: $id } }, _set: $changes) {
+    returning {
+      id
+    }
+  }
+}
 
 mutation InsertMessage($board_id: uuid!, $content: String!) {
   insert_comments_one(object: { board_id: $board_id, content: $content }) {
