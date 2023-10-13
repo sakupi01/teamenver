@@ -23,7 +23,7 @@ export async function GET(
     const label = searchParams.get('label')
     const isTeamBoard = searchParams.get('isTeamBoard')
 
-    if (Boolean(isTeamBoard)) {
+    if (isTeamBoard == 'true') {
       const res = await updateTeamBoardDetail({
         [`${
           category

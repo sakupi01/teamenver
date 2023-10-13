@@ -28,10 +28,6 @@ export const updateTeamBoardDetail = async ({
   const access_token = session?.accessToken
   const team_board_detail_id = cookies().get('current_team_board_detail_id')?.value
 
-  console.log('*********************')
-  console.log(args)
-  console.log('*********************')
-
   try {
     if (team_board_detail_id === undefined || null) {
       throw new BadRequestError()

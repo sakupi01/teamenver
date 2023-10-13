@@ -23,7 +23,7 @@ export async function GET(
       throw new BadRequestError()
     }
 
-    const res = await getCheckedLibraries(which, board_detail_id, Boolean(isTeamBoard))
+    const res = await getCheckedLibraries(which, board_detail_id, isTeamBoard == 'true')
     return NextResponse.json(res)
   } catch (error) {
     console.log(error)
