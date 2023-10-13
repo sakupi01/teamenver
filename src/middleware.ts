@@ -9,7 +9,6 @@ export default withMiddlewareAuthRequired(async function middleware(
 ) {
   const appSession = request.cookies.has('appSession')
   const current_team_id = request.cookies.get('current_team_id')?.value
-  const current_board_id = request.cookies.get('current_board_id')?.value
 
   if (!appSession) {
     if (request.nextUrl.pathname.startsWith('/')) {
@@ -19,7 +18,9 @@ export default withMiddlewareAuthRequired(async function middleware(
     NextResponse.redirect(new URL('/select/team', request.url))
   }
 
-  NextResponse.redirect(new URL('/select/team', request.url))
+  if (request.nextUrl.pathname == '/') {
+    return NextResponse.redirect(new URL('/select/team', request.url))
+  }
 })
 
 export const config = {

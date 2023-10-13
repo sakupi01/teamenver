@@ -18,32 +18,25 @@ import {
 import 'reactflow/dist/style.css'
 
 import { nodeInfo } from '@/types/custom/nodeInfo'
-import { sidebarData } from '@/types/custom/sidebarData'
 
-export type FlowProps = {
-  frameworks: sidebarData
-}
+import { ReturnGetTeamBoardDetailType } from '@/services/server/GetTeamBoardDetail'
 
-const initialElements = [
-  {
-    id: '1',
-    type: 'input',
-    data: { label: 'フレームワークを選択してください' },
-    position: { x: 250, y: 5 },
-    deletable: false,
-  },
-]
+import { idFactoryInstance, useNodeInit } from './useNodeInit'
 
 const MIN_DISTANCE = 150
 
-let id = 0
-const getId = () => `dndnode_${id++}`
-
-export const useReactFlowFunctions = () => {
+export const useReactFlowFunctions = (
+  initialNodes: ReturnGetTeamBoardDetailType['teamBoardDetailWithoutTypename'],
+  firstOneIndicator: string | null,
+) => {
+  const { initializedEdges, initializedNodes } = useNodeInit(
+    initialNodes,
+    firstOneIndicator,
+  )
   const store = useStoreApi()
   const reactFlowWrapper = useRef<HTMLInputElement>(null)
-  const [nodes, setNodes] = useNodesState(initialElements)
-  const [edges, setEdges] = useEdgesState([])
+  const [nodes, setNodes] = useNodesState(initializedNodes)
+  const [edges, setEdges] = useEdgesState(initializedEdges)
   const [reactFlowInstance, setReactFlowInstance] = useState<any>(null)
   const { deleteElements } = useReactFlow()
 
@@ -105,7 +98,7 @@ export const useReactFlowFunctions = () => {
         y: event.clientY - reactFlowBounds.top,
       })
       const newNode = {
-        id: getId(),
+        id: idFactoryInstance.getId(),
         type,
         position,
         data: { label: data.label ? data.label : 'N/A' },
@@ -139,7 +132,6 @@ export const useReactFlowFunctions = () => {
               res.node = n
             }
           }
-
           return res
         },
         {

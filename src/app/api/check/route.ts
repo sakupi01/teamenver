@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 
 import { handleApiRouteError } from '@/libs/error'
-import { ErrorType } from '@/libs/error/http'
+import { BadRequestError, ErrorType } from '@/libs/error/http'
 
 import { WhichLibrary } from '@/services/client/GetCheckedLibraries'
 import {
@@ -17,10 +17,17 @@ export async function GET(
   try {
     const { searchParams } = new URL(request.url!)
     const which = searchParams.get('which') as WhichLibrary
+    const board_detail_id = searchParams.get('board_detail_id')
+    const isTeamBoard = searchParams.get('isTeamBoard')
+    if (!board_detail_id || isTeamBoard == null) {
+      throw new BadRequestError()
+    }
 
-    const res = await getCheckedLibraries(which)
+    const res = await getCheckedLibraries(which, board_detail_id, isTeamBoard == 'true')
     return NextResponse.json(res)
   } catch (error) {
+    console.log(error)
+
     return handleApiRouteError(error)
   }
 }

@@ -1,5 +1,4 @@
 import { Meta, StoryObj } from '@storybook/react'
-import { within } from '@storybook/testing-library'
 
 import { Flow } from './Flow'
 
@@ -18,9 +17,9 @@ type Story = StoryObj<typeof meta>
 
 export const Default: Story = {
   args: {
-    frameworks: { category: 'frameworks', nodes: [{ name: 'react' }, { name: 'next' }] },
-  },
-  play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement)
+    board_detail_id: '0',
+    toFirstOneIndicator: null,
+    isTeamBoard: true,
+    board_detail: {},
   },
 }

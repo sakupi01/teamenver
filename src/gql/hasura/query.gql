@@ -1,9 +1,14 @@
-query GetBoardLibraries {
-  board_details {
-    id
-    framework
-    css_library
-    ui_library
+query GetBoardLibraries($board_id: uuid!) {
+  boards_by_pk(id: $board_id) {
+    board_detail {
+      id
+      framework
+      css_library
+      ui_library
+      linter
+      formatter
+    }
+    is_public
   }
 }
 
@@ -125,6 +130,21 @@ query GetTeamMember($team_id: uuid!) {
       image_url
       github_url
       twitter_url
+    }
+  }
+}
+
+query GetTeamBoardDetail($team_id: uuid!) {
+  teams_by_pk(id: $team_id) {
+    team_boards {
+      team_board_detail {
+        id
+        framework
+        css_library
+        ui_library
+        linter
+        formatter
+      }
     }
   }
 }
