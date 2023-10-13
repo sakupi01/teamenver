@@ -1,5 +1,4 @@
 import { Meta, StoryObj } from '@storybook/react'
-import { within } from '@storybook/testing-library'
 
 import { NavRight } from './NavRight'
 
@@ -19,8 +18,5 @@ type Story = StoryObj<typeof meta>
 export const Default: Story = {
   args: {
     current_team_id: '0',
-  },
-  play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement)
   },
 }
