@@ -4,7 +4,7 @@ import { NodeContainer } from './NodeContainer';
 
 
 const meta = {
-  title: "NodeContainer",
+  title: 'NodeContainer',
   component: NodeContainer,
   tags: ['autodocs'],
   parameters: {

@@ -27,7 +27,7 @@ function escapeForEval(code: string) {
   // JavaScriptコード内のバックスラッシュと引用符をエスケープします
   const escapedCode = code
     .replace(/\\/g, '\\\\')
-    .replace(/'/g, "\\'")
+    .replace(/'/g, '\\\'')
     .replace(/"/g, '\\"')
 
   return escapedCode
@@ -532,6 +532,8 @@ const fileGenerator = async ({
           \`Installation might not be all set! \\n Refer to the official information for more details: https://getbootstrap.jp/docs/5.3/getting-started/download/\`
       );
   };
+
+  // styled-components
   
   // ui
   const muiInstall = (manager, fw_name, css_name) => {

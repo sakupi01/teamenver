@@ -1,6 +1,9 @@
 const million = require('million/compiler')
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  images: {
+    domains: ['ejkzhsvxsplsaljuquds.supabase.co'],
+  },
   experimental: {
     serverActions: true,
     typedRoutes: true,

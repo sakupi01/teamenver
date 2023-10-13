@@ -1,9 +1,8 @@
-import { gqlGhClient } from '@/libs/graphql/client'
+import { gqlGhClient } from '@/libs/graphql/clientLegacy'
 
 import { GetCssFrameworksDocument } from '@/gql/codegen/github/graphql'
 
 import { handleServerError } from '..'
-
 export const getTopics = async ({ query }: { query: string | null }) => {
   try {
     if (query === null) {

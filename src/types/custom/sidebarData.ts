@@ -1,4 +1,4 @@
 export interface sidebarData {
-  name: string
+  category: string
   nodes: { name: string | null }[]
 }

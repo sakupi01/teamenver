@@ -1,10 +1,10 @@
 /** @format */
 
-import { execSync } from "child_process";
-import { access, constants, writeFile, writeFileSync } from "fs";
-import path from "path";
+import { execSync } from 'child_process';
+import { access, constants, writeFile, writeFileSync } from 'fs';
+import path from 'path';
 
-import inquirer from "inquirer";
+import inquirer from 'inquirer';
 
 const appGenerator = async ({
     fw_name,
@@ -22,31 +22,31 @@ const appGenerator = async ({
     try {
         // Create a project and switch to the directory.
         switch (fw_name) {
-            case "vue":
+            case 'vue':
                 await vueInstall(manager, isTs, eslint, prettier); // eslint option
                 break;
-            case "react":
+            case 'react':
                 await reactInstall(manager, isTs);
                 break;
-            case "lit":
+            case 'lit':
                 await litInstall(manager, isTs);
                 break;
-            case "svelte":
+            case 'svelte':
                 await svelteInstall(manager, isTs);
                 break;
-            case "solid":
+            case 'solid':
                 await solidInstall(manager, isTs);
                 break;
-            case "qwik":
+            case 'qwik':
                 await qwikInstall(manager, isTs);
                 break;
             default:
                 console.log(
-                    `Uh oh. The framework you selected is still not under our support, or incorrect spelling. \\ Try again.`
+                    'Uh oh. The framework you selected is still not under our support, or incorrect spelling. \\ Try again.'
                 );
         }
 
-        if (eslint === "template") {
+        if (eslint === 'template') {
             const eslintrcFileGenerate = () =>
                 `{
              "extends": ["eslint:recommended", "prettier"],
@@ -77,8 +77,8 @@ const appGenerator = async ({
              }
            }`;
 
-            const eslintrcFile = ".eslintrc.json";
-            const eslintignoreFile = ".eslintignore";
+            const eslintrcFile = '.eslintrc.json';
+            const eslintignoreFile = '.eslintignore';
 
             // Scaffold eslint
             writeFileSync(
@@ -86,29 +86,29 @@ const appGenerator = async ({
                 eslintrcFileGenerate()
             );
 
-            const eslintingoreFileGenerate = () => ``;
+            const eslintingoreFileGenerate = () => '';
 
             writeFileSync(
                 path.join(process.cwd(), eslintignoreFile),
                 eslintingoreFileGenerate()
             );
-        } else if (eslint === "yes") {
-            execSync(`${manager} install -D eslint`, { stdio: "inherit" });
-            execSync(`${manager} create @eslint/config`, { stdio: "inherit" });
+        } else if (eslint === 'yes') {
+            execSync(`${manager} install -D eslint`, { stdio: 'inherit' });
+            execSync(`${manager} create @eslint/config`, { stdio: 'inherit' });
             execSync(`${manager} install -D vite-plugin-checker`, {
-                stdio: "inherit",
+                stdio: 'inherit',
             });
         } else {
-            console.log("eslint installation was skipped");
+            console.log('eslint installation was skipped');
         }
 
-        if (prettier === "template") {
-            execSync(`${manager} install -D prettier`, { stdio: "inherit" });
+        if (prettier === 'template') {
+            execSync(`${manager} install -D prettier`, { stdio: 'inherit' });
             execSync(`${manager} install -D eslint-config-prettier`, {
-                stdio: "inherit",
+                stdio: 'inherit',
             });
-            const prettierrcFile = ".prettierrc.json";
-            const prettierignoreFile = ".prettierignore";
+            const prettierrcFile = '.prettierrc.json';
+            const prettierignoreFile = '.prettierignore';
 
             const prettierrcFileGenerate = () => `
           {
@@ -127,82 +127,82 @@ const appGenerator = async ({
                 prettierrcFileGenerate()
             );
 
-            const prettieringoreFileGenerate = () => ``;
+            const prettieringoreFileGenerate = () => '';
 
             writeFileSync(
                 path.join(process.cwd(), prettierignoreFile),
                 prettieringoreFileGenerate()
             );
-        } else if (prettier === "yes") {
+        } else if (prettier === 'yes') {
             execSync(`${manager} install -D prettier eslint-config-prettier`, {
-                stdio: "inherit",
+                stdio: 'inherit',
             });
         } else {
-            console.log("prettier installation was skipped");
+            console.log('prettier installation was skipped');
         }
 
         // css library installation
         if (css_name) {
             switch (css_name) {
-                case "bootstrap":
+                case 'bootstrap':
                     bootstrapInstall(manager);
                     break;
-                case "tailwind":
+                case 'tailwind':
                     tailwindInstall(manager);
                     break;
-                case "panda":
+                case 'panda':
                     pandacssInstall(manager);
                     break;
                 default:
                     console.log(
-                        `Uh oh. The framework you selected is still not under our support.`
+                        'Uh oh. The framework you selected is still not under our support.'
                     );
             }
         } else {
-            console.log("css library installation was skipped");
+            console.log('css library installation was skipped');
         }
 
         // ui library installation
         if (ui_name) {
             switch (ui_name) {
-                case "mui":
+                case 'mui':
                     muiInstall(manager, fw_name, css_name);
                     break;
-                case "daisy":
+                case 'daisy':
                     daisyInstall(manager);
                     break;
                 default:
                     console.log(
-                        `Uh oh. The framework you selected is still not under our support.`
+                        'Uh oh. The framework you selected is still not under our support.'
                     );
             }
         } else {
-            console.log("UI library installation was skipped");
+            console.log('UI library installation was skipped');
         }
 
         // Install dependency if needed
-        execSync(`${manager} install`, { stdio: "inherit" });
+        execSync(`${manager} install`, { stdio: 'inherit' });
 
         // Run and serve
-        execSync(`${manager} run dev`, { stdio: "inherit" });
+        execSync(`${manager} run dev`, { stdio: 'inherit' });
     } catch (error) {
-        console.error("An error occurred:", error.message);
+        console.error('An error occurred:', error.message);
     }
 };
 
 const generalQuestion = [
     {
-        type: "input",
-        name: "projectName",
-        message: "What do you want to name your app?",
+        type: 'input',
+        name: 'projectName',
+        message: 'What do you want to name your app?',
     },
 ];
 // framework
 const vueInstall = async (manager, isTs, eslint, prettier) => {
     generalQuestion.push({
-        type: "confirm",
-        name: "vite",
-        message: "Do you want to use Vite as a builder?",
+        type: 'confirm',
+        name: 'vite',
+        message: 'Do you want to use Vite as a builder?',
     });
 
     const generalAnswers = await inquirer.prompt(generalQuestion);
@@ -210,25 +210,25 @@ const vueInstall = async (manager, isTs, eslint, prettier) => {
     if (generalAnswers.vite) {
         execSync(
             `${manager} create vite@latest ${generalAnswers.projectName} ${
-                isTs ? " --template vue-ts" : " --template vue"
+                isTs ? ' --template vue-ts' : ' --template vue'
             } `,
             {
-                stdio: "inherit",
+                stdio: 'inherit',
             }
         );
     } else {
         execSync(
             `${manager} create vue@latest ${generalAnswers.projectName} ${
-                isTs ? "--typescript" : ""
+                isTs ? '--typescript' : ''
             } ${
                 eslint && prettier
-                    ? "--eslint-with-prettier"
+                    ? '--eslint-with-prettier'
                     : eslint
-                    ? "--eslint"
-                    : ""
+                    ? '--eslint'
+                    : ''
             } `,
             {
-                stdio: "inherit",
+                stdio: 'inherit',
             }
         );
     }
@@ -237,48 +237,48 @@ const vueInstall = async (manager, isTs, eslint, prettier) => {
     console.log(path.join(process.cwd(), `${generalAnswers.projectName}/`));
     generalQuestion.pop();
     console.log(
-        `Installation might not be all set! \n Refer to the official information for more details: https://daisyui.com/docs/install/`
+        'Installation might not be all set! \n Refer to the official information for more details: https://daisyui.com/docs/install/'
     );
 };
 
 const reactInstall = async (manager, isTs) => {
     generalQuestion.push({
-        type: "confirm",
-        name: "vite",
-        message: "Do you want to use Vite as a builder?",
+        type: 'confirm',
+        name: 'vite',
+        message: 'Do you want to use Vite as a builder?',
     });
     const generalAnswers = await inquirer.prompt(generalQuestion);
     if (generalAnswers.vite) {
         const question = [
             {
-                type: "confirm",
-                name: "swc",
-                message: "Do you want to use SWC as a compiler?",
+                type: 'confirm',
+                name: 'swc',
+                message: 'Do you want to use SWC as a compiler?',
             },
         ];
         inquirer.prompt(question).then((answer) => {
             execSync(
                 `${manager} create vite@latest ${generalAnswers.projectName} ${
                     isTs && answer.swc
-                        ? " --template react-swc-ts"
+                        ? ' --template react-swc-ts'
                         : isTs
-                        ? " --template react-ts"
+                        ? ' --template react-ts'
                         : answer.swc
-                        ? " --template react-swc"
-                        : " --template react"
+                        ? ' --template react-swc'
+                        : ' --template react'
                 } `,
                 {
-                    stdio: "inherit",
+                    stdio: 'inherit',
                 }
             );
         });
     } else {
         execSync(
             `${manager} create-react-app ${generalAnswers.projectName} ${
-                isTs ? "--template typescript" : ""
+                isTs ? '--template typescript' : ''
             } `,
             {
-                stdio: "inherit",
+                stdio: 'inherit',
             }
         );
     }
@@ -287,36 +287,36 @@ const reactInstall = async (manager, isTs) => {
     console.log(path.join(process.cwd(), `${generalAnswers.projectName}/`));
     generalQuestion.pop();
     console.log(
-        `Installation might not be all set! \n Refer to the official information for more details: https://daisyui.com/docs/install/`
+        'Installation might not be all set! \n Refer to the official information for more details: https://daisyui.com/docs/install/'
     );
 };
 
 const litInstall = async (manager, isTs) => {
     generalQuestion.push({
-        type: "confirm",
-        name: "vite",
-        message: "Do you want to use Vite as a builder?",
+        type: 'confirm',
+        name: 'vite',
+        message: 'Do you want to use Vite as a builder?',
     });
     const generalAnswers = await inquirer.prompt(generalQuestion);
     if (generalAnswers.vite) {
         execSync(
             `${manager} create vite@latest ${generalAnswers.projectName} ${
-                isTs ? " --template lit-ts" : "--template lit"
+                isTs ? ' --template lit-ts' : '--template lit'
             } `,
             {
-                stdio: "inherit",
+                stdio: 'inherit',
             }
         );
     } else {
         console.log(
-            `Our system only supports lit with Vite. \n We're installing the framework with vite anyway. Sorry!`
+            'Our system only supports lit with Vite. \n We\'re installing the framework with vite anyway. Sorry!'
         );
         execSync(
             `${manager} create vite@latest ${generalAnswers.projectName} ${
-                isTs ? " --template lit-ts" : "--template lit"
+                isTs ? ' --template lit-ts' : '--template lit'
             } `,
             {
-                stdio: "inherit",
+                stdio: 'inherit',
             }
         );
     }
@@ -325,34 +325,34 @@ const litInstall = async (manager, isTs) => {
     console.log(path.join(process.cwd(), `${generalAnswers.projectName}/`));
     generalQuestion.pop();
     console.log(
-        `Installation might not be all set! \n Refer to the official information for more details: https://daisyui.com/docs/install/`
+        'Installation might not be all set! \n Refer to the official information for more details: https://daisyui.com/docs/install/'
     );
 };
 
 const svelteInstall = async (manager, isTs) => {
     generalQuestion.push({
-        type: "confirm",
-        name: "vite",
-        message: "Do you want to use Vite as a builder?",
+        type: 'confirm',
+        name: 'vite',
+        message: 'Do you want to use Vite as a builder?',
     });
     const generalAnswers = await inquirer.prompt(generalQuestion);
     if (generalAnswers.vite) {
         execSync(
             `${manager} create vite@latest ${generalAnswers.projectName} ${
-                isTs ? " --template svelte-ts" : " --template svelte"
+                isTs ? ' --template svelte-ts' : ' --template svelte'
             } `,
             {
-                stdio: "inherit",
+                stdio: 'inherit',
             }
         );
     } else {
         console.log(
-            `We're sorry that we partially wouldn't use parameters you set before and rely on CLI provided by the framework!`
+            'We\'re sorry that we partially wouldn\'t use parameters you set before and rely on CLI provided by the framework!'
         );
         execSync(
             `${manager} create svelte@latest ${generalAnswers.projectName}`,
             {
-                stdio: "inherit",
+                stdio: 'inherit',
             }
         );
     }
@@ -361,7 +361,7 @@ const svelteInstall = async (manager, isTs) => {
     console.log(path.join(process.cwd(), `${generalAnswers.projectName}/`));
     generalQuestion.pop();
     console.log(
-        `Installation might not be all set! \n Refer to the official information for more details: https://daisyui.com/docs/install/`
+        'Installation might not be all set! \n Refer to the official information for more details: https://daisyui.com/docs/install/'
     );
 };
 
@@ -369,44 +369,44 @@ const solidInstall = async (manager, isTs) => {
     const generalAnswers = await inquirer.prompt(generalQuestion);
     execSync(
         `${manager} create vite@latest ${generalAnswers.projectName} ${
-            isTs ? "-- --template solid-ts" : "-- --template solid"
+            isTs ? '-- --template solid-ts' : '-- --template solid'
         } `,
         {
-            stdio: "inherit",
+            stdio: 'inherit',
         }
     );
     // Change to the project directory
     process.chdir(generalAnswers.projectName);
     console.log(path.join(process.cwd(), `${generalAnswers.projectName}/`));
     console.log(
-        `Installation might not be all set! \n Refer to the official information for more details: https://daisyui.com/docs/install/`
+        'Installation might not be all set! \n Refer to the official information for more details: https://daisyui.com/docs/install/'
     );
 };
 
 const qwikInstall = async (manager, isTs) => {
     generalQuestion.push({
-        type: "confirm",
-        name: "vite",
-        message: "Do you want to use Vite as a builder?",
+        type: 'confirm',
+        name: 'vite',
+        message: 'Do you want to use Vite as a builder?',
     });
     const generalAnswers = await inquirer.prompt(generalQuestion);
     if (generalAnswers.vite) {
         execSync(
             `${manager} create vite@latest ${generalAnswers.projectName} ${
-                isTs ? "-- --template qwik-ts" : "-- --template qwik"
+                isTs ? '-- --template qwik-ts' : '-- --template qwik'
             } `,
             {
-                stdio: "inherit",
+                stdio: 'inherit',
             }
         );
     } else {
         console.log(
-            `We're sorry that we partially wouldn't use parameters you set before and rely on CLI provided by the framework!`
+            'We\'re sorry that we partially wouldn\'t use parameters you set before and rely on CLI provided by the framework!'
         );
         execSync(
             `${manager} create qwik@latest ${generalAnswers.projectName}`,
             {
-                stdio: "inherit",
+                stdio: 'inherit',
             }
         );
     }
@@ -415,7 +415,7 @@ const qwikInstall = async (manager, isTs) => {
     console.log(path.join(process.cwd(), `${generalAnswers.projectName}/`));
     generalQuestion.pop();
     console.log(
-        `Installation might not be all set! \n Refer to the official information for more details: https://daisyui.com/docs/install/`
+        'Installation might not be all set! \n Refer to the official information for more details: https://daisyui.com/docs/install/'
     );
 };
 
@@ -423,22 +423,22 @@ const qwikInstall = async (manager, isTs) => {
 const pandacssInstall = (manager) => {
     try {
         execSync(`${manager} install -D @pandacss/dev`, {
-            stdio: "inherit",
+            stdio: 'inherit',
         });
         execSync(`${manager} panda init --postcss`, {
-            stdio: "inherit",
+            stdio: 'inherit',
         });
     } catch (error) {
-        console.error("Installation was not successful.");
+        console.error('Installation was not successful.');
         console.log(error);
     }
     console.log(
-        `Installation might not be all set! \n Refer to the official information for more details: https://panda-css.com/docs/installation/cli`
+        'Installation might not be all set! \n Refer to the official information for more details: https://panda-css.com/docs/installation/cli'
     );
 };
 
 const tailwindInstall = (manager) => {
-    const configFile = "tailwind.config.js";
+    const configFile = 'tailwind.config.js';
 
     const filePath = path.join(process.cwd(), configFile);
 
@@ -449,17 +449,17 @@ const tailwindInstall = (manager) => {
             );
             try {
                 execSync(`${manager} install -D tailwindcss`, {
-                    stdio: "inherit",
+                    stdio: 'inherit',
                 });
-                execSync(`npx tailwindcss init`, {
-                    stdio: "inherit",
+                execSync('npx tailwindcss init', {
+                    stdio: 'inherit',
                 });
             } catch (error) {
-                console.log("Installation was not successful.");
+                console.log('Installation was not successful.');
                 console.log(error);
             }
             console.log(
-                `Installation might not be all set! \n Refer to the official information for more details: https://tailwindcss.com/docs/installation`
+                'Installation might not be all set! \n Refer to the official information for more details: https://tailwindcss.com/docs/installation'
             );
         } else {
             console.log(
@@ -472,61 +472,61 @@ const tailwindInstall = (manager) => {
 const bootstrapInstall = (manager) => {
     try {
         execSync(`${manager} i bootstrap`, {
-            stdio: "inherit",
+            stdio: 'inherit',
         });
     } catch (error) {
-        console.error("Installation was not successful.");
+        console.error('Installation was not successful.');
         console.log(error);
     }
     console.log(
-        `Installation might not be all set! \n Refer to the official information for more details: https://getbootstrap.jp/docs/5.3/getting-started/download/`
+        'Installation might not be all set! \n Refer to the official information for more details: https://getbootstrap.jp/docs/5.3/getting-started/download/'
     );
 };
 
 // ui
 const muiInstall = (manager, fw_name, css_name) => {
-    if (fw_name == ("react" || "next")) {
+    if (fw_name == ('react' || 'next')) {
         try {
-            if (css_name == "styled-components") {
+            if (css_name == 'styled-components') {
                 execSync(
                     `${manager} @mui/material @mui/styled-engine-sc styled-components`,
                     {
-                        stdio: "inherit",
+                        stdio: 'inherit',
                     }
                 );
             } else {
                 execSync(
                     `${manager} install @mui/material @emotion/react @emotion/styled`,
                     {
-                        stdio: "inherit",
+                        stdio: 'inherit',
                     }
                 );
             }
         } catch (error) {
-            console.error("Install was not successful.");
+            console.error('Install was not successful.');
             console.log(error);
         }
         console.log(
-            `Installation might not be all set! \n Refer to the official information for more details: https://mui.com/material-ui/getting-started/installation/`
+            'Installation might not be all set! \n Refer to the official information for more details: https://mui.com/material-ui/getting-started/installation/'
         );
     } else {
         console.log(
-            "You need to use React or it's framework as Mui is peer dependent to react, react-dom."
+            'You need to use React or it\'s framework as Mui is peer dependent to react, react-dom.'
         );
     }
 };
 
 const daisyInstall = async (manager) => {
     try {
-        const configPath = path.resolve("tailwind.config.js");
-        const pluginName = "daisyui";
+        const configPath = path.resolve('tailwind.config.js');
+        const pluginName = 'daisyui';
         // 既存のコードを読み取る
         try {
             execSync(`${manager} i -D daisyui@latest`, {
-                stdio: "inherit",
+                stdio: 'inherit',
             });
         } catch (error) {
-            console.error("Install was not successful.");
+            console.error('Install was not successful.');
             console.log(error);
         }
         try {
@@ -547,33 +547,33 @@ const daisyInstall = async (manager) => {
             )};\n`;
 
             // 変更を保存
-            writeFile(configPath, updatedConfig, "utf-8", (err) => {
+            writeFile(configPath, updatedConfig, 'utf-8', (err) => {
                 if (err) {
-                    console.error("Error writing the file:", err);
+                    console.error('Error writing the file:', err);
                     return;
                 }
-                console.log("Config file updated successfully.");
+                console.log('Config file updated successfully.');
             });
 
             console.log(
-                `Installation might not be all set! \n Refer to the official information for more details: https://daisyui.com/docs/install/`
+                'Installation might not be all set! \n Refer to the official information for more details: https://daisyui.com/docs/install/'
             );
         } catch (err) {
-            console.error("Something went wrong:", err);
+            console.error('Something went wrong:', err);
         }
     } catch (err) {
-        console.error("Error reading the file:", err);
-        console.log("You need to install tailwind to use daisyUI");
+        console.error('Error reading the file:', err);
+        console.log('You need to install tailwind to use daisyUI');
         return;
     }
 };
 
 appGenerator({
-    fw_name: "vue",
-    css_name: "tailwind",
-    ui_name: "daisy",
-    eslint: "yes",
-    prettier: "template",
+    fw_name: 'vue',
+    css_name: 'tailwind',
+    ui_name: 'daisy',
+    eslint: 'yes',
+    prettier: 'template',
     isTs: true,
-    manager: "pnpm",
+    manager: 'pnpm',
 });

@@ -2,7 +2,7 @@ import { getSession } from '@auth0/nextjs-auth0'
 import { cookies } from 'next/headers'
 
 import { BadRequestError, UnAuthorizedError } from '@/libs/error/http'
-import { gqlHasuraClient } from '@/libs/graphql/client'
+import { gqlHasuraClient } from '@/libs/graphql/clientLegacy'
 
 import { UpdateDetailsDocument } from '@/gql/codegen/hasura/graphql'
 
@@ -35,7 +35,7 @@ export const updateBoardDetail = async ({
     if (access_token === undefined) {
       throw new UnAuthorizedError()
     }
-    gqlHasuraClient.setHeader(`authorization`, `Bearer ${access_token}`)
+    gqlHasuraClient.setHeader('authorization', `Bearer ${access_token}`)
     const { update_board_details } = await gqlHasuraClient.request(
       UpdateDetailsDocument,
       {

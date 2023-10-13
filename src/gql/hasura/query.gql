@@ -1,0 +1,150 @@
+query GetBoardLibraries($board_id: uuid!) {
+  boards_by_pk(id: $board_id) {
+    board_detail {
+      id
+      framework
+      css_library
+      ui_library
+      linter
+      formatter
+    }
+    is_public
+  }
+}
+
+query GetLastMessages($user_id: String!, $board_id: uuid, $from_ts: timestamptz) {
+  comments(
+    order_by: { updated_at: asc }
+    where: { updated_at: { _gt: $from_ts }, board_id: { _eq: $board_id } }
+  ) {
+    id
+    content
+    user {
+      name
+      id
+    }
+    board_id
+    updated_at
+    likes(where: { user_id: { _eq: $user_id } }) {
+      updated_at
+    }
+    likes_aggregate {
+      aggregate {
+        count(columns: comment_id)
+      }
+    }
+  }
+}
+
+query GetTeamInfo($id: uuid!, $user_id: String!) {
+  teams_by_pk(id: $id) {
+    team_boards {
+      id
+      team_board_detail {
+        ui_library
+        id
+        linter
+        framework
+        formatter
+        css_library
+      }
+    }
+    boards(where: { is_public: { _eq: true }, _not: { user_id: { _eq: $user_id } } }) {
+      id
+      user {
+        id
+        name
+      }
+    }
+  }
+}
+
+query GetMyBoardInTeam($team_id: uuid!, $user_id: String!) {
+  boards(where: { _and: { team_id: { _eq: $team_id }, user_id: { _eq: $user_id } } }) {
+    id
+    is_public
+    board_detail {
+      id
+      hygen
+      framework
+      formatter
+      css_library
+      created_at
+      builder
+      isGit
+      lint_staged_husky
+      linter
+      manager
+      ui_library
+      updated_at
+      volta
+      vscode
+    }
+  }
+}
+
+query GetJoinedTeams($user_id: String!) {
+  teams(where: { team_members: { user_id: { _eq: $user_id } } }) {
+    id
+    name
+    team_members {
+      user_id
+    }
+    admin_user {
+      id
+      name
+    }
+    boards(where: { user_id: { _eq: $user_id } }) {
+      id
+      board_detail {
+        id
+      }
+    }
+    team_boards {
+      id
+      team_board_detail {
+        id
+      }
+    }
+  }
+}
+
+query GetUserInfo($id: String!) {
+  users_by_pk(id: $id) {
+    id
+    email
+    github_url
+    is_online
+    image_url
+    name
+    twitter_url
+  }
+}
+
+query GetTeamMember($team_id: uuid!) {
+  team_member(where: { team_id: { _eq: $team_id } }) {
+    users {
+      id
+      name
+      email
+      image_url
+      github_url
+      twitter_url
+    }
+  }
+}
+
+query GetTeamBoardDetail($team_id: uuid!) {
+  teams_by_pk(id: $team_id) {
+    team_boards {
+      team_board_detail {
+        id
+        framework
+        css_library
+        ui_library
+        linter
+        formatter
+      }
+    }
+  }
+}

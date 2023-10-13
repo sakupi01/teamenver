@@ -38,3 +38,67 @@ mutation UpdateDetails($id: uuid!, $changes: board_details_set_input) {
     }
   }
 }
+mutation UpdateTeamBoardDetails($id: uuid!, $changes: team_board_details_set_input) {
+  update_team_board_details(where: { id: { _eq: $id } }, _set: $changes) {
+    returning {
+      id
+    }
+  }
+}
+
+mutation InsertMessage($board_id: uuid!, $content: String!) {
+  insert_comments_one(object: { board_id: $board_id, content: $content }) {
+    id
+    content
+    updated_at
+    user {
+      id
+      name
+    }
+  }
+}
+
+mutation SetLastSeenTimestamp($userId: String!) {
+  update_users_by_pk(pk_columns: { id: $userId }, _set: { last_seen: "now()" }) {
+    id
+    updated_at
+    last_seen
+  }
+}
+
+mutation InsertTeamMember($team_id: uuid!, $user_id: String!) {
+  insert_team_member_one(object: { team_id: $team_id, user_id: $user_id }) {
+    team_id
+    user_id
+  }
+}
+
+mutation CreateTeamBoard($team_id: uuid!) {
+  insert_team_boards_one(object: { team_id: $team_id }) {
+    id
+  }
+}
+
+mutation CreateTeamBoardDetails($team_board_id: uuid!) {
+  insert_team_board_details_one(object: { team_board_id: $team_board_id }) {
+    id
+  }
+}
+
+mutation InsertLike($comment_id: uuid!, $user_id: String!) {
+  insert_likes_one(object: { comment_id: $comment_id, user_id: $user_id }) {
+    created_at
+  }
+}
+
+mutation DeleteLike($comment_id: uuid!, $user_id: String!) {
+  delete_likes(where: { user_id: { _eq: $user_id }, comment_id: { _eq: $comment_id } }) {
+    affected_rows
+  }
+}
+
+mutation UpdateBoardVisibility($board_id: uuid!, $is_public: Boolean!) {
+  update_boards_by_pk(pk_columns: { id: $board_id }, _set: { is_public: $is_public }) {
+    updated_at
+  }
+}

@@ -1,5 +1,10 @@
 name: 'UI Tests'
 
+env:
+  # 👇 supabase secrets
+  NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+  NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+
 on: push
 
 jobs:
@@ -26,17 +31,6 @@ jobs:
           key: ${{ runner.os }}-bun-${{ hashFiles('**/bun.lockb') }}
           restore-keys: ${{ runner.os }}-bun
 
-      - name: Cache styled-system
-        uses: actions/cache@v3
-        id: panda_cache
-        with:
-          path: styled-system
-          key: ${{ runner.os }}-${{ hashFiles('styled-system') }}
-
-      - name: Pre dependencies installation
-        if: steps.panda_cache.outputs.cache-hit != 'true'
-        run: bun run prepare
-
       - name: Install dependencies if cache invalid
         if: steps.bun-cache.outputs.cache-hit != 'true'
         run: bun i --frozen-lockfile
@@ -60,13 +54,6 @@ jobs:
           path: node_modules
           key: ${{ runner.os }}-bun-${{ hashFiles('**/bun.lockb') }}
           restore-keys: ${{ runner.os }}-bun
-
-      - name: Restore styled-system
-        id: panda_cache
-        uses: actions/cache@v3
-        with:
-          path: styled-system
-          key: ${{ runner.os }}-${{ hashFiles('styled-system') }}
 
       - name: Run Type Check
         run: bun run check:typecheck # check ts compile error
@@ -94,13 +81,6 @@ jobs:
           key: ${{ runner.os }}-bun-${{ hashFiles('**/bun.lockb') }}
           restore-keys: ${{ runner.os }}-bun
 
-      - name: Restore styled-system
-        id: panda_cache
-        uses: actions/cache@v3
-        with:
-          path: styled-system
-          key: ${{ runner.os }}-${{ hashFiles('styled-system') }}
-
       - name: Cache Storybook
         id: storybook_cache
         uses: actions/cache@v3
@@ -108,16 +88,13 @@ jobs:
           path: storybook-static
           key: ${{ runner.os }}-${{ github.sha }}
 
-      - name: Run Pre Install Command
-        run: bun prepare
-
       - name: Build Storybook
-        run: bun storybook:build --quiet
+        run: bun run storybook:build --quiet
 
   # Run interaction and accessibility tests
   test-storybook:
     runs-on: ubuntu-latest
-    needs: install-dependencies
+    needs: build-storybook
     steps:
       - name: Checkout Commit
         uses: actions/checkout@v3
@@ -135,13 +112,6 @@ jobs:
           key: ${{ runner.os }}-bun-${{ hashFiles('**/bun.lockb') }}
           restore-keys: ${{ runner.os }}-bun
 
-      - name: Restore styled-system
-        id: panda_cache
-        uses: actions/cache@v3
-        with:
-          path: styled-system
-          key: ${{ runner.os }}-${{ hashFiles('styled-system') }}
-
       - name: Restore Storybook
         id: storybook_cache
         uses: actions/cache@v3
@@ -150,10 +120,13 @@ jobs:
           key: ${{ runner.os }}-${{ github.sha }}
 
       - name: Install Playwright
-        run: bunx playwright install --with-deps
+        run: bunx playwright install --with-deps chromium
 
       - name: Install MSW
         run: bun add msw-storybook-addon
 
       - name: Serve Storybook and run tests
         run: bun run storybook:ci
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: ${{secrets.NEXT_PUBLIC_SUPABASE_URL}}
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY}}

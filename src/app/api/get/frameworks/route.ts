@@ -1,19 +1,15 @@
-import { NextRequest, NextResponse } from 'next/server'
+import { NextResponse } from 'next/server'
 
 import { handleApiRouteError } from '@/libs/error'
 import { ErrorType } from '@/libs/error/http'
 
-import { GetLibrariesType, getLibraries } from '@/services/server/GetLibraries'
+import { GetFrameworksType, getFrameworks } from '@/services/server/GetFrameworks'
 
-export type GetType = GetLibrariesType
+export type GetType = GetFrameworksType
 
-export async function GET(
-  request: NextRequest,
-): Promise<NextResponse<GetType | ErrorType>> {
+export async function GET(): Promise<NextResponse<GetType | ErrorType>> {
   try {
-    const { searchParams } = new URL(request.url!)
-    const query = searchParams.get('query')
-    const res = await getLibraries({ query })
+    const res = await getFrameworks()
     return NextResponse.json(res)
   } catch (error) {
     return handleApiRouteError(error)

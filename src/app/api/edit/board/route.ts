@@ -7,8 +7,12 @@ import {
   ReturnUpdateBoardDetailType,
   updateBoardDetail,
 } from '@/services/server/UpdateBoardDetail'
+import {
+  ReturnUpdateTeamBoardDetailType,
+  updateTeamBoardDetail,
+} from '@/services/server/UpdateTeamBoardDetail'
 
-export type GetType = ReturnUpdateBoardDetailType
+export type GetType = ReturnUpdateBoardDetailType | ReturnUpdateTeamBoardDetailType
 
 export async function GET(
   request: NextRequest,
@@ -17,19 +21,19 @@ export async function GET(
     const { searchParams } = new URL(request.url!)
     const category = searchParams.get('category')
     const label = searchParams.get('label')
+    const isTeamBoard = searchParams.get('isTeamBoard')
 
-    const res = await updateBoardDetail({
-      [`${
-        category
-          ? category == 'css-framework'
-            ? 'css_library'
-            : category == 'ui-framework'
-            ? 'ui_library'
-            : category
-          : category
-      }`]: label,
-    })
-    return NextResponse.json(res)
+    if (isTeamBoard == 'true') {
+      const res = await updateTeamBoardDetail({
+        [`${category}`]: label,
+      })
+      return NextResponse.json(res)
+    } else {
+      const res = await updateBoardDetail({
+        [`${category}`]: label,
+      })
+      return NextResponse.json(res)
+    }
   } catch (error) {
     return handleApiRouteError(error)
   }

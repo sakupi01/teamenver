@@ -11,7 +11,7 @@ export const readmeGenerator = ({ manager, isGit }: readmeGeneratorProps) => {
   // If you want to create your project in your localhost machine, please try the same code away.
   
   ${isGit ? `// 🐙🐱 For security reason, we're afraid we cannot execute the git command and connect to your repo on your behalf. \\
-  // You can initialize the local repo and commit the init project on your preferred IDE using the commands generated below.` : ``}
+  // You can initialize the local repo and commit the init project on your preferred IDE using the commands generated below.` : ''}
 
   // Cheers!
 
@@ -47,6 +47,6 @@ export const readmeGenerator = ({ manager, isGit }: readmeGeneratorProps) => {
 
   # Push all
   git push -u origin main`
-      : ``
+      : ''
   }`
 }
