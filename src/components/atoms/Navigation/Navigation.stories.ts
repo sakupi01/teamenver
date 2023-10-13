@@ -1,8 +1,6 @@
 import { Meta, StoryObj } from '@storybook/react'
-import { within } from '@storybook/testing-library'
 
-import { Navigation } from './Navigation';
-
+import { Navigation } from './Navigation'
 
 const meta = {
   title: 'Navigation',
@@ -11,16 +9,15 @@ const meta = {
   parameters: {
     layout: 'fullscreen',
   },
-  argTypes: {
-  },
-} satisfies Meta<typeof Navigation>;
-
+  argTypes: {},
+} satisfies Meta<typeof Navigation>
 
 export default meta
 type Story = StoryObj<typeof meta>
 
 export const Default: Story = {
-  play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
+  args: {
+    current_team_id: '0',
+    public_boards_info: undefined,
   },
-};
+}
