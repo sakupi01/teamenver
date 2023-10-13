@@ -25,28 +25,12 @@ export async function GET(
 
     if (isTeamBoard == 'true') {
       const res = await updateTeamBoardDetail({
-        [`${
-          category
-            ? category == 'css-framework'
-              ? 'css_library'
-              : category == 'ui-framework'
-              ? 'ui_library'
-              : category
-            : category
-        }`]: label,
+        [`${category}`]: label,
       })
       return NextResponse.json(res)
     } else {
       const res = await updateBoardDetail({
-        [`${
-          category
-            ? category == 'css-framework'
-              ? 'css_library'
-              : category == 'ui-framework'
-              ? 'ui_library'
-              : category
-            : category
-        }`]: label,
+        [`${category}`]: label,
       })
       return NextResponse.json(res)
     }
