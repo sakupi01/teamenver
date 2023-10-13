@@ -6,6 +6,9 @@ name: 'Chromatic'
 env:
   # 👇 Chromatic projectToken, refer to the manage page to obtain it.
   CHROMATIC_PROJECT_TOKEN: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
+  # 👇 supabase secrets
+  NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+  NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
 
 # Event for the workflow
 on: push
@@ -42,3 +45,6 @@ jobs:
           zip: true
           # 👇Runs with custom build command.
           buildScriptName: 'storybook:build'
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: ${{secrets.NEXT_PUBLIC_SUPABASE_URL}}
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY}}
