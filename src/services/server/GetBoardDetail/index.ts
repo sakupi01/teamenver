@@ -7,9 +7,10 @@ import { gqlHasuraClient } from '@/libs/graphql/clientLegacy'
 import { GetBoardLibrariesDocument } from '@/gql/codegen/hasura/graphql'
 
 import { handleServerError } from '..'
+import { findKeyBeforeNullValue } from '../helpers/findFirstNullKeyIndicator'
 
 interface DataObject {
-  [key: string]: string
+  [key: string]: string | null
 }
 
 export const getBoardDetail = async (board_id: string) => {
@@ -38,16 +39,7 @@ export const getBoardDetail = async (board_id: string) => {
         ? ({} as DataObject)
         : (boards_by_pk.board_detail as DataObject)
 
-    // 最後のnullでないキーを保持　// 全て埋まっていればundefined
-    const prevFirstNullKey = Object.keys(boardDetailWithoutTypename as DataObject).reduce(
-      (prevKey: string | null, key) => {
-        if (boardDetailWithoutTypename[key] !== null) {
-          return key
-        }
-        return prevKey
-      },
-      null,
-    )
+    const prevFirstNullKey = findKeyBeforeNullValue(boardDetailWithoutTypename)
 
     const isPublic = boards_by_pk.is_public
 

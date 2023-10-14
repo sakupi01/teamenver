@@ -19,6 +19,7 @@ import 'reactflow/dist/style.css'
 
 import { nodeInfo } from '@/types/custom/nodeInfo'
 
+import { deleteBoardDetail } from '@/services/client/DeleteBoardDetail'
 import { ReturnGetTeamBoardDetailType } from '@/services/server/GetTeamBoardDetail'
 
 import { idFactoryInstance, useNodeInit } from './useNodeInit'
@@ -27,17 +28,19 @@ const MIN_DISTANCE = 150
 
 export const useReactFlowFunctions = (
   initialNodes: ReturnGetTeamBoardDetailType['teamBoardDetailWithoutTypename'],
-  firstOneIndicator: string | null,
+  toFirstOneIndicator: string | null,
+  isTeamBoard: boolean,
 ) => {
   const { initializedEdges, initializedNodes } = useNodeInit(
     initialNodes,
-    firstOneIndicator,
+    toFirstOneIndicator,
   )
   const store = useStoreApi()
   const reactFlowWrapper = useRef<HTMLInputElement>(null)
   const [nodes, setNodes] = useNodesState(initializedNodes)
   const [edges, setEdges] = useEdgesState(initializedEdges)
   const [reactFlowInstance, setReactFlowInstance] = useState<any>(null)
+  const [deleteOne, setDeleteOne] = useState(false)
   const { deleteElements } = useReactFlow()
 
   // When you drag or select a node, the onNodeChange handler gets called.
@@ -101,7 +104,10 @@ export const useReactFlowFunctions = (
         id: idFactoryInstance.getId(),
         type,
         position,
-        data: { label: data.label ? data.label : 'N/A' },
+        data: {
+          key: data.key ? data.key : 'N/A',
+          label: data.label ? data.label : 'N/A',
+        },
       }
 
       setNodes((nds) => nds.concat(newNode))
@@ -202,9 +208,13 @@ export const useReactFlowFunctions = (
 
   const onNodesDelete = useCallback(
     (deleted: Node<any, string | undefined>[]) => {
+      if (!deleteOne) {
+        deleteBoardDetail(deleted[0].data.key, isTeamBoard)
+        console.log('setDeleteOne(true)')
+        setDeleteOne(true)
+      }
       function removeTreeOfOutgoers(node: Node) {
         const outgoers = getOutgoers(node, nodes, edges)
-        console.log(outgoers)
         if (outgoers.length) {
           deleteElements({ nodes: outgoers })
           // we loop through the outgoers and try to remove any outgoers of our outgoers
@@ -213,6 +223,7 @@ export const useReactFlowFunctions = (
           })
         }
       }
+
       deleted.forEach((node) => {
         removeTreeOfOutgoers(node)
       })

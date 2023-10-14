@@ -40,7 +40,7 @@ const InnerFlow = ({
     onNodeDrag,
     onNodeDragStop,
     onNodesDelete,
-  } = useReactFlowFunctions(board_detail, toFirstOneIndicator)
+  } = useReactFlowFunctions(board_detail, toFirstOneIndicator, isTeamBoard)
 
   if (!board_detail) {
     return <p>Error. Team is not properly selected. Go back to /select/team</p>
