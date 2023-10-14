@@ -27,11 +27,11 @@ const MIN_DISTANCE = 150
 
 export const useReactFlowFunctions = (
   initialNodes: ReturnGetTeamBoardDetailType['teamBoardDetailWithoutTypename'],
-  firstOneIndicator: string | null,
+  toFirstOneIndicator: string | null,
 ) => {
   const { initializedEdges, initializedNodes } = useNodeInit(
     initialNodes,
-    firstOneIndicator,
+    toFirstOneIndicator,
   )
   const store = useStoreApi()
   const reactFlowWrapper = useRef<HTMLInputElement>(null)
@@ -204,7 +204,6 @@ export const useReactFlowFunctions = (
     (deleted: Node<any, string | undefined>[]) => {
       function removeTreeOfOutgoers(node: Node) {
         const outgoers = getOutgoers(node, nodes, edges)
-        console.log(outgoers)
         if (outgoers.length) {
           deleteElements({ nodes: outgoers })
           // we loop through the outgoers and try to remove any outgoers of our outgoers
@@ -213,6 +212,7 @@ export const useReactFlowFunctions = (
           })
         }
       }
+
       deleted.forEach((node) => {
         removeTreeOfOutgoers(node)
       })

@@ -7,10 +7,8 @@ import { gqlHasuraClient } from '@/libs/graphql/clientLegacy'
 import { GetTeamBoardDetailDocument } from '@/gql/codegen/hasura/graphql'
 
 import { handleServerError } from '..'
+import { DataObject, findKeyBeforeNullValue } from '../helpers/findFirstNullKeyIndicator'
 
-interface DataObject {
-  [key: string]: string
-}
 export const getTeamBoardDetail = async (team_id: string) => {
   const session = await getSession()
   const access_token = session?.accessToken
@@ -39,15 +37,7 @@ export const getTeamBoardDetail = async (team_id: string) => {
     const { __typename, id, ...teamBoardDetailWithoutTypename } = teams_by_pk.team_boards
       .team_board_detail as DataObject
 
-    // 最後のnullでないキーを保持　// 全て埋まっていればundefined
-    const prevFirstNullKey = Object.keys(
-      teamBoardDetailWithoutTypename as DataObject,
-    ).reduce((prevKey: string | null, key) => {
-      if (teamBoardDetailWithoutTypename[key] !== null) {
-        return key
-      }
-      return prevKey
-    }, null)
+    const prevFirstNullKey = findKeyBeforeNullValue(teamBoardDetailWithoutTypename)
 
     return { id, prevFirstNullKey, teamBoardDetailWithoutTypename }
   } catch (error) {
