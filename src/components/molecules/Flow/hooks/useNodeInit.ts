@@ -4,7 +4,7 @@ const initialElement = [
   {
     id: 'dndnode_0',
     type: 'input',
-    data: { label: 'フレームワークを選択してください' },
+    data: { key: '', label: 'フレームワークを選択してください' },
     position: { x: 250, y: 5 },
     deletable: false,
   },
@@ -41,13 +41,13 @@ export const useNodeInit = (
   const initializedNodes =
     // toFirstOneIndicatorがnullでない場合は、toFirstOneIndicatorまでのノードを初期化
     toFirstOneIndicator !== null
-      ? initialNodesValues
+      ? initialNodesKeys
           .slice(0, initialNodesKeys.indexOf(toFirstOneIndicator) + 1)
           .map((node) => {
             return {
               id: idFactoryInstance.getId(),
               type: 'default',
-              data: { label: node as string },
+              data: { key: node, label: initialNodes[node] as string },
               position: { x: 250 + 20 * id, y: 5 + 50 * id },
               deletable: true,
             }
@@ -71,6 +71,6 @@ export const useNodeInit = (
 
   return {
     initializedEdges: initializedEdges,
-    initializedNodes: initialElement.concat(...initializedNodes),
+    initializedNodes: initialElement.concat(initializedNodes),
   }
 }
