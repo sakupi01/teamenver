@@ -1,14 +1,15 @@
 import { FileSystemTree } from '@webcontainer/api'
 
+import { ReturnGetTeamBoardDetailType } from '@/services/server/GetTeamBoardDetail'
+
 import { readmeGenerator, readmeGeneratorProps } from './readme'
 
 type appGeneratorProps = {
-  fw_name: string
-  ui_name: string | null
-  css_name: string | null
-  eslint: 'yes' | 'no' | 'template'
-  prettier: 'yes' | 'no' | 'template'
-  isTs: boolean
+  frameworks: string
+  ui_library: string | null
+  css_library: string | null
+  linter: 'yes' | 'no' | 'template'
+  formatter: 'yes' | 'no' | 'template'
   lint_staged_husky?: 'yes' | 'no' | 'template'
   hygen?: 'yes' | 'no' | 'template'
   vscode?: 'yes' | 'no' | 'template'
@@ -27,26 +28,26 @@ function escapeForEval(code: string) {
   // JavaScriptコード内のバックスラッシュと引用符をエスケープします
   const escapedCode = code
     .replace(/\\/g, '\\\\')
-    .replace(/'/g, '\\\'')
+    // eslint-disable-next-line @stylistic/quotes
+    .replace(/'/g, "\\'")
     .replace(/"/g, '\\"')
 
   return escapedCode
 }
 
 const fileGenerator = async ({
-  fw_name,
-  ui_name,
-  css_name,
-  eslint,
-  prettier,
-  isTs,
+  frameworks,
+  ui_library,
+  css_library,
+  linter,
+  formatter,
   lint_staged_husky,
   hygen,
   vscode,
   volta,
   manager,
   isGit,
-}: fileGeneratorProps) => {
+}: ReturnGetTeamBoardDetailType['teamBoardDetailWithoutTypename']) => {
   const md = `${readmeGenerator({ manager, isGit })}`
   const appGen = `/** @format */
 
@@ -646,16 +647,23 @@ const fileGenerator = async ({
 }
 
 // type FileSystemTree cannot operate Promise, so I couldnt able to use 'fs', which means I cannot read the file from out programatically.
-export const getFiles = async () => {
-  const files: FileSystemTree = await fileGenerator({
-    fw_name: 'vue',
-    ui_name: null,
-    css_name: null,
-    eslint: 'yes',
-    prettier: 'template',
-    isTs: true,
-    manager: 'pnpm',
-    isGit: false,
-  })
+export const getFiles = async (
+  props: ReturnGetTeamBoardDetailType['teamBoardDetailWithoutTypename'],
+) => {
+  console.log(props)
+
+  const files: FileSystemTree = await fileGenerator(props)
+  //   const files: FileSystemTree = await fileGenerator({
+  //     frameworks: props.frameworks,
+  //     css_library: props.css_library,
+  //     ui_library: props.ui_library,
+  //     linter: props.linter,
+  //     formatter: 'template',
+  //     lint_staged_husky: 'yes',
+  //     hygen: 'yes',
+  //     vscode: 'yes',
+  //     manager: 'pnpm',
+  //     isGit: false,
+  //   })
   return files
 }

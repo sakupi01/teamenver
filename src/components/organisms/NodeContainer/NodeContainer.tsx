@@ -7,9 +7,15 @@ import { Terminal } from 'xterm'
 import { FitAddon } from 'xterm-addon-fit'
 
 import { getFiles } from '@/app/webContainerSideFiles'
+import { ReturnGetTeamBoardDetailType } from '@/services/server/GetTeamBoardDetail'
 
 let ignore = false
-export const NodeContainer = () => {
+
+export const NodeContainer = ({
+  teamBoardDetailWithoutTypename,
+}: {
+  teamBoardDetailWithoutTypename: ReturnGetTeamBoardDetailType['teamBoardDetailWithoutTypename']
+}) => {
   const [webcontainer, setWebcontainer] = useState<WebContainer>()
 
   useEffect(() => {
@@ -59,7 +65,7 @@ export const NodeContainer = () => {
       if (textarea) {
         // 即時関数
         ;(async () => {
-          const files = await getFiles()
+          const files = await getFiles(teamBoardDetailWithoutTypename)
 
           // @ts-ignore
           textarea.value = files['README.md'].file.contents
@@ -91,7 +97,7 @@ export const NodeContainer = () => {
         const terminal = initTerminal(terminalEl)
         // 即時関数
         ;(async () => {
-          await webcontainer.mount(await getFiles())
+          await webcontainer.mount(await getFiles(teamBoardDetailWithoutTypename))
         })()
 
         // Wait for server ready event

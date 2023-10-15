@@ -1,16 +1,16 @@
 import { Meta, StoryObj } from '@storybook/react'
 
-import { NodeContainer } from './NodeContainer'
+import { NodeContainerPage } from './NodeContainerPage'
 
 const meta = {
-  title: 'NodeContainer',
-  component: NodeContainer,
+  title: 'NodeContainerPage',
+  component: NodeContainerPage,
   tags: ['autodocs'],
   parameters: {
     layout: 'fullscreen',
   },
   argTypes: {},
-} satisfies Meta<typeof NodeContainer>
+} satisfies Meta<typeof NodeContainerPage>
 
 export default meta
 type Story = StoryObj<typeof meta>

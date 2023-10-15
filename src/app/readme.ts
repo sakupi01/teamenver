@@ -1,6 +1,6 @@
 export type readmeGeneratorProps = {
-  manager: string
-  isGit: boolean
+  manager: string | null
+  isGit: string | null
 }
 export const readmeGenerator = ({ manager, isGit }: readmeGeneratorProps) => {
   return `
@@ -10,8 +10,12 @@ export const readmeGenerator = ({ manager, isGit }: readmeGeneratorProps) => {
   // 🧞‍♂️ Psst! here's the full code which is going to be executed in the terminal.
   // If you want to create your project in your localhost machine, please try the same code away.
   
-  ${isGit ? `// 🐙🐱 For security reason, we're afraid we cannot execute the git command and connect to your repo on your behalf. \\
-  // You can initialize the local repo and commit the init project on your preferred IDE using the commands generated below.` : ''}
+  ${
+    isGit
+      ? `// 🐙🐱 For security reason, we're afraid we cannot execute the git command and connect to your repo on your behalf. \\
+  // You can initialize the local repo and commit the init project on your preferred IDE using the commands generated below.`
+      : ''
+  }
 
   // Cheers!
 
@@ -25,7 +29,7 @@ export const readmeGenerator = ({ manager, isGit }: readmeGeneratorProps) => {
   ${manager} run dev
 
   ${
-    isGit
+    isGit === 'true'
       ? `// 🐙🐱 To initialize Github repository *********************************************
 
   # 1: Initialize the local repository (Please execute only once.)

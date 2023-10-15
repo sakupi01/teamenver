@@ -10,7 +10,6 @@ const categories = [
   'formatter',
   'lint_staged_husky',
   'hygen',
-  'builder',
   'manager',
   'vscode',
   'volta',
