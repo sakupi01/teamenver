@@ -19,7 +19,6 @@ export const getPeerDependenciesInfo = (library: string) => {
     try {
       const stdout = execSync(command, { encoding: 'utf8', stdio: 'pipe' })
 
-      // if there're peer dependencies, return error
       if (stdout) {
         const peerDeps = JSON.parse(stdout)
         return { [library]: peerDeps }
@@ -33,27 +32,16 @@ export const getPeerDependenciesInfo = (library: string) => {
     return { [library]: {} }
   }
 }
-export const getPeerDependency = (libraries: string | Array<string>): Array<Json> => {
-  // array in string form
-
-  let arrLibraries: Array<string>
-
-  if (typeof libraries === 'string') {
-    arrLibraries = libraries.replace(/[\[\]']+/g, '').split(', ')
-  } else {
-    arrLibraries = libraries
-  }
-
-  if (arrLibraries.length === 0) {
+export const getPeerDependency = (libraries: { name: string }[]): Array<Json> => {
+  if (libraries.length === 0) {
     return [] as Array<Json>
   }
 
   const peerDepsOfLibraries: Array<Json> = []
-  arrLibraries.forEach((library) => {
-    const peerDeps = getPeerDependenciesInfo(library)
+  libraries.forEach((library) => {
+    const peerDeps = getPeerDependenciesInfo(library.name)
     peerDepsOfLibraries.push(peerDeps)
   })
-  // peerDepsOfLibraries.shift()
   console.log('**************************')
   console.log('peerDepsOfLibraries: ', peerDepsOfLibraries)
   console.log('**************************')
@@ -77,6 +65,7 @@ export const getPeerDepsOfSelectedFw = async (
     const { framework } = isTeamBoard
       ? (await getTeamBoardDetail(team_id)).teamBoardDetailWithoutTypename
       : (await getBoardDetail(board_id)).boardDetailWithoutTypename
+
     console.log('**************************')
     console.log('Your framework: ', framework)
     console.log('**************************')
@@ -119,14 +108,22 @@ export const getPeerDepsOfSelectedCss = async (
   if (css_library === null || css_library === undefined) {
     throw new BadRequestError()
   }
-  const peerDependenciesOfCss = { peerDependencies: getPeerDependency([css_library]) } // css libs with peerDeps
+  const { data: peerDependencies } = await supabaseClient
+    .from('css_libraries')
+    .select('peerDependencies')
+    .eq('name', css_library)
+    .limit(1)
+    .single()
 
-  return { css_library, peerDependenciesOfCss }
+  return {
+    css_library,
+    peerDependenciesOfCss: peerDependencies || { peerDependencies: {} },
+  }
 }
 
 export const checkDeps = (
   library: string,
-  pkgs: JSON,
+  pkgs: NonNullable<Json>,
   checkArr: Array<{ peerDependencies: Json }>,
   index: number,
   compatibleLibs: Array<{ name: string }>,
@@ -163,13 +160,13 @@ export const checkDeps = (
         }
       }
       // 上位のpeerDepsの名前自身と互換性があるかどうかを確認する
-      if (framework in pkgs) {
+      if (Object.keys(pkgs).find((key) => key === framework)) {
         console.log(
           // @ts-ignore
           `You need to adjust the version of ${framework} to ${pkgs[framework]} in order to use this css library`,
         )
         isSatisfied = true // バージョンの喚起のみしてtrue
-      } else if (css_library && css_library in pkgs) {
+      } else if (css_library && Object.keys(pkgs).find((key) => key === css_library)) {
         console.log(
           // @ts-ignore
           `You need to adjust the version of ${css_library} to ${pkgs[framework]} in order to use this css library`,

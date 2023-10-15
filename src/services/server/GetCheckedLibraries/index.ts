@@ -4,12 +4,7 @@ import supabaseClient from '@/libs/supabase/supabaseClient'
 
 import { WhichLibrary } from '@/services/client/GetCheckedLibraries'
 
-import {
-  getPeerDependency,
-  getPeerDepsOfSelectedFw,
-  getPeerDepsOfSelectedCss,
-  checkDeps,
-} from './helpers'
+import { getPeerDepsOfSelectedFw, getPeerDepsOfSelectedCss, checkDeps } from './helpers'
 
 export type GetCheckedLibrariesType = { data: { name: string }[] }
 
@@ -21,17 +16,15 @@ export const getCheckedLibraries = async (
   if (which == 'css_library') {
     let compatibleCssLibs: Array<{ name: string }> = []
 
-    // get peerDependency of all css
-    // get css from database
     try {
       const { data: css_libraries, error } = await supabaseClient
         .from('css_libraries')
-        .select('name')
+        .select('name, peerDependencies')
 
       if (css_libraries === null) {
         return { data: compatibleCssLibs }
       } else {
-        // frameworkのpeerDependenciesを取得する
+        // frameworkのpeerDependencyを取得する
         const { framework, peerDependenciesOfFw } = await getPeerDepsOfSelectedFw(
           isTeamBoard,
           board_id,
@@ -41,18 +34,13 @@ export const getCheckedLibraries = async (
         console.log('**********************')
         const checkArray = [peerDependenciesOfFw]
 
-        const cssLibrariesArr = css_libraries.map((library) => library.name)
-        const peerDeps1 = getPeerDependency(cssLibrariesArr) // css libs with peerDeps
-
-        for (const peerDep of peerDeps1) {
-          // ライブラリ名を取得
-          const library = Object.keys(peerDep || {})[0]
-          // @ts-ignore
-          const peerDeps = peerDep[library]
-
+        for (const css_library of css_libraries) {
+          console.log('**********************')
+          console.log('css_library: ', css_library)
+          console.log('**********************')
           compatibleCssLibs = checkDeps(
-            library,
-            peerDeps,
+            css_library.name,
+            css_library.peerDependencies || {},
             checkArray,
             0,
             compatibleCssLibs,
@@ -73,7 +61,7 @@ export const getCheckedLibraries = async (
     try {
       const { data: ui_libraries, error } = await supabaseClient
         .from('ui_libraries')
-        .select('name')
+        .select('name, peerDependencies')
 
       if (ui_libraries === null) {
         return { data: compatibleUiLibs }
@@ -95,18 +83,14 @@ export const getCheckedLibraries = async (
         console.log('**********************')
         const checkArray = [peerDependenciesOfFw, peerDependenciesOfCss]
 
-        const uiLibrariesArr = ui_libraries.map((library) => library.name)
-        const peerDeps1 = getPeerDependency(uiLibrariesArr) // ui libs with peerDeps
-
-        for (const peerDep of peerDeps1) {
-          // ライブラリ名を取得
-          const library = Object.keys(peerDep || {})[0]
-          // @ts-ignore
-          const peerDeps = peerDep[library]
+        for (const ui_library of ui_libraries) {
+          console.log('**********************')
+          console.log('ui_library: ', ui_library)
+          console.log('**********************')
 
           compatibleUiLibs = checkDeps(
-            library,
-            peerDeps,
+            ui_library.name,
+            ui_library.peerDependencies || {},
             checkArray,
             0,
             compatibleUiLibs,
