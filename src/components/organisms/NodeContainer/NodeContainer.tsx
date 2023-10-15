@@ -1,18 +1,18 @@
 'use client'
+
+import 'xterm/css/xterm.css'
 import { WebContainer } from '@webcontainer/api'
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Terminal } from 'xterm'
 import { FitAddon } from 'xterm-addon-fit'
 
 import { getFiles } from '@/app/webContainerSideFiles'
 
-import 'xterm/css/xterm.css'
-
+let ignore = false
 export const NodeContainer = () => {
-  const [webcontainer, setWebcontainer] = useState<WebContainer | null>(null)
+  const [webcontainer, setWebcontainer] = useState<WebContainer>()
 
   useEffect(() => {
-    let ignore = false
     const initWebContainer = async () => {
       const wc = await WebContainer.boot()
       setWebcontainer(wc)
@@ -25,91 +25,93 @@ export const NodeContainer = () => {
     }
   }, [])
 
-  useMemo(() => {
-    if (!webcontainer) return
+  async function startShell(terminal: Terminal) {
+    const shellProcess = await webcontainer!.spawn('jsh', {
+      terminal: {
+        cols: terminal.cols,
+        rows: terminal.rows,
+      },
+    })
 
-    const textarea = document.querySelector('textarea')
-    const iframe = document.querySelector('iframe')
-    const terminalEl: HTMLElement = document.querySelector('.terminal')!
-
-    if (textarea) {
-      // 即時関数
-      ;(async () => {
-        const files = await getFiles()
-
-        // @ts-ignore
-        textarea.value = files['README.md'].file.contents
-      })()
-      textarea.addEventListener('input', (event: Event) => {
-        if (event.currentTarget) {
-          // @ts-ignore
-          const content = event.currentTarget.value
-          webcontainer.fs.writeFile('/README.md', content)
-        } else {
-          return
-        }
-      })
-    }
-
-    async function startShell(terminal: Terminal) {
-      const shellProcess = await webcontainer!.spawn('jsh', {
-        terminal: {
-          cols: terminal.cols,
-          rows: terminal.rows,
+    shellProcess.output.pipeTo(
+      new WritableStream({
+        write(data) {
+          terminal.write(data)
         },
-      })
+      }),
+    )
 
-      shellProcess.output.pipeTo(
-        new WritableStream({
-          write(data) {
-            terminal.write(data)
-          },
-        }),
-      )
+    const input = shellProcess.input.getWriter()
+    terminal.onData((data) => {
+      input.write(data)
+    })
+    return shellProcess
+  }
 
-      const input = shellProcess.input.getWriter()
-      terminal.onData((data) => {
-        input.write(data)
-      })
-      return shellProcess
-    }
+  useEffect(() => {
+    if (ignore) {
+      if (!webcontainer) return
 
-    const bootWebContainer = async () => {
-      const fitAddon = new FitAddon()
-      const initTerminal = (terminalEl: HTMLElement) => {
-        const terminal = new Terminal({
-          convertEol: true,
+      const textarea = document.querySelector('textarea')
+      const iframe = document.querySelector('iframe')
+      const terminalEl: HTMLElement = document.querySelector('.terminal')!
+
+      if (textarea) {
+        // 即時関数
+        ;(async () => {
+          const files = await getFiles()
+
+          // @ts-ignore
+          textarea.value = files['README.md'].file.contents
+        })()
+        textarea.addEventListener('input', (event: Event) => {
+          if (event.currentTarget) {
+            // @ts-ignore
+            const content = event.currentTarget.value
+            webcontainer.fs.writeFile('/README.md', content)
+          } else {
+            return
+          }
         })
-        terminal.loadAddon(fitAddon)
-        terminal.open(terminalEl)
-
-        fitAddon.fit()
-        return terminal
       }
 
-      const terminal = initTerminal(terminalEl)
-      // 即時関数
-      ;(async () => {
-        await webcontainer.mount(await getFiles())
-      })()
+      const bootWebContainer = async () => {
+        const fitAddon = new FitAddon()
+        const initTerminal = (terminalEl: HTMLElement) => {
+          const terminal = new Terminal({
+            convertEol: true,
+          })
+          terminal.loadAddon(fitAddon)
+          terminal.open(terminalEl)
 
-      // Wait for server ready event
-      webcontainer.on('server-ready', (port, url) => {
-        if (iframe) {
-          iframe.src = url
+          fitAddon.fit()
+          return terminal
         }
-      })
-      const shellProcess = await startShell(terminal)
-      window.addEventListener('resize', () => {
-        fitAddon.fit()
-        shellProcess.resize({
-          cols: terminal.cols,
-          rows: terminal.rows,
-        })
-      })
-    }
 
-    bootWebContainer()
+        const terminal = initTerminal(terminalEl)
+        // 即時関数
+        ;(async () => {
+          await webcontainer.mount(await getFiles())
+        })()
+
+        // Wait for server ready event
+        webcontainer.on('server-ready', (port, url) => {
+          if (iframe) {
+            iframe.src = url
+          }
+        })
+        const shellProcess = await startShell(terminal)
+        window.addEventListener('resize', () => {
+          fitAddon.fit()
+          shellProcess.resize({
+            cols: terminal.cols,
+            rows: terminal.rows,
+          })
+        })
+      }
+
+      bootWebContainer()
+    }
   }, [webcontainer])
 
   return (
@@ -130,7 +132,7 @@ export const NodeContainer = () => {
       </div>
       <div className={'full-container'}>
         <p className='mt-5'>🤖 Terminal</p>
-        <div className='terminal'></div>
+        <div className='terminal w-full'></div>
       </div>
     </div>
   )

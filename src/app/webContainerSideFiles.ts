@@ -657,8 +657,5 @@ export const getFiles = async () => {
     manager: 'pnpm',
     isGit: false,
   })
-  console.log('**********')
-  console.log(files)
-  console.log('**********')
   return files
 }
