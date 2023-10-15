@@ -46,6 +46,12 @@ export interface Database {
             columns: ['user_id']
             referencedRelation: 'users'
             referencedColumns: ['id']
+          },
+          {
+            foreignKeyName: 'agreements_user_id_fkey'
+            columns: ['user_id']
+            referencedRelation: 'user_online'
+            referencedColumns: ['id']
           }
         ]
       }
@@ -150,6 +156,12 @@ export interface Database {
             columns: ['user_id']
             referencedRelation: 'users'
             referencedColumns: ['id']
+          },
+          {
+            foreignKeyName: 'boards_user_id_fkey'
+            columns: ['user_id']
+            referencedRelation: 'user_online'
+            referencedColumns: ['id']
           }
         ]
       }
@@ -190,27 +202,33 @@ export interface Database {
             columns: ['user_id']
             referencedRelation: 'users'
             referencedColumns: ['id']
+          },
+          {
+            foreignKeyName: 'comments_user_id_fkey'
+            columns: ['user_id']
+            referencedRelation: 'user_online'
+            referencedColumns: ['id']
           }
         ]
       }
       css_libraries: {
         Row: {
-          commandToRun: string | null
           created_at: string
           id: number
           name: string
+          peerDependencies: Json | null
         }
         Insert: {
-          commandToRun?: string | null
           created_at?: string
           id?: number
           name: string
+          peerDependencies?: Json | null
         }
         Update: {
-          commandToRun?: string | null
           created_at?: string
           id?: number
           name?: string
+          peerDependencies?: Json | null
         }
         Relationships: []
       }
@@ -218,7 +236,7 @@ export interface Database {
         Row: {
           ableToSetWithNode: boolean
           id: string
-          name: string | null
+          name: string
           peerDependencies: Json | null
           webframe_have_worked_with_count: number | null
           webframe_want_to_work_with_count: number | null
@@ -226,7 +244,7 @@ export interface Database {
         Insert: {
           ableToSetWithNode?: boolean
           id: string
-          name?: string | null
+          name: string
           peerDependencies?: Json | null
           webframe_have_worked_with_count?: number | null
           webframe_want_to_work_with_count?: number | null
@@ -234,7 +252,7 @@ export interface Database {
         Update: {
           ableToSetWithNode?: boolean
           id?: string
-          name?: string | null
+          name?: string
           peerDependencies?: Json | null
           webframe_have_worked_with_count?: number | null
           webframe_want_to_work_with_count?: number | null
@@ -271,6 +289,12 @@ export interface Database {
             foreignKeyName: 'likes_user_id_fkey'
             columns: ['user_id']
             referencedRelation: 'users'
+            referencedColumns: ['id']
+          },
+          {
+            foreignKeyName: 'likes_user_id_fkey'
+            columns: ['user_id']
+            referencedRelation: 'user_online'
             referencedColumns: ['id']
           }
         ]
@@ -324,35 +348,35 @@ export interface Database {
       team_board_details: {
         Row: {
           created_at: string
-          css_library: string
-          formatter: string
-          framework: string
+          css_library: string | null
+          formatter: string | null
+          framework: string | null
           id: string
-          linter: string
+          linter: string | null
           team_board_id: string
-          ui_library: string
+          ui_library: string | null
           updated_at: string
         }
         Insert: {
           created_at?: string
-          css_library: string
-          formatter: string
-          framework: string
+          css_library?: string | null
+          formatter?: string | null
+          framework?: string | null
           id?: string
-          linter: string
+          linter?: string | null
           team_board_id: string
-          ui_library: string
+          ui_library?: string | null
           updated_at?: string
         }
         Update: {
           created_at?: string
-          css_library?: string
-          formatter?: string
-          framework?: string
+          css_library?: string | null
+          formatter?: string | null
+          framework?: string | null
           id?: string
-          linter?: string
+          linter?: string | null
           team_board_id?: string
-          ui_library?: string
+          ui_library?: string | null
           updated_at?: string
         }
         Relationships: [
@@ -423,6 +447,12 @@ export interface Database {
             columns: ['user_id']
             referencedRelation: 'users'
             referencedColumns: ['id']
+          },
+          {
+            foreignKeyName: 'team_member_user_id_fkey'
+            columns: ['user_id']
+            referencedRelation: 'user_online'
+            referencedColumns: ['id']
           }
         ]
       }
@@ -454,6 +484,12 @@ export interface Database {
             columns: ['admin_id']
             referencedRelation: 'users'
             referencedColumns: ['id']
+          },
+          {
+            foreignKeyName: 'teams_admin_id_fkey'
+            columns: ['admin_id']
+            referencedRelation: 'user_online'
+            referencedColumns: ['id']
           }
         ]
       }
@@ -462,19 +498,25 @@ export interface Database {
           commandToInstall: string | null
           created_at: string
           id: number
+          is_devInstall: boolean
           name: string
+          peerDependencies: Json | null
         }
         Insert: {
           commandToInstall?: string | null
           created_at?: string
           id?: number
+          is_devInstall?: boolean
           name: string
+          peerDependencies?: Json | null
         }
         Update: {
           commandToInstall?: string | null
           created_at?: string
           id?: number
+          is_devInstall?: boolean
           name?: string
+          peerDependencies?: Json | null
         }
         Relationships: []
       }
@@ -519,7 +561,24 @@ export interface Database {
       }
     }
     Views: {
-      [_ in never]: never
+      user_online: {
+        Row: {
+          id: string | null
+          last_seen: string | null
+          name: string | null
+        }
+        Insert: {
+          id?: string | null
+          last_seen?: string | null
+          name?: string | null
+        }
+        Update: {
+          id?: string | null
+          last_seen?: string | null
+          name?: string | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       [_ in never]: never

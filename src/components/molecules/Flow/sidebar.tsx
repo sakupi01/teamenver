@@ -50,6 +50,7 @@ export const SideBar = ({
               onDragStart(event, {
                 type: 'default',
                 category: libraries.category,
+                key: libraries.category,
                 label: lb.name,
               })
             }
@@ -62,7 +63,9 @@ export const SideBar = ({
       })}
       <div
         className={'dndNode-container dndNode-output'}
-        onDragStart={(event) => onDragStart(event, { type: 'output', label: 'Output' })}
+        onDragStart={(event) =>
+          onDragStart(event, { type: 'output', key: 'output', label: 'Output' })
+        }
         draggable={loading}
       >
         Output
