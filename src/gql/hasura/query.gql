@@ -7,6 +7,14 @@ query GetBoardLibraries($board_id: uuid!) {
       ui_library
       linter
       formatter
+      created_at
+      updated_at
+      lint_staged_husky
+      hygen
+      manager
+      vscode
+      volta
+      isGit
     }
     is_public
   }
@@ -41,12 +49,20 @@ query GetTeamInfo($id: uuid!, $user_id: String!) {
     team_boards {
       id
       team_board_detail {
-        ui_library
         id
-        linter
         framework
-        formatter
         css_library
+        ui_library
+        linter
+        formatter
+        created_at
+        updated_at
+        lint_staged_husky
+        hygen
+        manager
+        vscode
+        volta
+        isGit
       }
     }
     boards(where: { is_public: { _eq: true }, _not: { user_id: { _eq: $user_id } } }) {
@@ -70,7 +86,6 @@ query GetMyBoardInTeam($team_id: uuid!, $user_id: String!) {
       formatter
       css_library
       created_at
-      builder
       isGit
       lint_staged_husky
       linter
@@ -144,6 +159,14 @@ query GetTeamBoardDetail($team_id: uuid!) {
         ui_library
         linter
         formatter
+        created_at
+        updated_at
+        lint_staged_husky
+        hygen
+        manager
+        vscode
+        volta
+        isGit
       }
     }
   }

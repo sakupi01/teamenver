@@ -58,7 +58,6 @@ export interface Database {
       board_details: {
         Row: {
           board_id: string
-          builder: string | null
           created_at: string
           css_library: string | null
           formatter: string | null
@@ -76,7 +75,6 @@ export interface Database {
         }
         Insert: {
           board_id: string
-          builder?: string | null
           created_at?: string
           css_library?: string | null
           formatter?: string | null
@@ -94,7 +92,6 @@ export interface Database {
         }
         Update: {
           board_id?: string
-          builder?: string | null
           created_at?: string
           css_library?: string | null
           formatter?: string | null
@@ -351,33 +348,51 @@ export interface Database {
           css_library: string | null
           formatter: string | null
           framework: string | null
+          hygen: string | null
           id: string
+          isGit: string | null
+          lint_staged_husky: string | null
           linter: string | null
+          manager: string | null
           team_board_id: string
           ui_library: string | null
           updated_at: string
+          volta: string | null
+          vscode: string | null
         }
         Insert: {
           created_at?: string
           css_library?: string | null
           formatter?: string | null
           framework?: string | null
+          hygen?: string | null
           id?: string
+          isGit?: string | null
+          lint_staged_husky?: string | null
           linter?: string | null
+          manager?: string | null
           team_board_id: string
           ui_library?: string | null
           updated_at?: string
+          volta?: string | null
+          vscode?: string | null
         }
         Update: {
           created_at?: string
           css_library?: string | null
           formatter?: string | null
           framework?: string | null
+          hygen?: string | null
           id?: string
+          isGit?: string | null
+          lint_staged_husky?: string | null
           linter?: string | null
+          manager?: string | null
           team_board_id?: string
           ui_library?: string | null
           updated_at?: string
+          volta?: string | null
+          vscode?: string | null
         }
         Relationships: [
           {
