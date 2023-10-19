@@ -31,6 +31,7 @@ const TeamPage = async ({
         board_detail_id={id}
         toFirstOneIndicator={prevFirstNullKey}
         isTeamBoard={true}
+        team_id={team_id}
         board_detail={teamBoardDetailWithoutTypename}
       />
     </div>

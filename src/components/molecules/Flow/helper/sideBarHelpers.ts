@@ -10,10 +10,11 @@ const categories = [
   'formatter',
   'lint_staged_husky',
   'hygen',
-  'manager',
   'vscode',
   'volta',
+  'manager',
   'isGit',
+  'end',
 ]
 
 export const fetchData = async (
@@ -44,11 +45,6 @@ export const fetchData = async (
     return data
   } else {
     switch (nextCategory) {
-      case 'builder':
-        return JSON.stringify({
-          category: nextCategory,
-          nodes: [{ name: 'vite' }, { name: 'already using different builder' }],
-        })
       case 'manager':
         return JSON.stringify({
           category: nextCategory,
@@ -59,6 +55,8 @@ export const fetchData = async (
           category: nextCategory,
           nodes: [{ name: 'true' }, { name: 'false' }],
         })
+      case 'end':
+        return JSON.stringify(null)
       default:
         return JSON.stringify({
           category: nextCategory,

@@ -1,4 +1,7 @@
+import { useRouter } from 'next/navigation'
 import React, { useEffect } from 'react'
+
+import { Button } from '@/components/ui/button'
 
 import { sidebarData } from '@/types/custom/sidebarData'
 
@@ -8,14 +11,18 @@ import { useSidebarState } from './hooks'
 type SideBarProps = {
   toFirstOneIndicator: string | null
   isTeamBoard: boolean
+  team_id: string
   board_detail_id: string
 }
 
 export const SideBar = ({
   toFirstOneIndicator,
   isTeamBoard,
+  team_id,
   board_detail_id,
 }: SideBarProps) => {
+  const router = useRouter()
+
   const { loading, libraries, onDragStart, setLoading, setLibraries } = useSidebarState(
     isTeamBoard,
     board_detail_id,
@@ -34,12 +41,27 @@ export const SideBar = ({
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
-
+  if (!libraries) {
+    return (
+      <aside className='border-r border-gray-300 p-4 text-sm bg-gray-50 w-1/5 md:w-[20%] md:max-width-[250px]'>
+        <div className='mb-10'>
+          <p className='text-red-500'>The settings has been saved.</p>
+        </div>
+        {isTeamBoard ? (
+          <Button onClick={() => router.push(`/result/team/${team_id}`)}>実行</Button>
+        ) : (
+          <></>
+        )}
+      </aside>
+    )
+  }
   return (
     <aside className='border-r border-gray-300 p-4 text-sm bg-gray-50 w-1/5 md:w-[20%] md:max-width-[250px]'>
       <div className='mb-10'>
-        <p className='text-red'>Choose how you apply {libraries.category}.</p>
-        You can drag one of these nodes to the left.
+        <p>
+          Choose how you apply <span className='text-red-500'>{libraries.category}</span>.
+          You can drag one of these nodes to the left.
+        </p>
       </div>
       {/* loading...をつけて要素を一時的に消したいが，消すとd&dができないのでundraggableにする */}
       {libraries.nodes.map((lb, index) => {
@@ -61,15 +83,6 @@ export const SideBar = ({
           </div>
         )
       })}
-      <div
-        className={'dndNode-container dndNode-output'}
-        onDragStart={(event) =>
-          onDragStart(event, { type: 'output', key: 'output', label: 'Output' })
-        }
-        draggable={loading}
-      >
-        Output
-      </div>
     </aside>
   )
 }

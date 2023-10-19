@@ -18,6 +18,7 @@ export type FlowProps = {
   board_detail_id: string
   toFirstOneIndicator: string | null
   isTeamBoard: boolean
+  team_id: string
   board_detail: ReturnGetTeamBoardDetailType['teamBoardDetailWithoutTypename']
 }
 
@@ -25,6 +26,7 @@ const InnerFlow = ({
   board_detail_id,
   toFirstOneIndicator,
   isTeamBoard,
+  team_id,
   board_detail,
 }: FlowProps) => {
   const {
@@ -71,6 +73,7 @@ const InnerFlow = ({
       <SideBar
         toFirstOneIndicator={toFirstOneIndicator}
         isTeamBoard={isTeamBoard}
+        team_id={team_id}
         board_detail_id={board_detail_id}
       />
     </div>
@@ -81,6 +84,7 @@ export const Flow = ({
   board_detail_id,
   toFirstOneIndicator,
   isTeamBoard,
+  team_id,
   board_detail,
 }: FlowProps) => {
   return (
@@ -89,6 +93,7 @@ export const Flow = ({
         board_detail_id={board_detail_id}
         toFirstOneIndicator={toFirstOneIndicator}
         isTeamBoard={isTeamBoard}
+        team_id={team_id}
         board_detail={board_detail}
       />
     </ReactFlowProvider>
