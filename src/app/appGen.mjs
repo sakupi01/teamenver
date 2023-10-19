@@ -50,17 +50,28 @@ const appGenerator = async ({
     // css library installation
     if (css_library) {
       switch (css_library) {
-        case 'bootstrap':
-          bootstrapInstall(manager)
+        case 'CSS Modules':
+          cssModulesInstall(manager)
           break
-        case 'tailwind':
+        case 'tailwindcss':
           tailwindInstall(manager)
           break
-        case 'panda':
+        case '@vanilla-extract/css':
+          await vanillaInstall(manager)
+          break
+        case 'emotion':
+          emotionInstall(manager)
+          break
+        case 'styled-components':
+          styledComponentsInstall(manager)
+          break
+        case '@pandacss/dev':
           pandacssInstall(manager)
           break
         default:
-          console.log('Uh oh. The framework you selected is still not under our support.')
+          console.log(
+            'Uh oh. The css library you selected is still not under our support.',
+          )
       }
     } else {
       console.log('css library installation was skipped')
@@ -69,14 +80,37 @@ const appGenerator = async ({
     // ui library installation
     if (ui_library) {
       switch (ui_library) {
-        case 'mui':
-          muiInstall(manager, framework, css_library)
+        case '@mui/material':
+          muiInstall(manager, css_library)
           break
-        case 'daisy':
-          daisyInstall(manager)
+        case 'antd':
+          antdInstall(manager)
+          break
+        case '@headlessui/react@latest' || '@headlessui/vue@latest':
+          headlessUiInstall(manager, framework)
+          break
+        case 'react-aria':
+          reactAriaInstall(manager)
+          break
+        case 'shadcn-ui@latest':
+          shadCnInstall(manager, framework)
+          break
+        case '@chakra-ui/react':
+          chakraUiInstall(manager)
+          break
+        case '@radix-ui/themes':
+          radixUiInstall(manager)
+          break
+        case '@kuma-ui/core':
+          await kumaUiInstall(manager)
+          break
+        case 'daisyui':
+          await daisyInstall(manager)
           break
         default:
-          console.log('Uh oh. The framework you selected is still not under our support.')
+          console.log(
+            'Uh oh. The ui library you selected is still not under our support.',
+          )
       }
     } else {
       console.log('UI library installation was skipped')
@@ -425,6 +459,19 @@ const qwikInstall = async (manager, isTs) => {
 }
 
 // css
+const cssModulesInstall = (manager) => {
+  const cssModulesSampleFile = 'Example.module.css'
+  cssModulesFileGenerate = () => `
+    .example {
+    }
+    `
+  // Scaffold cssModules
+  writeFileSync(path.join(process.cwd(), cssModulesSampleFile), cssModulesFileGenerate())
+  console.log(
+    'Installation might not be all set! \n Refer to the official information for more details: https://getbootstrap.jp/docs/5.3/getting-started/download/',
+  )
+}
+
 const pandacssInstall = (manager) => {
   try {
     execSync(`${manager} install -D @pandacss/dev`, {
@@ -472,45 +519,344 @@ const tailwindInstall = (manager) => {
   })
 }
 
-const bootstrapInstall = (manager) => {
+const vanillaInstall = async (manager, framework) => {
+  const question = [
+    {
+      type: 'list',
+      name: 'builder',
+      choices: ['Vite', 'ESbuild', 'Webpack', 'Next.js', 'parcel', 'rollup', 'Gatsby'],
+      message: 'Which builder do you use in your project?',
+    },
+  ]
+  const answer = await inquirer.prompt(question)
   try {
-    execSync(`${manager} i bootstrap`, {
+    execSync(`${manager} install @vanilla-extract/css`, {
       stdio: 'inherit',
     })
+    let configPath = ''
+    let updatedConfig = ''
+    switch (answer.builder) {
+      case 'Vite':
+        execSync(`${manager} install --save-dev @vanilla-extract/vite-plugin`, {
+          stdio: 'inherit',
+        })
+        configPath = path.resolve('vite.config.js')
+        updatedConfig = `import { vanillaExtractPlugin } from '@vanilla-extract/vite-plugin';
+
+        export default {
+          plugins: [vanillaExtractPlugin()]
+        };`
+        break
+      case 'ESbuild':
+        execSync(`${manager} install --save-dev @vanilla-extract/esbuild-plugin`, {
+          stdio: 'inherit',
+        })
+        configPath = path.resolve('bundle.config.js')
+        updatedConfig = `const {
+          vanillaExtractPlugin
+        } = require('@vanilla-extract/esbuild-plugin');
+        
+        require('esbuild')
+          .build({
+            entryPoints: ['app.ts'],
+            bundle: true,
+            plugins: [vanillaExtractPlugin()],
+            outfile: 'out.js'
+          })
+          .catch(() => process.exit(1));`
+        break
+      case 'Webpack':
+        execSync(`${manager} install --save-dev @vanilla-extract/webpack-plugin`, {
+          stdio: 'inherit',
+        })
+        configPath = path.resolve('webpack.config.js')
+        updatedConfig = `const {
+          VanillaExtractPlugin
+        } = require('@vanilla-extract/webpack-plugin');
+        
+        module.exports = {
+          plugins: [new VanillaExtractPlugin()]
+        };`
+        break
+      case 'Next.js':
+        execSync(`${manager} install --save-dev @vanilla-extract/next-plugin`, {
+          stdio: 'inherit',
+        })
+        configPath = path.resolve('next.config.js')
+        updatedConfig = `const {
+          createVanillaExtractPlugin
+        } = require('@vanilla-extract/next-plugin');
+        const withVanillaExtract = createVanillaExtractPlugin();
+        
+        /** @type {import('next').NextConfig} */
+        const nextConfig = {};
+        
+        module.exports = withVanillaExtract(nextConfig);`
+        break
+      case 'parcel':
+        execSync(`${manager} install --save-dev @vanilla-extract/parcel-transformer`, {
+          stdio: 'inherit',
+        })
+        configPath = path.resolve('.percelrc')
+        updatedConfig = `{
+          "transformers": {
+            "*.css.ts": ["@vanilla-extract/parcel-transformer"]
+          }
+        }`
+        break
+      case 'rollup':
+        execSync(`${manager} install --save-dev @vanilla-extract/rollup-plugin`, {
+          stdio: 'inherit',
+        })
+        configPath = path.resolve('rollup.config.js')
+        updatedConfig = `import { vanillaExtractPlugin } from '@vanilla-extract/rollup-plugin';
+
+          export default {
+            plugins: [vanillaExtractPlugin()]
+          };`
+        break
+      case 'Gatsby':
+        execSync(
+          `${manager} install @vanilla-extract/webpack-plugin gatsby-plugin-vanilla-extract`,
+          {
+            stdio: 'inherit',
+          },
+        )
+        configPath = path.resolve('rollup.config.js')
+        updatedConfig = `module.exports = {
+            plugins: [\`gatsby-plugin-vanilla-extract\`]
+          };`
+        break
+      default:
+        break
+    }
+    // 変更を保存
+    writeFile(configPath, updatedConfig, 'utf-8', (err) => {
+      if (err) {
+        console.error('Error writing the file:', err)
+        return
+      }
+      console.log('Config file updated successfully.')
+    })
   } catch (error) {
-    console.error('Installation was not successful.')
+    console.log('Installation was not successful.')
+    console.log(error)
+  }
+
+  console.log(
+    'Installation might not be all set! \n Refer to the official information for more details: https://vanilla-extract.style/documentation/getting-started',
+  )
+}
+
+const emotionInstall = (manager, framework) => {
+  try {
+    if (framework === 'react' || framework === 'next') {
+      execSync(`${manager} install @emotion/react`, {
+        stdio: 'inherit',
+      })
+    } else {
+      execSync(`${manager} install @emotion/css`, {
+        stdio: 'inherit',
+      })
+    }
+  } catch (error) {
+    console.log('Installation was not successful.')
     console.log(error)
   }
   console.log(
-    'Installation might not be all set! \n Refer to the official information for more details: https://getbootstrap.jp/docs/5.3/getting-started/download/',
+    'Installation might not be all set! \n Refer to the official information for more details: https://emotion.sh/docs/install',
+  )
+}
+
+const styledComponentsInstall = (manager) => {
+  try {
+    execSync(`${manager} install styled-components`, {
+      stdio: 'inherit',
+    })
+  } catch (error) {
+    console.log('Installation was not successful.')
+    console.log(error)
+  }
+  console.log(
+    'Installation might not be all set! \n Refer to the official information for more details: https://styled-components.com/',
   )
 }
 
 // ui
-const muiInstall = (manager, framework, css_library) => {
-  if (framework == ('react' || 'next')) {
-    try {
-      if (css_library == 'styled-components') {
-        execSync(`${manager} @mui/material @mui/styled-engine-sc styled-components`, {
+const muiInstall = (manager, css_library) => {
+  try {
+    if (css_library == 'styled-components') {
+      execSync(
+        `${manager} install @mui/material @mui/styled-engine-sc styled-components`,
+        {
           stdio: 'inherit',
-        })
-      } else {
-        execSync(`${manager} install @mui/material @emotion/react @emotion/styled`, {
-          stdio: 'inherit',
-        })
-      }
-    } catch (error) {
-      console.error('Install was not successful.')
-      console.log(error)
+        },
+      )
+    } else {
+      execSync(`${manager} install @mui/material @emotion/react @emotion/styled`, {
+        stdio: 'inherit',
+      })
     }
-    console.log(
-      'Installation might not be all set! \n Refer to the official information for more details: https://mui.com/material-ui/getting-started/installation/',
-    )
-  } else {
-    console.log(
-      "You need to use React or it's framework as Mui is peer dependent to react, react-dom.",
-    )
+  } catch (error) {
+    console.error('Install was not successful.')
+    console.log(error)
   }
+  console.log(
+    'Installation might not be all set! \n Refer to the official information for more details: https://mui.com/material-ui/getting-started/installation/',
+  )
+}
+
+const headlessUiInstall = (manager, framework) => {
+  try {
+    if (framework === 'vue') {
+      execSync(`${manager} install @headlessui/vue`, {
+        stdio: 'inherit',
+      })
+      console.log(
+        'Installation might not be all set! \n Refer to the official information for more details: https://headlessui.com/vue/menu#installation',
+      )
+    } else if (framework === 'react' || framework === 'next') {
+      execSync(`${manager} install @headlessui/react`, {
+        stdio: 'inherit',
+      })
+      console.log(
+        'Installation might not be all set! \n Refer to the official information for more details: https://headlessui.com/react/menu#installation',
+      )
+    }
+  } catch (error) {
+    console.error('Install was not successful.')
+    console.log(error)
+  }
+}
+
+const antdInstall = (manager) => {
+  try {
+    execSync(`${manager} install antd`, {
+      stdio: 'inherit',
+    })
+  } catch (error) {
+    console.error('Install was not successful.')
+    console.log(error)
+  }
+  console.log(
+    'Installation might not be all set! \n Refer to the official information for more details: https://ant.design/docs/react/introduce',
+  )
+}
+
+const reactAriaInstall = (manager) => {
+  try {
+    execSync(`${manager} install react-aria`, {
+      stdio: 'inherit',
+    })
+  } catch (error) {
+    console.error('Install was not successful.')
+    console.log(error)
+  }
+  console.log(
+    'Installation might not be all set! \n Refer to the official information for more details: https://react-spectrum.adobe.com/react-aria/getting-started.html',
+  )
+}
+
+const shadCnInstall = async (manager, framework) => {
+  // frameworkによってインストール方法が異なるので現状URLのみ提示
+  console.log(
+    'Installation might not be all set! \n Refer to the official information for more details: https://ui.shadcn.com/docs/installation/manual',
+  )
+}
+
+const chakraUiInstall = (manager) => {
+  try {
+    execSync(
+      `${manager} install @chakra-ui/react @emotion/react @emotion/styled framer-motion`,
+      {
+        stdio: 'inherit',
+      },
+    )
+  } catch (error) {
+    console.error('Install was not successful.')
+    console.log(error)
+  }
+  console.log(
+    'Installation might not be all set! \n Refer to the official information for more details: https://chakra-ui.com/getting-started',
+  )
+}
+
+const radixUiInstall = (manager) => {
+  try {
+    execSync(`${manager} install @radix-ui/themes`, {
+      stdio: 'inherit',
+    })
+  } catch (error) {
+    console.error('Install was not successful.')
+    console.log(error)
+  }
+  console.log(
+    'Installation might not be all set! \n Refer to the official information for more details: https://www.radix-ui.com/themes/docs/overview/getting-started',
+  )
+}
+
+const kumaUiInstall = async (manager) => {
+  const question = [
+    {
+      type: 'list',
+      name: 'builder',
+      choices: ['Vite', 'Next.js'],
+      message: 'Which builder do you use in your project?',
+    },
+  ]
+  const answer = await inquirer.prompt(question)
+  try {
+    execSync(`${manager} install @kuma-ui/core`, {
+      stdio: 'inherit',
+    })
+    let configPath = ''
+    let updatedConfig = ''
+
+    if (answer.builder === 'Next.js') {
+      execSync(`${manager} install @kuma-ui/next-plugin`, {
+        stdio: 'inherit',
+      })
+      configPath = path.resolve('next.config.js')
+      updatedConfig = `const { withKumaUI } = require("@kuma-ui/next-plugin");
+ 
+      /** @type {import('next').NextConfig} */
+      const nextConfig = {
+        reactStrictMode: true,
+      };
+       
+      module.exports = withKumaUI(nextConfig);`
+    } else if (answer.builder === 'Vite') {
+      execSync(`${manager} install @kuma-ui/vite`, {
+        stdio: 'inherit',
+      })
+
+      configPath = path.resolve('vite.config.js')
+      updatedConfig = `import { defineConfig } from "vite";
+      import react from "@vitejs/plugin-react";
+      import KumaUI from "@kuma-ui/vite";
+       
+      export default defineConfig({
+        plugins: [
+          react(),
+          KumaUI(),
+        ],
+      });`
+    }
+    // 変更を保存
+    writeFile(configPath, updatedConfig, 'utf-8', (err) => {
+      if (err) {
+        console.error('Error writing the file:', err)
+        return
+      }
+      console.log('Config file updated successfully.')
+    })
+  } catch (error) {
+    console.error('Install was not successful.')
+    console.log(error)
+  }
+  console.log(
+    'Installation might not be all set! \n Refer to the official information for more details: https://www.kuma-ui.com/docs/install',
+  )
 }
 
 const daisyInstall = async (manager) => {
@@ -530,7 +876,6 @@ const daisyInstall = async (manager) => {
       // ファイル内容を JavaScript オブジェクトとして解析
       // eslint-disable-next-line no-undef
       const configObject = await require(configPath)
-      console.log(configObject.default)
       // 既に追加済みでない場合にプラグインを追加
       if (!configObject.default.plugins.includes(pluginName)) {
         configObject.default.plugins.push(pluginName)
@@ -566,8 +911,8 @@ const daisyInstall = async (manager) => {
 }
 appGenerator({
   framework: 'react',
-  css_library: 'tailwind',
-  ui_library: 'panda',
+  css_library: 'styled-components',
+  ui_library: '@kuma-ui/core',
   linter: 'template',
   formatter: 'yes',
   lint_staged_husky: 'yes',
