@@ -5,7 +5,7 @@ import { ReturnGetTeamBoardDetailType } from '@/services/server/GetTeamBoardDeta
 import { readmeGenerator, readmeGeneratorProps } from './readme'
 
 type appGeneratorProps = {
-  frameworks: string
+  framework: string
   ui_library: string | null
   css_library: string | null
   linter: 'yes' | 'no' | 'template'
@@ -36,7 +36,7 @@ function escapeForEval(code: string) {
 }
 
 const fileGenerator = async ({
-  frameworks,
+  framework,
   ui_library,
   css_library,
   linter,
@@ -49,8 +49,9 @@ const fileGenerator = async ({
   isGit,
 }: ReturnGetTeamBoardDetailType['teamBoardDetailWithoutTypename']) => {
   const md = `${readmeGenerator({ manager, isGit })}`
+  console.log(framework)
   const appGen = `/** @format */
-
+    
   import { execSync } from \"child_process\";
   import { access, constants, writeFile, writeFileSync } from \"fs\";
   import path from \"path\";
@@ -58,23 +59,26 @@ const fileGenerator = async ({
   import inquirer from \"inquirer\";
   
   const appGenerator = async ({
-      fw_name,
-      css_name,
-      ui_name,
-      eslint,
-      prettier,
-      isTs,
-      lint_staged_husky,
-      hygen,
-      vscode,
-      volta,
-      manager,
-  }) => {
-      try {
+    framework,
+    ui_library,
+    css_library,
+    linter,
+    formatter,
+    lint_staged_husky,
+    hygen,
+    vscode,
+    volta,
+    manager,
+    isGit,
+    isTs
+}) => {
+    console.log(\`You are using \${manager} as a package manager.\`);
+    
+    try {
           // Create a project and switch to the directory.
-          switch (fw_name) {
+          switch (framework) {
               case \"vue\":
-                  await vueInstall(manager, isTs, eslint, prettier); // eslint option
+                  await vueInstall(manager, isTs, linter, formatter); // eslint option
                   break;
               case \"react\":
                   await reactInstall(manager, isTs);
@@ -97,7 +101,7 @@ const fileGenerator = async ({
                   );
           }
   
-          if (eslint === \"template\") {
+          if (linter === \"template\") {
               const eslintrcFileGenerate = () =>
                   \`{
                \"extends\": [\"eslint:recommended\", \"prettier\"],
@@ -143,7 +147,7 @@ const fileGenerator = async ({
                   path.join(process.cwd(), eslintignoreFile),
                   eslintingoreFileGenerate()
               );
-          } else if (eslint === \"yes\") {
+          } else if (linter === \"yes\") {
               execSync(\`\${manager} install -D eslint\`, { stdio: \"inherit\" });
               execSync(\`\${manager} create @eslint/config\`, { stdio: \"inherit\" });
               execSync(\`\${manager} install -D vite-plugin-checker\`, {
@@ -153,7 +157,7 @@ const fileGenerator = async ({
               console.log(\"eslint installation was skipped\");
           }
   
-          if (prettier === \"template\") {
+          if (formatter === \"template\") {
               execSync(\`\${manager} install -D prettier\`, { stdio: \"inherit\" });
               execSync(\`\${manager} install -D eslint-config-prettier\`, {
                   stdio: \"inherit\",
@@ -172,7 +176,7 @@ const fileGenerator = async ({
               \"jsxSingleQuote\": true
             }
             \`;
-              // Scafford prettier
+              // Scafford formatter
               writeFileSync(
                   path.join(process.cwd(), prettierrcFile),
                   prettierrcFileGenerate()
@@ -184,7 +188,7 @@ const fileGenerator = async ({
                   path.join(process.cwd(), prettierignoreFile),
                   prettieringoreFileGenerate()
               );
-          } else if (prettier === \"yes\") {
+          } else if (formatter === \"yes\") {
               execSync(\`\${manager} install -D prettier eslint-config-prettier\`, {
                   stdio: \"inherit\",
               });
@@ -193,8 +197,8 @@ const fileGenerator = async ({
           }
   
           // css library installation
-          if (css_name) {
-              switch (css_name) {
+          if (css_library) {
+              switch (css_library) {
                   case \"bootstrap\":
                       bootstrapInstall(manager);
                       break;
@@ -214,10 +218,10 @@ const fileGenerator = async ({
           }
   
           // ui library installation
-          if (ui_name) {
-              switch (ui_name) {
+          if (ui_library) {
+              switch (ui_library) {
                   case \"mui\":
-                      muiInstall(manager, fw_name, css_name);
+                      muiInstall(manager, framework, css_library);
                       break;
                   case \"daisy\":
                       daisyInstall(manager);
@@ -292,29 +296,26 @@ const fileGenerator = async ({
       );
   };
   
-  const reactInstall = async (manager, isTs) => {
+  const reactInstall = async (manager, isTs) => {    
       generalQuestion.push({
           type: \"confirm\",
           name: \"vite\",
           message: \"Do you want to use Vite as a builder?\",
-      });
+      }, 
+      {
+        type: \"confirm\",
+        name: \"swc\",
+        message: \"Do you want to use SWC as a compiler?\",
+    });
       const generalAnswers = await inquirer.prompt(generalQuestion);
       if (generalAnswers.vite) {
-          const question = [
-              {
-                  type: \"confirm\",
-                  name: \"swc\",
-                  message: \"Do you want to use SWC as a compiler?\",
-              },
-          ];
-          inquirer.prompt(question).then((answer) => {
               execSync(
                   \`\${manager} create vite@latest \${generalAnswers.projectName} \${
-                      isTs && answer.swc
+                      isTs && generalAnswers.swc
                           ? \" --template react-swc-ts\"
                           : isTs
                           ? \" --template react-ts\"
-                          : answer.swc
+                          : generalAnswers.swc
                           ? \" --template react-swc\"
                           : \" --template react\"
                   } \`,
@@ -322,7 +323,6 @@ const fileGenerator = async ({
                       stdio: \"inherit\",
                   }
               );
-          });
       } else {
           execSync(
               \`\${manager} create-react-app \${generalAnswers.projectName} \${
@@ -334,8 +334,8 @@ const fileGenerator = async ({
           );
       }
       // Change to the project directory
-      process.chdir(generalAnswers.projectName);
-      console.log(path.join(process.cwd(), \`\${generalAnswers.projectName}/\`));
+      process.chdir(\`./\${generalAnswers.projectName}\`);
+      console.log(path.join(process.cwd()));
       generalQuestion.pop();
       console.log(
           \`Installation might not be all set! \\n Refer to the official information for more details: https://daisyui.com/docs/install/\`
@@ -537,10 +537,10 @@ const fileGenerator = async ({
   // styled-components
   
   // ui
-  const muiInstall = (manager, fw_name, css_name) => {
-      if (fw_name == (\"react\" || \"next\")) {
+  const muiInstall = (manager, framework, css_library) => {
+      if (framework == (\"react\" || \"next\")) {
           try {
-              if (css_name == \"styled-components\") {
+              if (css_library == \"styled-components\") {
                   execSync(
                       \`\${manager} @mui/material @mui/styled-engine-sc styled-components\`,
                       {
@@ -620,15 +620,19 @@ const fileGenerator = async ({
           return;
       }
   };
-  
+
   appGenerator({
-      fw_name: \"vue\",
-      css_name: \"tailwind\",
-      ui_name: \"daisy\",
-      eslint: \"yes\",
-      prettier: \"template\",
-      isTs: true,
-      manager: \"pnpm\",
+      framework: \"react\",
+      css_library: \"tailwind\",
+      ui_library: \"daisy\",
+      linter: \"${linter}\",
+      formatter: \"${formatter}\",
+      lint_staged_husky: \"${lint_staged_husky}\",
+      hygen: \"${hygen}\",
+      vscode: \"${vscode}\",
+      volta: \"${volta}\",
+      manager: \"${manager}\",
+      isTs: \"${true}\",
   });
   `
   const shell = `
@@ -637,6 +641,8 @@ const fileGenerator = async ({
   npm init -y --scope="" 
   npm install inquirer
   node appGen.mjs
+  rm -rf node_modules
+  rm package.json package-lock.json
   `
 
   return {
@@ -650,20 +656,7 @@ const fileGenerator = async ({
 export const getFiles = async (
   props: ReturnGetTeamBoardDetailType['teamBoardDetailWithoutTypename'],
 ) => {
-  console.log(props)
-
   const files: FileSystemTree = await fileGenerator(props)
-  //   const files: FileSystemTree = await fileGenerator({
-  //     frameworks: props.frameworks,
-  //     css_library: props.css_library,
-  //     ui_library: props.ui_library,
-  //     linter: props.linter,
-  //     formatter: 'template',
-  //     lint_staged_husky: 'yes',
-  //     hygen: 'yes',
-  //     vscode: 'yes',
-  //     manager: 'pnpm',
-  //     isGit: false,
-  //   })
+
   return files
 }
