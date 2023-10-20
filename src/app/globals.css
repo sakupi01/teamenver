@@ -77,7 +77,7 @@
 
 @layer components {
   .full-container {
-    @apply flex items-center justify-center h-full w-full;
+    @apply flex flex-col items-start justify-center h-full w-full;
   }
 
   .dndNode-container {

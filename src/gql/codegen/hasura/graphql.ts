@@ -353,7 +353,6 @@ export type Board_Details = {
   /** An object relationship */
   board: Boards;
   board_id: Scalars['uuid']['output'];
-  builder?: Maybe<Scalars['String']['output']>;
   created_at: Scalars['timestamptz']['output'];
   css_library?: Maybe<Scalars['String']['output']>;
   formatter?: Maybe<Scalars['String']['output']>;
@@ -399,7 +398,6 @@ export type Board_Details_Bool_Exp = {
   _or?: InputMaybe<Array<Board_Details_Bool_Exp>>;
   board?: InputMaybe<Boards_Bool_Exp>;
   board_id?: InputMaybe<Uuid_Comparison_Exp>;
-  builder?: InputMaybe<String_Comparison_Exp>;
   created_at?: InputMaybe<Timestamptz_Comparison_Exp>;
   css_library?: InputMaybe<String_Comparison_Exp>;
   formatter?: InputMaybe<String_Comparison_Exp>;
@@ -428,7 +426,6 @@ export enum Board_Details_Constraint {
 export type Board_Details_Insert_Input = {
   board?: InputMaybe<Boards_Obj_Rel_Insert_Input>;
   board_id?: InputMaybe<Scalars['uuid']['input']>;
-  builder?: InputMaybe<Scalars['String']['input']>;
   created_at?: InputMaybe<Scalars['timestamptz']['input']>;
   css_library?: InputMaybe<Scalars['String']['input']>;
   formatter?: InputMaybe<Scalars['String']['input']>;
@@ -449,7 +446,6 @@ export type Board_Details_Insert_Input = {
 export type Board_Details_Max_Fields = {
   __typename?: 'board_details_max_fields';
   board_id?: Maybe<Scalars['uuid']['output']>;
-  builder?: Maybe<Scalars['String']['output']>;
   created_at?: Maybe<Scalars['timestamptz']['output']>;
   css_library?: Maybe<Scalars['String']['output']>;
   formatter?: Maybe<Scalars['String']['output']>;
@@ -470,7 +466,6 @@ export type Board_Details_Max_Fields = {
 export type Board_Details_Min_Fields = {
   __typename?: 'board_details_min_fields';
   board_id?: Maybe<Scalars['uuid']['output']>;
-  builder?: Maybe<Scalars['String']['output']>;
   created_at?: Maybe<Scalars['timestamptz']['output']>;
   css_library?: Maybe<Scalars['String']['output']>;
   formatter?: Maybe<Scalars['String']['output']>;
@@ -514,7 +509,6 @@ export type Board_Details_On_Conflict = {
 export type Board_Details_Order_By = {
   board?: InputMaybe<Boards_Order_By>;
   board_id?: InputMaybe<Order_By>;
-  builder?: InputMaybe<Order_By>;
   created_at?: InputMaybe<Order_By>;
   css_library?: InputMaybe<Order_By>;
   formatter?: InputMaybe<Order_By>;
@@ -540,8 +534,6 @@ export type Board_Details_Pk_Columns_Input = {
 export enum Board_Details_Select_Column {
   /** column name */
   BoardId = 'board_id',
-  /** column name */
-  Builder = 'builder',
   /** column name */
   CreatedAt = 'created_at',
   /** column name */
@@ -575,7 +567,6 @@ export enum Board_Details_Select_Column {
 /** input type for updating data in table "board_details" */
 export type Board_Details_Set_Input = {
   board_id?: InputMaybe<Scalars['uuid']['input']>;
-  builder?: InputMaybe<Scalars['String']['input']>;
   created_at?: InputMaybe<Scalars['timestamptz']['input']>;
   css_library?: InputMaybe<Scalars['String']['input']>;
   formatter?: InputMaybe<Scalars['String']['input']>;
@@ -603,7 +594,6 @@ export type Board_Details_Stream_Cursor_Input = {
 /** Initial value of the column from where the streaming should start */
 export type Board_Details_Stream_Cursor_Value_Input = {
   board_id?: InputMaybe<Scalars['uuid']['input']>;
-  builder?: InputMaybe<Scalars['String']['input']>;
   created_at?: InputMaybe<Scalars['timestamptz']['input']>;
   css_library?: InputMaybe<Scalars['String']['input']>;
   formatter?: InputMaybe<Scalars['String']['input']>;
@@ -624,8 +614,6 @@ export type Board_Details_Stream_Cursor_Value_Input = {
 export enum Board_Details_Update_Column {
   /** column name */
   BoardId = 'board_id',
-  /** column name */
-  Builder = 'builder',
   /** column name */
   CreatedAt = 'created_at',
   /** column name */
@@ -3236,13 +3224,19 @@ export type Team_Board_Details = {
   css_library?: Maybe<Scalars['String']['output']>;
   formatter?: Maybe<Scalars['String']['output']>;
   framework?: Maybe<Scalars['String']['output']>;
+  hygen?: Maybe<Scalars['String']['output']>;
   id: Scalars['uuid']['output'];
+  isGit?: Maybe<Scalars['String']['output']>;
+  lint_staged_husky?: Maybe<Scalars['String']['output']>;
   linter?: Maybe<Scalars['String']['output']>;
+  manager?: Maybe<Scalars['String']['output']>;
   /** An object relationship */
   team_board: Team_Boards;
   team_board_id: Scalars['uuid']['output'];
   ui_library?: Maybe<Scalars['String']['output']>;
   updated_at: Scalars['timestamptz']['output'];
+  volta?: Maybe<Scalars['String']['output']>;
+  vscode?: Maybe<Scalars['String']['output']>;
 };
 
 /** aggregated selection of "team_board_details" */
@@ -3276,12 +3270,18 @@ export type Team_Board_Details_Bool_Exp = {
   css_library?: InputMaybe<String_Comparison_Exp>;
   formatter?: InputMaybe<String_Comparison_Exp>;
   framework?: InputMaybe<String_Comparison_Exp>;
+  hygen?: InputMaybe<String_Comparison_Exp>;
   id?: InputMaybe<Uuid_Comparison_Exp>;
+  isGit?: InputMaybe<String_Comparison_Exp>;
+  lint_staged_husky?: InputMaybe<String_Comparison_Exp>;
   linter?: InputMaybe<String_Comparison_Exp>;
+  manager?: InputMaybe<String_Comparison_Exp>;
   team_board?: InputMaybe<Team_Boards_Bool_Exp>;
   team_board_id?: InputMaybe<Uuid_Comparison_Exp>;
   ui_library?: InputMaybe<String_Comparison_Exp>;
   updated_at?: InputMaybe<Timestamptz_Comparison_Exp>;
+  volta?: InputMaybe<String_Comparison_Exp>;
+  vscode?: InputMaybe<String_Comparison_Exp>;
 };
 
 /** unique or primary key constraints on table "team_board_details" */
@@ -3298,12 +3298,18 @@ export type Team_Board_Details_Insert_Input = {
   css_library?: InputMaybe<Scalars['String']['input']>;
   formatter?: InputMaybe<Scalars['String']['input']>;
   framework?: InputMaybe<Scalars['String']['input']>;
+  hygen?: InputMaybe<Scalars['String']['input']>;
   id?: InputMaybe<Scalars['uuid']['input']>;
+  isGit?: InputMaybe<Scalars['String']['input']>;
+  lint_staged_husky?: InputMaybe<Scalars['String']['input']>;
   linter?: InputMaybe<Scalars['String']['input']>;
+  manager?: InputMaybe<Scalars['String']['input']>;
   team_board?: InputMaybe<Team_Boards_Obj_Rel_Insert_Input>;
   team_board_id?: InputMaybe<Scalars['uuid']['input']>;
   ui_library?: InputMaybe<Scalars['String']['input']>;
   updated_at?: InputMaybe<Scalars['timestamptz']['input']>;
+  volta?: InputMaybe<Scalars['String']['input']>;
+  vscode?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** aggregate max on columns */
@@ -3313,11 +3319,17 @@ export type Team_Board_Details_Max_Fields = {
   css_library?: Maybe<Scalars['String']['output']>;
   formatter?: Maybe<Scalars['String']['output']>;
   framework?: Maybe<Scalars['String']['output']>;
+  hygen?: Maybe<Scalars['String']['output']>;
   id?: Maybe<Scalars['uuid']['output']>;
+  isGit?: Maybe<Scalars['String']['output']>;
+  lint_staged_husky?: Maybe<Scalars['String']['output']>;
   linter?: Maybe<Scalars['String']['output']>;
+  manager?: Maybe<Scalars['String']['output']>;
   team_board_id?: Maybe<Scalars['uuid']['output']>;
   ui_library?: Maybe<Scalars['String']['output']>;
   updated_at?: Maybe<Scalars['timestamptz']['output']>;
+  volta?: Maybe<Scalars['String']['output']>;
+  vscode?: Maybe<Scalars['String']['output']>;
 };
 
 /** aggregate min on columns */
@@ -3327,11 +3339,17 @@ export type Team_Board_Details_Min_Fields = {
   css_library?: Maybe<Scalars['String']['output']>;
   formatter?: Maybe<Scalars['String']['output']>;
   framework?: Maybe<Scalars['String']['output']>;
+  hygen?: Maybe<Scalars['String']['output']>;
   id?: Maybe<Scalars['uuid']['output']>;
+  isGit?: Maybe<Scalars['String']['output']>;
+  lint_staged_husky?: Maybe<Scalars['String']['output']>;
   linter?: Maybe<Scalars['String']['output']>;
+  manager?: Maybe<Scalars['String']['output']>;
   team_board_id?: Maybe<Scalars['uuid']['output']>;
   ui_library?: Maybe<Scalars['String']['output']>;
   updated_at?: Maybe<Scalars['timestamptz']['output']>;
+  volta?: Maybe<Scalars['String']['output']>;
+  vscode?: Maybe<Scalars['String']['output']>;
 };
 
 /** response of any mutation on the table "team_board_details" */
@@ -3363,12 +3381,18 @@ export type Team_Board_Details_Order_By = {
   css_library?: InputMaybe<Order_By>;
   formatter?: InputMaybe<Order_By>;
   framework?: InputMaybe<Order_By>;
+  hygen?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
+  isGit?: InputMaybe<Order_By>;
+  lint_staged_husky?: InputMaybe<Order_By>;
   linter?: InputMaybe<Order_By>;
+  manager?: InputMaybe<Order_By>;
   team_board?: InputMaybe<Team_Boards_Order_By>;
   team_board_id?: InputMaybe<Order_By>;
   ui_library?: InputMaybe<Order_By>;
   updated_at?: InputMaybe<Order_By>;
+  volta?: InputMaybe<Order_By>;
+  vscode?: InputMaybe<Order_By>;
 };
 
 /** primary key columns input for table: team_board_details */
@@ -3387,15 +3411,27 @@ export enum Team_Board_Details_Select_Column {
   /** column name */
   Framework = 'framework',
   /** column name */
+  Hygen = 'hygen',
+  /** column name */
   Id = 'id',
   /** column name */
+  IsGit = 'isGit',
+  /** column name */
+  LintStagedHusky = 'lint_staged_husky',
+  /** column name */
   Linter = 'linter',
+  /** column name */
+  Manager = 'manager',
   /** column name */
   TeamBoardId = 'team_board_id',
   /** column name */
   UiLibrary = 'ui_library',
   /** column name */
-  UpdatedAt = 'updated_at'
+  UpdatedAt = 'updated_at',
+  /** column name */
+  Volta = 'volta',
+  /** column name */
+  Vscode = 'vscode'
 }
 
 /** input type for updating data in table "team_board_details" */
@@ -3404,11 +3440,17 @@ export type Team_Board_Details_Set_Input = {
   css_library?: InputMaybe<Scalars['String']['input']>;
   formatter?: InputMaybe<Scalars['String']['input']>;
   framework?: InputMaybe<Scalars['String']['input']>;
+  hygen?: InputMaybe<Scalars['String']['input']>;
   id?: InputMaybe<Scalars['uuid']['input']>;
+  isGit?: InputMaybe<Scalars['String']['input']>;
+  lint_staged_husky?: InputMaybe<Scalars['String']['input']>;
   linter?: InputMaybe<Scalars['String']['input']>;
+  manager?: InputMaybe<Scalars['String']['input']>;
   team_board_id?: InputMaybe<Scalars['uuid']['input']>;
   ui_library?: InputMaybe<Scalars['String']['input']>;
   updated_at?: InputMaybe<Scalars['timestamptz']['input']>;
+  volta?: InputMaybe<Scalars['String']['input']>;
+  vscode?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** Streaming cursor of the table "team_board_details" */
@@ -3425,11 +3467,17 @@ export type Team_Board_Details_Stream_Cursor_Value_Input = {
   css_library?: InputMaybe<Scalars['String']['input']>;
   formatter?: InputMaybe<Scalars['String']['input']>;
   framework?: InputMaybe<Scalars['String']['input']>;
+  hygen?: InputMaybe<Scalars['String']['input']>;
   id?: InputMaybe<Scalars['uuid']['input']>;
+  isGit?: InputMaybe<Scalars['String']['input']>;
+  lint_staged_husky?: InputMaybe<Scalars['String']['input']>;
   linter?: InputMaybe<Scalars['String']['input']>;
+  manager?: InputMaybe<Scalars['String']['input']>;
   team_board_id?: InputMaybe<Scalars['uuid']['input']>;
   ui_library?: InputMaybe<Scalars['String']['input']>;
   updated_at?: InputMaybe<Scalars['timestamptz']['input']>;
+  volta?: InputMaybe<Scalars['String']['input']>;
+  vscode?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** update columns of table "team_board_details" */
@@ -3443,15 +3491,27 @@ export enum Team_Board_Details_Update_Column {
   /** column name */
   Framework = 'framework',
   /** column name */
+  Hygen = 'hygen',
+  /** column name */
   Id = 'id',
   /** column name */
+  IsGit = 'isGit',
+  /** column name */
+  LintStagedHusky = 'lint_staged_husky',
+  /** column name */
   Linter = 'linter',
+  /** column name */
+  Manager = 'manager',
   /** column name */
   TeamBoardId = 'team_board_id',
   /** column name */
   UiLibrary = 'ui_library',
   /** column name */
-  UpdatedAt = 'updated_at'
+  UpdatedAt = 'updated_at',
+  /** column name */
+  Volta = 'volta',
+  /** column name */
+  Vscode = 'vscode'
 }
 
 export type Team_Board_Details_Updates = {
@@ -4818,7 +4878,7 @@ export type GetBoardLibrariesQueryVariables = Exact<{
 }>;
 
 
-export type GetBoardLibrariesQuery = { __typename?: 'query_root', boards_by_pk?: { __typename?: 'boards', is_public: boolean, board_detail?: { __typename?: 'board_details', id: string, framework?: string | null, css_library?: string | null, ui_library?: string | null, linter?: string | null, formatter?: string | null } | null } | null };
+export type GetBoardLibrariesQuery = { __typename?: 'query_root', boards_by_pk?: { __typename?: 'boards', is_public: boolean, board_detail?: { __typename?: 'board_details', id: string, framework?: string | null, css_library?: string | null, ui_library?: string | null, linter?: string | null, formatter?: string | null, created_at: string, updated_at: string, lint_staged_husky?: string | null, hygen?: string | null, manager?: string | null, vscode?: string | null, volta?: string | null, isGit?: string | null } | null } | null };
 
 export type GetLastMessagesQueryVariables = Exact<{
   user_id: Scalars['String']['input'];
@@ -4835,7 +4895,7 @@ export type GetTeamInfoQueryVariables = Exact<{
 }>;
 
 
-export type GetTeamInfoQuery = { __typename?: 'query_root', teams_by_pk?: { __typename?: 'teams', team_boards?: { __typename?: 'team_boards', id: string, team_board_detail?: { __typename?: 'team_board_details', ui_library?: string | null, id: string, linter?: string | null, framework?: string | null, formatter?: string | null, css_library?: string | null } | null } | null, boards: Array<{ __typename?: 'boards', id: string, user: { __typename?: 'users', id: string, name: string } }> } | null };
+export type GetTeamInfoQuery = { __typename?: 'query_root', teams_by_pk?: { __typename?: 'teams', team_boards?: { __typename?: 'team_boards', id: string, team_board_detail?: { __typename?: 'team_board_details', id: string, framework?: string | null, css_library?: string | null, ui_library?: string | null, linter?: string | null, formatter?: string | null, created_at: string, updated_at: string, lint_staged_husky?: string | null, hygen?: string | null, manager?: string | null, vscode?: string | null, volta?: string | null, isGit?: string | null } | null } | null, boards: Array<{ __typename?: 'boards', id: string, user: { __typename?: 'users', id: string, name: string } }> } | null };
 
 export type GetMyBoardInTeamQueryVariables = Exact<{
   team_id: Scalars['uuid']['input'];
@@ -4843,7 +4903,7 @@ export type GetMyBoardInTeamQueryVariables = Exact<{
 }>;
 
 
-export type GetMyBoardInTeamQuery = { __typename?: 'query_root', boards: Array<{ __typename?: 'boards', id: string, is_public: boolean, board_detail?: { __typename?: 'board_details', id: string, hygen?: string | null, framework?: string | null, formatter?: string | null, css_library?: string | null, created_at: string, builder?: string | null, isGit?: string | null, lint_staged_husky?: string | null, linter?: string | null, manager?: string | null, ui_library?: string | null, updated_at: string, volta?: string | null, vscode?: string | null } | null }> };
+export type GetMyBoardInTeamQuery = { __typename?: 'query_root', boards: Array<{ __typename?: 'boards', id: string, is_public: boolean, board_detail?: { __typename?: 'board_details', id: string, hygen?: string | null, framework?: string | null, formatter?: string | null, css_library?: string | null, created_at: string, isGit?: string | null, lint_staged_husky?: string | null, linter?: string | null, manager?: string | null, ui_library?: string | null, updated_at: string, volta?: string | null, vscode?: string | null } | null }> };
 
 export type GetJoinedTeamsQueryVariables = Exact<{
   user_id: Scalars['String']['input'];
@@ -4871,7 +4931,7 @@ export type GetTeamBoardDetailQueryVariables = Exact<{
 }>;
 
 
-export type GetTeamBoardDetailQuery = { __typename?: 'query_root', teams_by_pk?: { __typename?: 'teams', team_boards?: { __typename?: 'team_boards', team_board_detail?: { __typename?: 'team_board_details', id: string, framework?: string | null, css_library?: string | null, ui_library?: string | null, linter?: string | null, formatter?: string | null } | null } | null } | null };
+export type GetTeamBoardDetailQuery = { __typename?: 'query_root', teams_by_pk?: { __typename?: 'teams', team_boards?: { __typename?: 'team_boards', team_board_detail?: { __typename?: 'team_board_details', id: string, framework?: string | null, css_library?: string | null, ui_library?: string | null, linter?: string | null, formatter?: string | null, created_at: string, updated_at: string, lint_staged_husky?: string | null, hygen?: string | null, manager?: string | null, vscode?: string | null, volta?: string | null, isGit?: string | null } | null } | null } | null };
 
 export type SubscribeMessageSubscriptionVariables = Exact<{
   board_id?: InputMaybe<Scalars['uuid']['input']>;
@@ -4894,12 +4954,12 @@ export const CreateTeamBoardDetailsDocument = {"kind":"Document","definitions":[
 export const InsertLikeDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"InsertLike"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"comment_id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"uuid"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"user_id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"insert_likes_one"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"object"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"comment_id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"comment_id"}}},{"kind":"ObjectField","name":{"kind":"Name","value":"user_id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"user_id"}}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"created_at"}}]}}]}}]} as unknown as DocumentNode<InsertLikeMutation, InsertLikeMutationVariables>;
 export const DeleteLikeDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"DeleteLike"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"comment_id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"uuid"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"user_id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"delete_likes"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"user_id"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"_eq"},"value":{"kind":"Variable","name":{"kind":"Name","value":"user_id"}}}]}},{"kind":"ObjectField","name":{"kind":"Name","value":"comment_id"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"_eq"},"value":{"kind":"Variable","name":{"kind":"Name","value":"comment_id"}}}]}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"affected_rows"}}]}}]}}]} as unknown as DocumentNode<DeleteLikeMutation, DeleteLikeMutationVariables>;
 export const UpdateBoardVisibilityDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"UpdateBoardVisibility"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"board_id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"uuid"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"is_public"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Boolean"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"update_boards_by_pk"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"pk_columns"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"board_id"}}}]}},{"kind":"Argument","name":{"kind":"Name","value":"_set"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"is_public"},"value":{"kind":"Variable","name":{"kind":"Name","value":"is_public"}}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"updated_at"}}]}}]}}]} as unknown as DocumentNode<UpdateBoardVisibilityMutation, UpdateBoardVisibilityMutationVariables>;
-export const GetBoardLibrariesDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetBoardLibraries"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"board_id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"uuid"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"boards_by_pk"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"board_id"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"board_detail"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"framework"}},{"kind":"Field","name":{"kind":"Name","value":"css_library"}},{"kind":"Field","name":{"kind":"Name","value":"ui_library"}},{"kind":"Field","name":{"kind":"Name","value":"linter"}},{"kind":"Field","name":{"kind":"Name","value":"formatter"}}]}},{"kind":"Field","name":{"kind":"Name","value":"is_public"}}]}}]}}]} as unknown as DocumentNode<GetBoardLibrariesQuery, GetBoardLibrariesQueryVariables>;
+export const GetBoardLibrariesDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetBoardLibraries"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"board_id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"uuid"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"boards_by_pk"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"board_id"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"board_detail"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"framework"}},{"kind":"Field","name":{"kind":"Name","value":"css_library"}},{"kind":"Field","name":{"kind":"Name","value":"ui_library"}},{"kind":"Field","name":{"kind":"Name","value":"linter"}},{"kind":"Field","name":{"kind":"Name","value":"formatter"}},{"kind":"Field","name":{"kind":"Name","value":"created_at"}},{"kind":"Field","name":{"kind":"Name","value":"updated_at"}},{"kind":"Field","name":{"kind":"Name","value":"lint_staged_husky"}},{"kind":"Field","name":{"kind":"Name","value":"hygen"}},{"kind":"Field","name":{"kind":"Name","value":"manager"}},{"kind":"Field","name":{"kind":"Name","value":"vscode"}},{"kind":"Field","name":{"kind":"Name","value":"volta"}},{"kind":"Field","name":{"kind":"Name","value":"isGit"}}]}},{"kind":"Field","name":{"kind":"Name","value":"is_public"}}]}}]}}]} as unknown as DocumentNode<GetBoardLibrariesQuery, GetBoardLibrariesQueryVariables>;
 export const GetLastMessagesDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetLastMessages"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"user_id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"board_id"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"uuid"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"from_ts"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"timestamptz"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"comments"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"order_by"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"updated_at"},"value":{"kind":"EnumValue","value":"asc"}}]}},{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"updated_at"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"_gt"},"value":{"kind":"Variable","name":{"kind":"Name","value":"from_ts"}}}]}},{"kind":"ObjectField","name":{"kind":"Name","value":"board_id"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"_eq"},"value":{"kind":"Variable","name":{"kind":"Name","value":"board_id"}}}]}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"content"}},{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"id"}}]}},{"kind":"Field","name":{"kind":"Name","value":"board_id"}},{"kind":"Field","name":{"kind":"Name","value":"updated_at"}},{"kind":"Field","name":{"kind":"Name","value":"likes"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"user_id"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"_eq"},"value":{"kind":"Variable","name":{"kind":"Name","value":"user_id"}}}]}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"updated_at"}}]}},{"kind":"Field","name":{"kind":"Name","value":"likes_aggregate"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"aggregate"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"count"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"columns"},"value":{"kind":"EnumValue","value":"comment_id"}}]}]}}]}}]}}]}}]} as unknown as DocumentNode<GetLastMessagesQuery, GetLastMessagesQueryVariables>;
-export const GetTeamInfoDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetTeamInfo"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"uuid"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"user_id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"teams_by_pk"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"team_boards"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"team_board_detail"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"ui_library"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"linter"}},{"kind":"Field","name":{"kind":"Name","value":"framework"}},{"kind":"Field","name":{"kind":"Name","value":"formatter"}},{"kind":"Field","name":{"kind":"Name","value":"css_library"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"boards"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"is_public"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"_eq"},"value":{"kind":"BooleanValue","value":true}}]}},{"kind":"ObjectField","name":{"kind":"Name","value":"_not"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"user_id"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"_eq"},"value":{"kind":"Variable","name":{"kind":"Name","value":"user_id"}}}]}}]}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}}]}}]}}]}}]} as unknown as DocumentNode<GetTeamInfoQuery, GetTeamInfoQueryVariables>;
-export const GetMyBoardInTeamDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetMyBoardInTeam"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"team_id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"uuid"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"user_id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"boards"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"_and"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"team_id"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"_eq"},"value":{"kind":"Variable","name":{"kind":"Name","value":"team_id"}}}]}},{"kind":"ObjectField","name":{"kind":"Name","value":"user_id"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"_eq"},"value":{"kind":"Variable","name":{"kind":"Name","value":"user_id"}}}]}}]}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"is_public"}},{"kind":"Field","name":{"kind":"Name","value":"board_detail"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"hygen"}},{"kind":"Field","name":{"kind":"Name","value":"framework"}},{"kind":"Field","name":{"kind":"Name","value":"formatter"}},{"kind":"Field","name":{"kind":"Name","value":"css_library"}},{"kind":"Field","name":{"kind":"Name","value":"created_at"}},{"kind":"Field","name":{"kind":"Name","value":"builder"}},{"kind":"Field","name":{"kind":"Name","value":"isGit"}},{"kind":"Field","name":{"kind":"Name","value":"lint_staged_husky"}},{"kind":"Field","name":{"kind":"Name","value":"linter"}},{"kind":"Field","name":{"kind":"Name","value":"manager"}},{"kind":"Field","name":{"kind":"Name","value":"ui_library"}},{"kind":"Field","name":{"kind":"Name","value":"updated_at"}},{"kind":"Field","name":{"kind":"Name","value":"volta"}},{"kind":"Field","name":{"kind":"Name","value":"vscode"}}]}}]}}]}}]} as unknown as DocumentNode<GetMyBoardInTeamQuery, GetMyBoardInTeamQueryVariables>;
+export const GetTeamInfoDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetTeamInfo"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"uuid"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"user_id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"teams_by_pk"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"team_boards"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"team_board_detail"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"framework"}},{"kind":"Field","name":{"kind":"Name","value":"css_library"}},{"kind":"Field","name":{"kind":"Name","value":"ui_library"}},{"kind":"Field","name":{"kind":"Name","value":"linter"}},{"kind":"Field","name":{"kind":"Name","value":"formatter"}},{"kind":"Field","name":{"kind":"Name","value":"created_at"}},{"kind":"Field","name":{"kind":"Name","value":"updated_at"}},{"kind":"Field","name":{"kind":"Name","value":"lint_staged_husky"}},{"kind":"Field","name":{"kind":"Name","value":"hygen"}},{"kind":"Field","name":{"kind":"Name","value":"manager"}},{"kind":"Field","name":{"kind":"Name","value":"vscode"}},{"kind":"Field","name":{"kind":"Name","value":"volta"}},{"kind":"Field","name":{"kind":"Name","value":"isGit"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"boards"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"is_public"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"_eq"},"value":{"kind":"BooleanValue","value":true}}]}},{"kind":"ObjectField","name":{"kind":"Name","value":"_not"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"user_id"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"_eq"},"value":{"kind":"Variable","name":{"kind":"Name","value":"user_id"}}}]}}]}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}}]}}]}}]}}]} as unknown as DocumentNode<GetTeamInfoQuery, GetTeamInfoQueryVariables>;
+export const GetMyBoardInTeamDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetMyBoardInTeam"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"team_id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"uuid"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"user_id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"boards"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"_and"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"team_id"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"_eq"},"value":{"kind":"Variable","name":{"kind":"Name","value":"team_id"}}}]}},{"kind":"ObjectField","name":{"kind":"Name","value":"user_id"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"_eq"},"value":{"kind":"Variable","name":{"kind":"Name","value":"user_id"}}}]}}]}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"is_public"}},{"kind":"Field","name":{"kind":"Name","value":"board_detail"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"hygen"}},{"kind":"Field","name":{"kind":"Name","value":"framework"}},{"kind":"Field","name":{"kind":"Name","value":"formatter"}},{"kind":"Field","name":{"kind":"Name","value":"css_library"}},{"kind":"Field","name":{"kind":"Name","value":"created_at"}},{"kind":"Field","name":{"kind":"Name","value":"isGit"}},{"kind":"Field","name":{"kind":"Name","value":"lint_staged_husky"}},{"kind":"Field","name":{"kind":"Name","value":"linter"}},{"kind":"Field","name":{"kind":"Name","value":"manager"}},{"kind":"Field","name":{"kind":"Name","value":"ui_library"}},{"kind":"Field","name":{"kind":"Name","value":"updated_at"}},{"kind":"Field","name":{"kind":"Name","value":"volta"}},{"kind":"Field","name":{"kind":"Name","value":"vscode"}}]}}]}}]}}]} as unknown as DocumentNode<GetMyBoardInTeamQuery, GetMyBoardInTeamQueryVariables>;
 export const GetJoinedTeamsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetJoinedTeams"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"user_id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"teams"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"team_members"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"user_id"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"_eq"},"value":{"kind":"Variable","name":{"kind":"Name","value":"user_id"}}}]}}]}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"team_members"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"user_id"}}]}},{"kind":"Field","name":{"kind":"Name","value":"admin_user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}},{"kind":"Field","name":{"kind":"Name","value":"boards"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"user_id"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"_eq"},"value":{"kind":"Variable","name":{"kind":"Name","value":"user_id"}}}]}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"board_detail"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"team_boards"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"team_board_detail"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]}}]}}]} as unknown as DocumentNode<GetJoinedTeamsQuery, GetJoinedTeamsQueryVariables>;
 export const GetUserInfoDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetUserInfo"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"users_by_pk"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"github_url"}},{"kind":"Field","name":{"kind":"Name","value":"is_online"}},{"kind":"Field","name":{"kind":"Name","value":"image_url"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"twitter_url"}}]}}]}}]} as unknown as DocumentNode<GetUserInfoQuery, GetUserInfoQueryVariables>;
 export const GetTeamMemberDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetTeamMember"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"team_id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"uuid"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"team_member"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"team_id"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"_eq"},"value":{"kind":"Variable","name":{"kind":"Name","value":"team_id"}}}]}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"users"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"image_url"}},{"kind":"Field","name":{"kind":"Name","value":"github_url"}},{"kind":"Field","name":{"kind":"Name","value":"twitter_url"}}]}}]}}]}}]} as unknown as DocumentNode<GetTeamMemberQuery, GetTeamMemberQueryVariables>;
-export const GetTeamBoardDetailDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetTeamBoardDetail"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"team_id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"uuid"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"teams_by_pk"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"team_id"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"team_boards"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"team_board_detail"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"framework"}},{"kind":"Field","name":{"kind":"Name","value":"css_library"}},{"kind":"Field","name":{"kind":"Name","value":"ui_library"}},{"kind":"Field","name":{"kind":"Name","value":"linter"}},{"kind":"Field","name":{"kind":"Name","value":"formatter"}}]}}]}}]}}]}}]} as unknown as DocumentNode<GetTeamBoardDetailQuery, GetTeamBoardDetailQueryVariables>;
+export const GetTeamBoardDetailDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetTeamBoardDetail"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"team_id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"uuid"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"teams_by_pk"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"team_id"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"team_boards"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"team_board_detail"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"framework"}},{"kind":"Field","name":{"kind":"Name","value":"css_library"}},{"kind":"Field","name":{"kind":"Name","value":"ui_library"}},{"kind":"Field","name":{"kind":"Name","value":"linter"}},{"kind":"Field","name":{"kind":"Name","value":"formatter"}},{"kind":"Field","name":{"kind":"Name","value":"created_at"}},{"kind":"Field","name":{"kind":"Name","value":"updated_at"}},{"kind":"Field","name":{"kind":"Name","value":"lint_staged_husky"}},{"kind":"Field","name":{"kind":"Name","value":"hygen"}},{"kind":"Field","name":{"kind":"Name","value":"manager"}},{"kind":"Field","name":{"kind":"Name","value":"vscode"}},{"kind":"Field","name":{"kind":"Name","value":"volta"}},{"kind":"Field","name":{"kind":"Name","value":"isGit"}}]}}]}}]}}]}}]} as unknown as DocumentNode<GetTeamBoardDetailQuery, GetTeamBoardDetailQueryVariables>;
 export const SubscribeMessageDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"subscription","name":{"kind":"Name","value":"SubscribeMessage"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"board_id"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"uuid"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"comments"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"limit"},"value":{"kind":"IntValue","value":"1"}},{"kind":"Argument","name":{"kind":"Name","value":"order_by"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"updated_at"},"value":{"kind":"EnumValue","value":"desc"}}]}},{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"board_id"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"_eq"},"value":{"kind":"Variable","name":{"kind":"Name","value":"board_id"}}}]}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"content"}},{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"email"}}]}},{"kind":"Field","name":{"kind":"Name","value":"board_id"}},{"kind":"Field","name":{"kind":"Name","value":"updated_at"}}]}}]}}]} as unknown as DocumentNode<SubscribeMessageSubscription, SubscribeMessageSubscriptionVariables>;

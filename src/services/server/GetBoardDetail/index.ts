@@ -34,7 +34,7 @@ export const getBoardDetail = async (board_id: string) => {
     }
 
     // typenameを除外
-    const { __typename, id, ...boardDetailWithoutTypename } =
+    const { __typename, id, created_at, updated_at, ...boardDetailWithoutTypename } =
       boards_by_pk.board_detail == null
         ? ({} as DataObject)
         : (boards_by_pk.board_detail as DataObject)
