@@ -354,6 +354,7 @@ const litInstall = async (manager, isTs) => {
     )
   } else {
     console.log(
+      // eslint-disable-next-line @stylistic/quotes
       "Our system only supports lit with Vite. \n We're installing the framework with vite anyway. Sorry!",
     )
     execSync(
@@ -392,6 +393,7 @@ const svelteInstall = async (manager, isTs) => {
     )
   } else {
     console.log(
+      // eslint-disable-next-line @stylistic/quotes
       "We're sorry that we partially wouldn't use parameters you set before and rely on CLI provided by the framework!",
     )
     execSync(`${manager} create svelte@latest ${generalAnswers.projectName}`, {
@@ -443,6 +445,7 @@ const qwikInstall = async (manager, isTs) => {
     )
   } else {
     console.log(
+      // eslint-disable-next-line @stylistic/quotes
       "We're sorry that we partially wouldn't use parameters you set before and rely on CLI provided by the framework!",
     )
     execSync(`${manager} create qwik@latest ${generalAnswers.projectName}`, {
