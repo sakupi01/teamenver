@@ -11,7 +11,7 @@ import { useSidebarState } from './hooks'
 type SideBarProps = {
   toFirstOneIndicator: string | null
   isTeamBoard: boolean
-  team_id: string
+  team_id?: string
   board_detail_id: string
 }
 
@@ -41,6 +41,7 @@ export const SideBar = ({
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+
   if (!libraries) {
     return (
       <aside className='border-r border-gray-300 p-4 text-sm bg-gray-50 w-1/5 md:w-[20%] md:max-width-[250px]'>
@@ -63,7 +64,6 @@ export const SideBar = ({
           You can drag one of these nodes to the left.
         </p>
       </div>
-      {/* loading...をつけて要素を一時的に消したいが，消すとd&dができないのでundraggableにする */}
       {libraries.nodes.map((lb, index) => {
         return (
           <div

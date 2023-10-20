@@ -1,5 +1,5 @@
 import { getCheckedLibraries, WhichLibrary } from '@/services/client/GetCheckedLibraries'
-import { getFrameworks } from '@/services/server/GetFrameworks'
+import { getFrameworks } from '@/services/client/GetFrameworks'
 
 const categories = [
   null,
@@ -28,6 +28,7 @@ export const fetchData = async (
   if (nextCategory == 'framework') {
     // framework
     const sidebarState = await getFrameworks()
+
     return JSON.stringify({
       category: nextCategory,
       nodes: sidebarState,

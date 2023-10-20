@@ -18,7 +18,7 @@ export type FlowProps = {
   board_detail_id: string
   toFirstOneIndicator: string | null
   isTeamBoard: boolean
-  team_id: string
+  team_id?: string
   board_detail: ReturnGetTeamBoardDetailType['teamBoardDetailWithoutTypename']
 }
 
@@ -99,3 +99,6 @@ export const Flow = ({
     </ReactFlowProvider>
   )
 }
+
+// supabaseUrlが読み込まれてないみたい
+//

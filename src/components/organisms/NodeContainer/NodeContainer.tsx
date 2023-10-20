@@ -118,6 +118,7 @@ export const NodeContainer = ({
 
       bootWebContainer()
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [webcontainer])
 
   return (
