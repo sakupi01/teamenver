@@ -512,7 +512,7 @@ const fileGenerator = async ({
   // css
   const cssModulesInstall = (manager) => {
     const cssModulesSampleFile = \'Example.module.css\'
-    cssModulesFileGenerate = () => \`
+    const cssModulesFileGenerate = () => \`
       .example {
       }
       \`
@@ -576,7 +576,7 @@ const fileGenerator = async ({
         type: \'list\',
         name: \'builder\',
         choices: [\'Vite\', \'ESbuild\', \'Webpack\', \'Next.js\', \'parcel\', \'rollup\', \'Gatsby\'],
-        message: \'Which builder do you use in your project?\',
+        message: \'Which builder do you use for vanilla-extract?\',
       },
     ]
     const answer = await inquirer.prompt(question)
@@ -852,7 +852,7 @@ const fileGenerator = async ({
         type: \'list\',
         name: \'builder\',
         choices: [\'Vite\', \'Next.js\'],
-        message: \'Which builder do you use in your project?\',
+        message: \'Which builder do you use for KumaUI?\',
       },
     ]
     const answer = await inquirer.prompt(question)

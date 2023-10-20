@@ -461,7 +461,7 @@ const qwikInstall = async (manager, isTs) => {
 // css
 const cssModulesInstall = (manager) => {
   const cssModulesSampleFile = 'Example.module.css'
-  cssModulesFileGenerate = () => `
+  const cssModulesFileGenerate = () => `
     .example {
     }
     `
