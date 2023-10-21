@@ -53,9 +53,12 @@ const fileGenerator = async ({
 
   import { execSync } from \'child_process\'
   import { access, constants, writeFile, writeFileSync } from \'fs\'
+  import fs from \'fs\'
   import path from \'path\'
   
+  import axios from \'axios\'
   import inquirer from \'inquirer\'
+  import semver from \'semver\'
   
   const appGenerator = async ({
     framework,
@@ -94,12 +97,12 @@ const fileGenerator = async ({
           break
         default:
           console.log(
-            \'Uh oh. The framework you selected is still not under our support, or incorrect spelling. \\ Try again.\',
+            \'Uh oh. The framework you selected is still not under our support, or incorrect spelling. \\\\ Try again.\',
           )
       }
   
       // css library installation
-      if (css_library) {
+      if (css_library != null) {
         switch (css_library) {
           case \'CSS Modules\':
             cssModulesInstall(manager)
@@ -129,7 +132,7 @@ const fileGenerator = async ({
       }
   
       // ui library installation
-      if (ui_library) {
+      if (ui_library != null) {
         switch (ui_library) {
           case \'@mui/material\':
             muiInstall(manager, css_library)
@@ -167,6 +170,177 @@ const fileGenerator = async ({
         console.log(\'UI library installation was skipped\')
       }
   
+      // lint_staged_husky installation
+      if (lint_staged_husky === \'template\') {
+        execSync(\`\${manager} install -D lint-staged husky\`, { stdio: \'inherit\' })
+        // add lint-staged to package.json
+        const packageJsonPath = path.join(process.cwd(), \'package.json\')
+        const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, \'utf8\'))
+        packageJson[\'lint-staged\'] = JSON.parse(
+          \'{\"*.{js,jsx,ts,tsx}\": [\"tsc --noEmit\", \"prettier ./src/**/*.{ts,tsx} --write\"]}\',
+        )
+        // Scaffold lint-staged
+        writeFileSync(
+          path.join(process.cwd(), \'package.json\'),
+          JSON.stringify(packageJson, null, 2),
+        )
+  
+        const lintStagedRcFile = \'.lintstagedrc.mjs\'
+        const lintStagedRcFileGenerate = () => \`
+        import { ESLint } from \'eslint\'
+  
+        const removeIgnoredFiles = async (files) => {
+          const eslint = new ESLint()
+          const isIgnored = await Promise.all(
+            files.map((file) => {
+              return eslint.isPathIgnored(file)
+            })
+          )
+          const filteredFiles = files.filter((_, i) => !isIgnored[i])
+          return filteredFiles.join(\' \')
+        }
+  
+        export default {
+          \'**/*.{ts,tsx,js,jsx}\': async (files) => {
+            const filesToLint = await removeIgnoredFiles(files)
+            return [\\\`eslint --max-warnings=0 \\\${filesToLint}\\\`]
+          },
+        }
+        \`
+        // Scaffold lintstagedrc.mjs
+        writeFileSync(
+          path.join(process.cwd(), lintStagedRcFile),
+          lintStagedRcFileGenerate(),
+        )
+  
+        const huskyDir = path.join(process.cwd(), \'.husky\')
+        // .huskyディレクトリを作成
+        if (!fs.existsSync(huskyDir)) {
+          fs.mkdirSync(huskyDir)
+        }
+        const huskyFile = path.join(huskyDir, \'pre-commit\')
+        const huskyFileGenerate = (manager) => \`
+        #!/usr/bin/env sh
+        . \"\$(dirname -- \"\$0\")/_/husky.sh\"
+  
+        \${manager} run lint-staged --config .lintstagedrc.mjs
+        \`
+        // Scaffold husky
+        writeFileSync(huskyFile, huskyFileGenerate(manager))
+      } else if (lint_staged_husky === \'yes\') {
+        execSync(\`\${manager} install -D lint-staged husky\`, { stdio: \'inherit\' })
+      } else {
+        console.log(\'lint-staged and husky installation was skipped\')
+      }
+  
+      // hygen installation
+      if (hygen == \'template\' || hygen == \'yes\') {
+        execSync(\`\${manager} install -D hygen\`, { stdio: \'inherit\' })
+        execSync(\`\${manager} hygen init self\`, { stdio: \'inherit\' })
+        execSync(\`\${manager} hygen generator new --name yourGen\`, { stdio: \'inherit\' })
+      } else {
+        console.log(\'hygen installation was skipped\')
+      }
+  
+      // vscode installation
+      if (vscode == \'template\') {
+        const vscodeDir = path.join(process.cwd(), \'.vscode\')
+        // .vscodeディレクトリを作成
+        if (!fs.existsSync(vscodeDir)) {
+          fs.mkdirSync(vscodeDir)
+        }
+        const extensionFileGenerate = () =>
+          JSON.parse(\`
+        {
+          \"recommendations\": [
+            \"dbaeumer.vscode-eslint\",
+            \"esbenp.prettier-vscode\",
+            \"streetsidesoftware.code-spell-checker\",
+            \"yusukehirao.vscode-markuplint\"
+          ]
+        }
+        \`)
+        const settingsFileGenerate = () =>
+          JSON.parse(\`
+          {
+            \"editor.codeActionsOnSave\": {
+              \"source.fixAll.eslint\": true
+            },
+            \"prettier.configPath\": \"./.prettierrc.json\",
+            \"editor.formatOnSave\": true,
+            \"editor.defaultFormatter\": \"esbenp.prettier-vscode\",
+            \"editor.quickSuggestions\": {
+              \"strings\": true
+            },
+            \"files.eol\": \"\\\\n\",
+            \"typescript.updateImportsOnFileMove.enabled\": \"always\",
+            \"files.watcherExclude\": {
+              \"**/build/**\": true,
+              \"**/styled-system/**\": true
+            }
+          }
+        \`)
+        // Scaffold vscode extensions and settings
+        writeFileSync(
+          path.join(vscodeDir, \'extensions.json\'),
+          JSON.stringify(extensionFileGenerate(), null, 2),
+        )
+        writeFileSync(
+          path.join(vscodeDir, \'settings.json\'),
+          JSON.stringify(settingsFileGenerate()),
+          null,
+          2,
+        )
+      } else {
+        console.log(\'vscode scaffold was skipped\')
+      }
+  
+      // volta installation
+      if (volta == \'template\' || volta == \'yes\') {
+        const currentLatestNodeVersion = (
+          await axios.get(\'https://nodejs.org/dist/index.json\')
+        ).data[0].version
+        const question = [
+          {
+            type: \'list\',
+            name: \'version\',
+            choices: [\'latest\', \'other\'],
+            message:
+              \'Which version of Node.js does your project want to use? \\n Current latest version is: \' +
+              currentLatestNodeVersion,
+          },
+        ]
+        const answer = await inquirer.prompt(question)
+        const packageJsonPath = path.join(process.cwd(), \'package.json\')
+        const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, \'utf8\'))
+        console.log(currentLatestNodeVersion.slice(1))
+        if (answer.version === \'latest\') {
+          packageJson[\'volta\'] = { node: currentLatestNodeVersion.slice(1) }
+        } else {
+          const confirmAnswerValidator = async (input) => {
+            if (semver.valid(input) === null) {
+              return \'Incorrect input. Please input the version in semver format (e.g.; 20.7.0).\'
+            }
+            return true
+          }
+          const questionToCustomVersion = [
+            {
+              type: \'input\',
+              name: \'customVersion\',
+              validate: confirmAnswerValidator,
+              message: \'Input the version you want to use (e.g.; 20.7.0): \',
+            },
+          ]
+          const answerToCustomVersion = await inquirer.prompt(questionToCustomVersion)
+          packageJson[\'volta\'] = { node: answerToCustomVersion.customVersion }
+        }
+  
+        writeFileSync(
+          path.join(process.cwd(), \'package.json\'),
+          JSON.stringify(packageJson, null, 2),
+        )
+      }
+  
       // Install dependency if needed
       execSync(\`\${manager} install\`, { stdio: \'inherit\' })
   
@@ -178,7 +352,6 @@ const fileGenerator = async ({
   }
   
   function setLinter(manager, linter, customInstallCommands) {
-    console.log(linter)
     if (linter === \'template\') {
       // when the user wants to install framework-based linter with template
       execSync(\`\${manager} install -D eslint\`, { stdio: \'inherit\' })
@@ -306,7 +479,7 @@ const fileGenerator = async ({
         },
       )
       console.log(
-        \`Installation might not be all set! \n Refer to the official information for more details: https://vitejs.dev/guide/\`,
+        \'Installation might not be all set! \\n Refer to the official information for more details: https://vitejs.dev/guide/\',
       )
       process.chdir(\`./\${generalAnswers.projectName}\`)
       setLinter(manager, linter, [
@@ -323,7 +496,7 @@ const fileGenerator = async ({
         },
       )
       console.log(
-        \`Installation might not be all set! \n Refer to the official information for more details: https://vuejs.org/guide/quick-start.html\`,
+        \'Installation might not be all set! \\n Refer to the official information for more details: https://vuejs.org/guide/quick-start.html\',
       )
       process.chdir(\`./\${generalAnswers.projectName}\`)
       setLinter(manager, linter, [
@@ -364,7 +537,7 @@ const fileGenerator = async ({
         },
       )
       console.log(
-        \`Installation might not be all set! \n Refer to the official information for more details: https://vitejs.dev/guide/\`,
+        \'Installation might not be all set! \\n Refer to the official information for more details: https://vitejs.dev/guide/\',
       )
       process.chdir(\`./\${generalAnswers.projectName}\`)
       setLinter(manager, linter, [\'create @eslint/config\'])
@@ -379,7 +552,7 @@ const fileGenerator = async ({
         },
       )
       console.log(
-        \`Installation might not be all set! \n Refer to the official information for more details: https://react.dev/learn/installation\`,
+        \'Installation might not be all set! \\n Refer to the official information for more details: https://react.dev/learn/installation\',
       )
       process.chdir(\`./\${generalAnswers.projectName}\`)
       // create-react-app includes eslint and prettier as default
@@ -405,7 +578,8 @@ const fileGenerator = async ({
       )
     } else {
       console.log(
-        \`Our system only supports lit with Vite. \n We\'re installing the framework with vite anyway. Sorry!\`,
+        // eslint-disable-next-line @stylistic/quotes
+        \"Our system only supports lit with Vite. \\n We\'re installing the framework with vite anyway. Sorry!\",
       )
       execSync(
         \`\${manager} create vite@latest \${generalAnswers.projectName} \${
@@ -421,7 +595,7 @@ const fileGenerator = async ({
     console.log(path.join(process.cwd(), \`\${generalAnswers.projectName}/\`))
     generalQuestion.pop()
     console.log(
-      \`Installation might not be all set! \n Refer to the official information for more details: https://daisyui.com/docs/install/\`,
+      \'Installation might not be all set! \\n Refer to the official information for more details: https://daisyui.com/docs/install/\',
     )
   }
   
@@ -443,6 +617,7 @@ const fileGenerator = async ({
       )
     } else {
       console.log(
+        // eslint-disable-next-line @stylistic/quotes
         \"We\'re sorry that we partially wouldn\'t use parameters you set before and rely on CLI provided by the framework!\",
       )
       execSync(\`\${manager} create svelte@latest \${generalAnswers.projectName}\`, {
@@ -454,7 +629,7 @@ const fileGenerator = async ({
     console.log(path.join(process.cwd(), \`\${generalAnswers.projectName}/\`))
     generalQuestion.pop()
     console.log(
-      \`Installation might not be all set! \n Refer to the official information for more details: https://daisyui.com/docs/install/\`,
+      \'Installation might not be all set! \\n Refer to the official information for more details: https://daisyui.com/docs/install/\',
     )
   }
   
@@ -472,11 +647,11 @@ const fileGenerator = async ({
     process.chdir(generalAnswers.projectName)
     console.log(path.join(process.cwd(), \`\${generalAnswers.projectName}/\`))
     console.log(
-      \`Installation might not be all set! \n Refer to the official information for more details: https://daisyui.com/docs/install/\`,
+      \'Installation might not be all set! \\n Refer to the official information for more details: https://daisyui.com/docs/install/\',
     )
   }
   
-  const qwikInstall = async (manager, isTs) => {
+  const qwikInstall = async (manager, isTs, linter, formatter) => {
     generalQuestion.push({
       type: \'confirm\',
       name: \'vite\',
@@ -486,27 +661,33 @@ const fileGenerator = async ({
     if (generalAnswers.vite) {
       execSync(
         \`\${manager} create vite@latest \${generalAnswers.projectName} \${
-          isTs ? \'-- --template qwik-ts\' : \'-- --template qwik\'
+          isTs ? \'--template qwik-ts\' : \'--template qwik\'
         } \`,
         {
           stdio: \'inherit\',
         },
       )
-    } else {
       console.log(
-        \"We\'re sorry that we partially wouldn\'t use parameters you set before and rely on CLI provided by the framework!\",
+        \'Installation might not be all set! \\n Refer to the official information for more details: https://vitejs.dev/guide/\',
       )
+      process.chdir(\`./\${generalAnswers.projectName}\`)
+      setLinter(manager, linter, [
+        \'add -D eslint-plugin-vue @vue/eslint-config-typescript @typescript-eslint/parser @typescript-eslint/eslint-plugin\',
+      ])
+      setFormatter(manager, formatter)
+    } else {
       execSync(\`\${manager} create qwik@latest \${generalAnswers.projectName}\`, {
         stdio: \'inherit\',
       })
+      console.log(
+        \'Installation might not be all set! \\n Refer to the official information for more details: https://vitejs.dev/guide/\',
+      )
+      process.chdir(\`./\${generalAnswers.projectName}\`)
+      setLinter(manager, linter, [
+        \'add -D eslint-plugin-vue @vue/eslint-config-typescript @typescript-eslint/parser @typescript-eslint/eslint-plugin\',
+      ])
+      setFormatter(manager, formatter)
     }
-    // Change to the project directory
-    process.chdir(generalAnswers.projectName)
-    console.log(path.join(process.cwd(), \`\${generalAnswers.projectName}/\`))
-    generalQuestion.pop()
-    console.log(
-      \`Installation might not be all set! \n Refer to the official information for more details: https://daisyui.com/docs/install/\`,
-    )
   }
   
   // css
@@ -519,7 +700,7 @@ const fileGenerator = async ({
     // Scaffold cssModules
     writeFileSync(path.join(process.cwd(), cssModulesSampleFile), cssModulesFileGenerate())
     console.log(
-      \`Installation might not be all set! \n Refer to the official information for more details: https://getbootstrap.jp/docs/5.3/getting-started/download/\`,
+      \'Installation might not be all set! \\n Refer to the official information for more details: https://getbootstrap.jp/docs/5.3/getting-started/download/\',
     )
   }
   
@@ -536,7 +717,7 @@ const fileGenerator = async ({
       console.log(error)
     }
     console.log(
-      \`Installation might not be all set! \n Refer to the official information for more details: https://panda-css.com/docs/installation/cli\`,
+      \'Installation might not be all set! \\n Refer to the official information for more details: https://panda-css.com/docs/installation/cli\',
     )
   }
   
@@ -562,7 +743,7 @@ const fileGenerator = async ({
           console.log(error)
         }
         console.log(
-          \`Installation might not be all set! \n Refer to the official information for more details: https://tailwindcss.com/docs/installation\`,
+          \'Installation might not be all set! \\n Refer to the official information for more details: https://tailwindcss.com/docs/installation\',
         )
       } else {
         console.log(\`\${configFile} already exists in the specified directory.\`)
@@ -576,7 +757,7 @@ const fileGenerator = async ({
         type: \'list\',
         name: \'builder\',
         choices: [\'Vite\', \'ESbuild\', \'Webpack\', \'Next.js\', \'parcel\', \'rollup\', \'Gatsby\'],
-        message: \'Which builder do you use for vanilla-extract?\',
+        message: \'Which builder do you use in your project?\',
       },
     ]
     const answer = await inquirer.prompt(question)
@@ -675,7 +856,7 @@ const fileGenerator = async ({
           )
           configPath = path.resolve(\'rollup.config.js\')
           updatedConfig = \`module.exports = {
-              plugins: [\'gatsby-plugin-vanilla-extract\']
+              plugins: [\\\`gatsby-plugin-vanilla-extract\\\`]
             };\`
           break
         default:
@@ -695,7 +876,7 @@ const fileGenerator = async ({
     }
   
     console.log(
-      \`Installation might not be all set! \n Refer to the official information for more details: https://vanilla-extract.style/documentation/getting-started\`,
+      \'Installation might not be all set! \\n Refer to the official information for more details: https://vanilla-extract.style/documentation/getting-started\',
     )
   }
   
@@ -715,7 +896,7 @@ const fileGenerator = async ({
       console.log(error)
     }
     console.log(
-      \`Installation might not be all set! \n Refer to the official information for more details: https://emotion.sh/docs/install\`,
+      \'Installation might not be all set! \\n Refer to the official information for more details: https://emotion.sh/docs/install\',
     )
   }
   
@@ -729,7 +910,7 @@ const fileGenerator = async ({
       console.log(error)
     }
     console.log(
-      \`Installation might not be all set! \n Refer to the official information for more details: https://styled-components.com/\`,
+      \'Installation might not be all set! \\n Refer to the official information for more details: https://styled-components.com/\',
     )
   }
   
@@ -753,7 +934,7 @@ const fileGenerator = async ({
       console.log(error)
     }
     console.log(
-      \`Installation might not be all set! \n Refer to the official information for more details: https://mui.com/material-ui/getting-started/installation/\`,
+      \'Installation might not be all set! \\n Refer to the official information for more details: https://mui.com/material-ui/getting-started/installation/\',
     )
   }
   
@@ -764,14 +945,14 @@ const fileGenerator = async ({
           stdio: \'inherit\',
         })
         console.log(
-          \`Installation might not be all set! \n Refer to the official information for more details: https://headlessui.com/vue/menu#installation\`,
+          \'Installation might not be all set! \\n Refer to the official information for more details: https://headlessui.com/vue/menu#installation\',
         )
       } else if (framework === \'react\' || framework === \'next\') {
         execSync(\`\${manager} install @headlessui/react\`, {
           stdio: \'inherit\',
         })
         console.log(
-          \`Installation might not be all set! \n Refer to the official information for more details: https://headlessui.com/react/menu#installation\`,
+          \'Installation might not be all set! \\n Refer to the official information for more details: https://headlessui.com/react/menu#installation\',
         )
       }
     } catch (error) {
@@ -790,7 +971,7 @@ const fileGenerator = async ({
       console.log(error)
     }
     console.log(
-      \`Installation might not be all set! \n Refer to the official information for more details: https://ant.design/docs/react/introduce\`,
+      \'Installation might not be all set! \\n Refer to the official information for more details: https://ant.design/docs/react/introduce\',
     )
   }
   
@@ -804,14 +985,14 @@ const fileGenerator = async ({
       console.log(error)
     }
     console.log(
-      \`Installation might not be all set! \n Refer to the official information for more details: https://react-spectrum.adobe.com/react-aria/getting-started.html\`,
+      \'Installation might not be all set! \\n Refer to the official information for more details: https://react-spectrum.adobe.com/react-aria/getting-started.html\',
     )
   }
   
   const shadCnInstall = async (manager, framework) => {
     // frameworkによってインストール方法が異なるので現状URLのみ提示
     console.log(
-      \`Installation might not be all set! \n Refer to the official information for more details: https://ui.shadcn.com/docs/installation/manual\`,
+      \'Installation might not be all set! \\n Refer to the official information for more details: https://ui.shadcn.com/docs/installation/manual\',
     )
   }
   
@@ -828,7 +1009,7 @@ const fileGenerator = async ({
       console.log(error)
     }
     console.log(
-      \`Installation might not be all set! \n Refer to the official information for more details: https://chakra-ui.com/getting-started\`,
+      \'Installation might not be all set! \\n Refer to the official information for more details: https://chakra-ui.com/getting-started\',
     )
   }
   
@@ -842,7 +1023,7 @@ const fileGenerator = async ({
       console.log(error)
     }
     console.log(
-      \`Installation might not be all set! \n Refer to the official information for more details: https://www.radix-ui.com/themes/docs/overview/getting-started\`,
+      \'Installation might not be all set! \\n Refer to the official information for more details: https://www.radix-ui.com/themes/docs/overview/getting-started\',
     )
   }
   
@@ -852,7 +1033,7 @@ const fileGenerator = async ({
         type: \'list\',
         name: \'builder\',
         choices: [\'Vite\', \'Next.js\'],
-        message: \'Which builder do you use for KumaUI?\',
+        message: \'Which builder do you use in your project?\',
       },
     ]
     const answer = await inquirer.prompt(question)
@@ -906,7 +1087,7 @@ const fileGenerator = async ({
       console.log(error)
     }
     console.log(
-      \`Installation might not be all set! \n Refer to the official information for more details: https://www.kuma-ui.com/docs/install\`,
+      \'Installation might not be all set! \\n Refer to the official information for more details: https://www.kuma-ui.com/docs/install\',
     )
   }
   
@@ -933,11 +1114,11 @@ const fileGenerator = async ({
         }
   
         // 変更を加えたオブジェクトを文字列に戻す
-        const updatedConfig = \`/** @type {import(\'tailwindcss\').Config} */ \n export default \${JSON.stringify(
+        const updatedConfig = \`/** @type {import(\'tailwindcss\').Config} */ \\n export default \${JSON.stringify(
           configObject.default,
           null,
           2,
-        )};\n\`
+        )};\\n\`
   
         // 変更を保存
         writeFile(configPath, updatedConfig, \'utf-8\', (err) => {
@@ -949,7 +1130,7 @@ const fileGenerator = async ({
         })
   
         console.log(
-          \`Installation might not be all set! \n Refer to the official information for more details: https://daisyui.com/docs/install/\`,
+          \'Installation might not be all set! \\n Refer to the official information for more details: https://daisyui.com/docs/install/\',
         )
       } catch (err) {
         console.error(\'Something went wrong:\', err)
@@ -980,7 +1161,7 @@ const fileGenerator = async ({
   #!/bin/jsh
 
   npm init -y --scope="" 
-  npm install inquirer
+  npm install inquirer axios semver
   node appGen.mjs
   rm -rf node_modules
   rm package.json package-lock.json

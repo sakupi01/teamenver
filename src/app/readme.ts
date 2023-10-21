@@ -2,13 +2,10 @@ export type readmeGeneratorProps = {
   manager: string | null
   isGit: string | null
 }
-export const readmeGenerator = ({ manager, isGit }: readmeGeneratorProps) => {
+export const readmeGenerator = ({ isGit }: readmeGeneratorProps) => {
   return `
   // 🚀 If you agree with the settings below, give the access to the execution file with \`chmod u+x create.sh\`, and then just type \`./create.sh\`  to start your Vite app with your settings.
-  // In order to observe what contents were generated, stop the server with \`ctrl + C\` and type \`ls -a\` on the terminal.
-
-  // 🧞‍♂️ Psst! here's the full code which is going to be executed in the terminal.
-  // If you want to create your project in your localhost machine, please try the same code away.
+  // In order to observe what contents were generated, stop the server with \`ctrl + C\` and type \`ls -a\` in the terminal.
   
   ${
     isGit
@@ -16,17 +13,6 @@ export const readmeGenerator = ({ manager, isGit }: readmeGeneratorProps) => {
   // You can initialize the local repo and commit the init project on your preferred IDE using the commands generated below.`
       : ''
   }
-
-  // Cheers!
-
-  // *********************************************
-
-  // Upcoming feature...
-  // (Ex:)
-  ${manager} create vite my-vue-app --template vue
-  ${manager} install -D @pandacss/dev
-  ${manager} panda init --postcss
-  ${manager} run dev
 
   ${
     isGit === 'true'

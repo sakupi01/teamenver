@@ -2,9 +2,12 @@
 
 import { execSync } from 'child_process'
 import { access, constants, writeFile, writeFileSync } from 'fs'
+import fs from 'fs'
 import path from 'path'
 
+import axios from 'axios'
 import inquirer from 'inquirer'
+import semver from 'semver'
 
 const appGenerator = async ({
   framework,
@@ -48,7 +51,7 @@ const appGenerator = async ({
     }
 
     // css library installation
-    if (css_library) {
+    if (css_library != null) {
       switch (css_library) {
         case 'CSS Modules':
           cssModulesInstall(manager)
@@ -78,7 +81,7 @@ const appGenerator = async ({
     }
 
     // ui library installation
-    if (ui_library) {
+    if (ui_library != null) {
       switch (ui_library) {
         case '@mui/material':
           muiInstall(manager, css_library)
@@ -116,6 +119,177 @@ const appGenerator = async ({
       console.log('UI library installation was skipped')
     }
 
+    // lint_staged_husky installation
+    if (lint_staged_husky === 'template') {
+      execSync(`${manager} install -D lint-staged husky`, { stdio: 'inherit' })
+      // add lint-staged to package.json
+      const packageJsonPath = path.join(process.cwd(), 'package.json')
+      const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'))
+      packageJson['lint-staged'] = JSON.parse(
+        '{"*.{js,jsx,ts,tsx}": ["tsc --noEmit", "prettier ./src/**/*.{ts,tsx} --write"]}',
+      )
+      // Scaffold lint-staged
+      writeFileSync(
+        path.join(process.cwd(), 'package.json'),
+        JSON.stringify(packageJson, null, 2),
+      )
+
+      const lintStagedRcFile = '.lintstagedrc.mjs'
+      const lintStagedRcFileGenerate = () => `
+      import { ESLint } from 'eslint'
+
+      const removeIgnoredFiles = async (files) => {
+        const eslint = new ESLint()
+        const isIgnored = await Promise.all(
+          files.map((file) => {
+            return eslint.isPathIgnored(file)
+          })
+        )
+        const filteredFiles = files.filter((_, i) => !isIgnored[i])
+        return filteredFiles.join(' ')
+      }
+
+      export default {
+        '**/*.{ts,tsx,js,jsx}': async (files) => {
+          const filesToLint = await removeIgnoredFiles(files)
+          return [\`eslint --max-warnings=0 \${filesToLint}\`]
+        },
+      }
+      `
+      // Scaffold lintstagedrc.mjs
+      writeFileSync(
+        path.join(process.cwd(), lintStagedRcFile),
+        lintStagedRcFileGenerate(),
+      )
+
+      const huskyDir = path.join(process.cwd(), '.husky')
+      // .huskyディレクトリを作成
+      if (!fs.existsSync(huskyDir)) {
+        fs.mkdirSync(huskyDir)
+      }
+      const huskyFile = path.join(huskyDir, 'pre-commit')
+      const huskyFileGenerate = (manager) => `
+      #!/usr/bin/env sh
+      . "$(dirname -- "$0")/_/husky.sh"
+
+      ${manager} run lint-staged --config .lintstagedrc.mjs
+      `
+      // Scaffold husky
+      writeFileSync(huskyFile, huskyFileGenerate(manager))
+    } else if (lint_staged_husky === 'yes') {
+      execSync(`${manager} install -D lint-staged husky`, { stdio: 'inherit' })
+    } else {
+      console.log('lint-staged and husky installation was skipped')
+    }
+
+    // hygen installation
+    if (hygen == 'template' || hygen == 'yes') {
+      execSync(`${manager} install -D hygen`, { stdio: 'inherit' })
+      execSync(`${manager} hygen init self`, { stdio: 'inherit' })
+      execSync(`${manager} hygen generator new --name yourGen`, { stdio: 'inherit' })
+    } else {
+      console.log('hygen installation was skipped')
+    }
+
+    // vscode installation
+    if (vscode == 'template') {
+      const vscodeDir = path.join(process.cwd(), '.vscode')
+      // .vscodeディレクトリを作成
+      if (!fs.existsSync(vscodeDir)) {
+        fs.mkdirSync(vscodeDir)
+      }
+      const extensionFileGenerate = () =>
+        JSON.parse(`
+      {
+        "recommendations": [
+          "dbaeumer.vscode-eslint",
+          "esbenp.prettier-vscode",
+          "streetsidesoftware.code-spell-checker",
+          "yusukehirao.vscode-markuplint"
+        ]
+      }
+      `)
+      const settingsFileGenerate = () =>
+        JSON.parse(`
+        {
+          "editor.codeActionsOnSave": {
+            "source.fixAll.eslint": true
+          },
+          "prettier.configPath": "./.prettierrc.json",
+          "editor.formatOnSave": true,
+          "editor.defaultFormatter": "esbenp.prettier-vscode",
+          "editor.quickSuggestions": {
+            "strings": true
+          },
+          "files.eol": "\\n",
+          "typescript.updateImportsOnFileMove.enabled": "always",
+          "files.watcherExclude": {
+            "**/build/**": true,
+            "**/styled-system/**": true
+          }
+        }
+      `)
+      // Scaffold vscode extensions and settings
+      writeFileSync(
+        path.join(vscodeDir, 'extensions.json'),
+        JSON.stringify(extensionFileGenerate(), null, 2),
+      )
+      writeFileSync(
+        path.join(vscodeDir, 'settings.json'),
+        JSON.stringify(settingsFileGenerate()),
+        null,
+        2,
+      )
+    } else {
+      console.log('vscode scaffold was skipped')
+    }
+
+    // volta installation
+    if (volta == 'template' || volta == 'yes') {
+      const currentLatestNodeVersion = (
+        await axios.get('https://nodejs.org/dist/index.json')
+      ).data[0].version
+      const question = [
+        {
+          type: 'list',
+          name: 'version',
+          choices: ['latest', 'other'],
+          message:
+            'Which version of Node.js does your project want to use? \n Current latest version is: ' +
+            currentLatestNodeVersion,
+        },
+      ]
+      const answer = await inquirer.prompt(question)
+      const packageJsonPath = path.join(process.cwd(), 'package.json')
+      const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'))
+      console.log(currentLatestNodeVersion.slice(1))
+      if (answer.version === 'latest') {
+        packageJson['volta'] = { node: currentLatestNodeVersion.slice(1) }
+      } else {
+        const confirmAnswerValidator = async (input) => {
+          if (semver.valid(input) === null) {
+            return 'Incorrect input. Please input the version in semver format (e.g.; 20.7.0).'
+          }
+          return true
+        }
+        const questionToCustomVersion = [
+          {
+            type: 'input',
+            name: 'customVersion',
+            validate: confirmAnswerValidator,
+            message: 'Input the version you want to use (e.g.; 20.7.0): ',
+          },
+        ]
+        const answerToCustomVersion = await inquirer.prompt(questionToCustomVersion)
+        packageJson['volta'] = { node: answerToCustomVersion.customVersion }
+      }
+
+      writeFileSync(
+        path.join(process.cwd(), 'package.json'),
+        JSON.stringify(packageJson, null, 2),
+      )
+    }
+
     // Install dependency if needed
     execSync(`${manager} install`, { stdio: 'inherit' })
 
@@ -127,7 +301,6 @@ const appGenerator = async ({
 }
 
 function setLinter(manager, linter, customInstallCommands) {
-  console.log(linter)
   if (linter === 'template') {
     // when the user wants to install framework-based linter with template
     execSync(`${manager} install -D eslint`, { stdio: 'inherit' })
@@ -427,7 +600,7 @@ const solidInstall = async (manager, isTs) => {
   )
 }
 
-const qwikInstall = async (manager, isTs) => {
+const qwikInstall = async (manager, isTs, linter, formatter) => {
   generalQuestion.push({
     type: 'confirm',
     name: 'vite',
@@ -437,28 +610,33 @@ const qwikInstall = async (manager, isTs) => {
   if (generalAnswers.vite) {
     execSync(
       `${manager} create vite@latest ${generalAnswers.projectName} ${
-        isTs ? '-- --template qwik-ts' : '-- --template qwik'
+        isTs ? '--template qwik-ts' : '--template qwik'
       } `,
       {
         stdio: 'inherit',
       },
     )
-  } else {
     console.log(
-      // eslint-disable-next-line @stylistic/quotes
-      "We're sorry that we partially wouldn't use parameters you set before and rely on CLI provided by the framework!",
+      'Installation might not be all set! \n Refer to the official information for more details: https://vitejs.dev/guide/',
     )
+    process.chdir(`./${generalAnswers.projectName}`)
+    setLinter(manager, linter, [
+      'add -D eslint-plugin-vue @vue/eslint-config-typescript @typescript-eslint/parser @typescript-eslint/eslint-plugin',
+    ])
+    setFormatter(manager, formatter)
+  } else {
     execSync(`${manager} create qwik@latest ${generalAnswers.projectName}`, {
       stdio: 'inherit',
     })
+    console.log(
+      'Installation might not be all set! \n Refer to the official information for more details: https://vitejs.dev/guide/',
+    )
+    process.chdir(`./${generalAnswers.projectName}`)
+    setLinter(manager, linter, [
+      'add -D eslint-plugin-vue @vue/eslint-config-typescript @typescript-eslint/parser @typescript-eslint/eslint-plugin',
+    ])
+    setFormatter(manager, formatter)
   }
-  // Change to the project directory
-  process.chdir(generalAnswers.projectName)
-  console.log(path.join(process.cwd(), `${generalAnswers.projectName}/`))
-  generalQuestion.pop()
-  console.log(
-    'Installation might not be all set! \n Refer to the official information for more details: https://daisyui.com/docs/install/',
-  )
 }
 
 // css
@@ -912,15 +1090,16 @@ const daisyInstall = async (manager) => {
     return
   }
 }
+
 appGenerator({
   framework: 'react',
-  css_library: 'styled-components',
-  ui_library: '@kuma-ui/core',
-  linter: 'template',
-  formatter: 'yes',
-  lint_staged_husky: 'yes',
-  hygen: 'yes',
-  vscode: 'yes',
+  css_library: null,
+  ui_library: null,
+  linter: 'no',
+  formatter: 'no',
+  lint_staged_husky: 'template',
+  hygen: 'template',
+  vscode: 'template',
   volta: 'yes',
   manager: 'pnpm',
   isTs: 'true',
