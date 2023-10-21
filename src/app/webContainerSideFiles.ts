@@ -500,7 +500,7 @@ const fileGenerator = async ({
       )
       process.chdir(\`./\${generalAnswers.projectName}\`)
       setLinter(manager, linter, [
-        \'add -D eslint-plugin-vue @vue/eslint-config-typescript @typescript-eslint/parser @typescript-eslint/eslint-plugin\',
+        \'install -D eslint-plugin-vue @vue/eslint-config-typescript @typescript-eslint/parser @typescript-eslint/eslint-plugin\',
       ])
       setFormatter(manager, formatter)
     }
@@ -560,46 +560,25 @@ const fileGenerator = async ({
     }
   }
   
-  const litInstall = async (manager, isTs) => {
-    generalQuestion.push({
-      type: \'confirm\',
-      name: \'vite\',
-      message: \'Do you want to use Vite as a builder?\',
-    })
-    const generalAnswers = await inquirer.prompt(generalQuestion)
-    if (generalAnswers.vite) {
-      execSync(
-        \`\${manager} create vite@latest \${generalAnswers.projectName} \${
-          isTs ? \' --template lit-ts\' : \'--template lit\'
-        } \`,
-        {
-          stdio: \'inherit\',
-        },
-      )
-    } else {
-      console.log(
-        // eslint-disable-next-line @stylistic/quotes
-        \"Our system only supports lit with Vite. \\n We\'re installing the framework with vite anyway. Sorry!\",
-      )
-      execSync(
-        \`\${manager} create vite@latest \${generalAnswers.projectName} \${
-          isTs ? \' --template lit-ts\' : \'--template lit\'
-        } \`,
-        {
-          stdio: \'inherit\',
-        },
-      )
-    }
+  const litInstall = async (manager, isTs, linter, formatter) => {
+    execSync(
+      \`\${manager} create vite@latest \${generalAnswers.projectName} \${
+        isTs ? \'--template lit-ts\' : \'--template lit\'
+      } \`,
+      {
+        stdio: \'inherit\',
+      },
+    )
     // Change to the project directory
-    process.chdir(generalAnswers.projectName)
-    console.log(path.join(process.cwd(), \`\${generalAnswers.projectName}/\`))
-    generalQuestion.pop()
+    process.chdir(\`./\${generalAnswers.projectName}\`)
     console.log(
       \'Installation might not be all set! \\n Refer to the official information for more details: https://daisyui.com/docs/install/\',
     )
+    setLinter(manager, linter, [\'install -D eslint-plugin-lit\'])
+    setFormatter(manager, formatter)
   }
   
-  const svelteInstall = async (manager, isTs) => {
+  const svelteInstall = async (manager, isTs, linter, formatter) => {
     generalQuestion.push({
       type: \'confirm\',
       name: \'vite\',
@@ -609,7 +588,7 @@ const fileGenerator = async ({
     if (generalAnswers.vite) {
       execSync(
         \`\${manager} create vite@latest \${generalAnswers.projectName} \${
-          isTs ? \' --template svelte-ts\' : \' --template svelte\'
+          isTs ? \'--template svelte-ts\' : \'--template svelte\'
         } \`,
         {
           stdio: \'inherit\',
@@ -625,30 +604,31 @@ const fileGenerator = async ({
       })
     }
     // Change to the project directory
-    process.chdir(generalAnswers.projectName)
-    console.log(path.join(process.cwd(), \`\${generalAnswers.projectName}/\`))
-    generalQuestion.pop()
     console.log(
       \'Installation might not be all set! \\n Refer to the official information for more details: https://daisyui.com/docs/install/\',
     )
+    process.chdir(generalAnswers.projectName)
+    setLinter(manager, linter, [\'install -D eslint-plugin-svelte3\'])
+    setFormatter(manager, formatter)
   }
   
-  const solidInstall = async (manager, isTs) => {
+  const solidInstall = async (manager, isTs, linter, formatter) => {
     const generalAnswers = await inquirer.prompt(generalQuestion)
     execSync(
       \`\${manager} create vite@latest \${generalAnswers.projectName} \${
-        isTs ? \'-- --template solid-ts\' : \'-- --template solid\'
+        isTs ? \'--template solid-ts\' : \'--template solid\'
       } \`,
       {
         stdio: \'inherit\',
       },
     )
     // Change to the project directory
-    process.chdir(generalAnswers.projectName)
-    console.log(path.join(process.cwd(), \`\${generalAnswers.projectName}/\`))
     console.log(
       \'Installation might not be all set! \\n Refer to the official information for more details: https://daisyui.com/docs/install/\',
     )
+    process.chdir(generalAnswers.projectName)
+    setLinter(manager, linter, [\'install -D eslint-plugin-solid\'])
+    setFormatter(manager, formatter)
   }
   
   const qwikInstall = async (manager, isTs, linter, formatter) => {
@@ -667,27 +647,19 @@ const fileGenerator = async ({
           stdio: \'inherit\',
         },
       )
-      console.log(
-        \'Installation might not be all set! \\n Refer to the official information for more details: https://vitejs.dev/guide/\',
-      )
-      process.chdir(\`./\${generalAnswers.projectName}\`)
-      setLinter(manager, linter, [
-        \'add -D eslint-plugin-vue @vue/eslint-config-typescript @typescript-eslint/parser @typescript-eslint/eslint-plugin\',
-      ])
-      setFormatter(manager, formatter)
     } else {
       execSync(\`\${manager} create qwik@latest \${generalAnswers.projectName}\`, {
         stdio: \'inherit\',
       })
-      console.log(
-        \'Installation might not be all set! \\n Refer to the official information for more details: https://vitejs.dev/guide/\',
-      )
-      process.chdir(\`./\${generalAnswers.projectName}\`)
-      setLinter(manager, linter, [
-        \'add -D eslint-plugin-vue @vue/eslint-config-typescript @typescript-eslint/parser @typescript-eslint/eslint-plugin\',
-      ])
-      setFormatter(manager, formatter)
     }
+    console.log(
+      \'Installation might not be all set! \\n Refer to the official information for more details: https://vitejs.dev/guide/\',
+    )
+    process.chdir(\`./\${generalAnswers.projectName}\`)
+    setLinter(manager, linter, [
+      \'add -D eslint-plugin-vue @vue/eslint-config-typescript @typescript-eslint/parser @typescript-eslint/eslint-plugin\',
+    ])
+    setFormatter(manager, formatter)
   }
   
   // css
@@ -1179,6 +1151,5 @@ export const getFiles = async (
   props: ReturnGetTeamBoardDetailType['teamBoardDetailWithoutTypename'],
 ) => {
   const files: FileSystemTree = await fileGenerator(props)
-
   return files
 }
