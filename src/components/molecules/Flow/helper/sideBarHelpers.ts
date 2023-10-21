@@ -1,5 +1,5 @@
 import { getCheckedLibraries, WhichLibrary } from '@/services/client/GetCheckedLibraries'
-import { getFrameworks } from '@/services/server/GetFrameworks'
+import { getFrameworks } from '@/services/client/GetFrameworks'
 
 const categories = [
   null,
@@ -10,11 +10,11 @@ const categories = [
   'formatter',
   'lint_staged_husky',
   'hygen',
-  'builder',
-  'manager',
   'vscode',
   'volta',
+  'manager',
   'isGit',
+  'end',
 ]
 
 export const fetchData = async (
@@ -28,6 +28,7 @@ export const fetchData = async (
   if (nextCategory == 'framework') {
     // framework
     const sidebarState = await getFrameworks()
+
     return JSON.stringify({
       category: nextCategory,
       nodes: sidebarState,
@@ -45,11 +46,6 @@ export const fetchData = async (
     return data
   } else {
     switch (nextCategory) {
-      case 'builder':
-        return JSON.stringify({
-          category: nextCategory,
-          nodes: [{ name: 'vite' }, { name: 'already using different builder' }],
-        })
       case 'manager':
         return JSON.stringify({
           category: nextCategory,
@@ -60,6 +56,8 @@ export const fetchData = async (
           category: nextCategory,
           nodes: [{ name: 'true' }, { name: 'false' }],
         })
+      case 'end':
+        return JSON.stringify(null)
       default:
         return JSON.stringify({
           category: nextCategory,

@@ -9,10 +9,10 @@ import { fetchData } from '../helper/sideBarHelpers'
 
 export const useSidebarState = (isTeamBoard: boolean, board_detail_id: string) => {
   const [loading, setLoading] = useState(true)
-  const [libraries, setLibraries] = useState<sidebarData>({
+  const [libraries, setLibraries] = useState<sidebarData | null>({
     category: '',
     nodes: [{ name: 'loading...' }],
-  } as sidebarData)
+  })
 
   const onDragStart = async (
     event: React.DragEvent<HTMLDivElement>,

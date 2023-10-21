@@ -34,8 +34,8 @@ export const getTeamBoardDetail = async (team_id: string) => {
     }
 
     // typenameを除外
-    const { __typename, id, ...teamBoardDetailWithoutTypename } = teams_by_pk.team_boards
-      .team_board_detail as DataObject
+    const { __typename, id, created_at, updated_at, ...teamBoardDetailWithoutTypename } =
+      teams_by_pk.team_boards.team_board_detail as DataObject
 
     const prevFirstNullKey = findKeyBeforeNullValue(teamBoardDetailWithoutTypename)
 
