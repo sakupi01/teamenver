@@ -66,6 +66,14 @@ mutation InsertTeamMember($team_id: uuid!, $user_id: String!) {
   insert_team_member_one(object: { team_id: $team_id, user_id: $user_id }) {
     team_id
     user_id
+    teams {
+      team_boards {
+        id
+        team_board_detail {
+          id
+        }
+      }
+    }
   }
 }
 

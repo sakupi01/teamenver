@@ -130,6 +130,9 @@ query GetTeamMember($team_id: uuid!) {
       github_url
       twitter_url
     }
+    teams {
+      name
+    }
   }
 }
 
