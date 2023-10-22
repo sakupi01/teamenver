@@ -14,6 +14,11 @@ export default withMiddlewareAuthRequired(async function middleware(
     if (request.nextUrl.pathname.startsWith('/')) {
       NextResponse.redirect(new URL('/api/auth/login', request.url))
     }
+  } else if (request.nextUrl.pathname.startsWith('/shared_invitation')) {
+    const invitation_id = request.nextUrl.searchParams.get('invitation_id')
+    return NextResponse.redirect(
+      new URL(`/approve/shared_invitation/${invitation_id}`, request.url),
+    )
   } else if (!current_team_id) {
     NextResponse.redirect(new URL('/select/team', request.url))
   }

@@ -54,7 +54,8 @@ export function ShareLinkButton({ current_team_id }: ShareLinkButtonProps) {
             <Input
               id='link'
               defaultValue={
-                process.env.NEXT_PUBLIC_BASE_URL + `/shared_invitation/team/${linkId}`
+                process.env.NEXT_PUBLIC_BASE_URL +
+                `/shared_invitation?invitation_id=${linkId}`
               }
               readOnly
             />
