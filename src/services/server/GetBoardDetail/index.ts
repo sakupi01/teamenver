@@ -41,9 +41,7 @@ export const getBoardDetail = async (board_id: string) => {
 
     const prevFirstNullKey = findKeyBeforeNullValue(boardDetailWithoutTypename)
 
-    const isPublic = boards_by_pk.is_public
-
-    return { prevFirstNullKey, boardDetailWithoutTypename, isPublic }
+    return { prevFirstNullKey, boardDetailWithoutTypename }
   } catch (error) {
     return handleServerError(error)
   }

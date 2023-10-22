@@ -9,8 +9,6 @@ import { deleteCookies } from '@/libs/actions/deleteCookies'
 
 import { getBoardDetail } from '@/services/server/GetBoardDetail'
 
-import { PubPriButton } from './PubPriButton'
-
 export type TeamPageProps = {
   params: {
     team_id: string
@@ -22,9 +20,7 @@ const BoardPage = async ({ params: { team_id, board_id } }: TeamPageProps) => {
   // 現在のボードの情報を取得
   const current_my_board_id = cookies().get('current_board_id')?.value
 
-  const { prevFirstNullKey, boardDetailWithoutTypename, isPublic } = await getBoardDetail(
-    board_id,
-  )
+  const { prevFirstNullKey, boardDetailWithoutTypename } = await getBoardDetail(board_id)
 
   // チャットwsClientに用いるaccessToken
   const accessToken = await getSession().then((session) => session?.accessToken)
@@ -35,15 +31,6 @@ const BoardPage = async ({ params: { team_id, board_id } }: TeamPageProps) => {
 
   return (
     <div className='w-full h-full'>
-      {board_id == current_my_board_id ? (
-        isPublic ? (
-          <PubPriButton label='非公開にする' turnToVisible={false} />
-        ) : (
-          <PubPriButton label='公開にする' turnToVisible={true} />
-        )
-      ) : (
-        ''
-      )}
       <Flow
         board_detail_id={board_id}
         toFirstOneIndicator={prevFirstNullKey}
