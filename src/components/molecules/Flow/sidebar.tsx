@@ -9,10 +9,10 @@ import { fetchData } from './helper/sideBarHelpers'
 import { useSidebarState } from './hooks'
 
 type SideBarProps = {
-  toFirstOneIndicator: string | null
-  isTeamBoard: boolean
-  team_id?: string
   board_detail_id: string
+  toFirstOneIndicator: string | null
+  team_id?: string
+  isTeamBoard: boolean
 }
 
 export const SideBar = ({
@@ -22,7 +22,6 @@ export const SideBar = ({
   board_detail_id,
 }: SideBarProps) => {
   const router = useRouter()
-
   const { loading, libraries, onDragStart, setLoading, setLibraries } = useSidebarState(
     isTeamBoard,
     board_detail_id,

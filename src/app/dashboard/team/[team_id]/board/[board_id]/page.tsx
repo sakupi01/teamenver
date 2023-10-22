@@ -21,11 +21,7 @@ export type TeamPageProps = {
 const BoardPage = async ({ params: { team_id, board_id } }: TeamPageProps) => {
   // 現在のボードの情報を取得
   const current_my_board_id = cookies().get('current_board_id')?.value
-  // const current_my_board_detail_id = cookies().get('current_board_detail_id')?.value
-  // if (!current_my_board_id || !current_my_board_detail_id) {
-  //   deleteCookies()
-  //   redirect('/api/auth/login')
-  // }
+
   const { prevFirstNullKey, boardDetailWithoutTypename, isPublic } = await getBoardDetail(
     board_id,
   )
@@ -53,6 +49,7 @@ const BoardPage = async ({ params: { team_id, board_id } }: TeamPageProps) => {
         toFirstOneIndicator={prevFirstNullKey}
         isTeamBoard={false}
         board_detail={boardDetailWithoutTypename}
+        isAdminOfTheBoard={board_id == current_my_board_id}
       />
       <ChatPage current_board_id={board_id} accessToken={accessToken} />
     </div>

@@ -16,7 +16,7 @@ const TeamPage = async ({
     team_id: string
   }
 }) => {
-  const { id, prevFirstNullKey, teamBoardDetailWithoutTypename } =
+  const { id, prevFirstNullKey, teamBoardDetailWithoutTypename, isAdmin } =
     await getTeamBoardDetail(team_id)
 
   if (!id) {
@@ -31,6 +31,7 @@ const TeamPage = async ({
         isTeamBoard={true}
         team_id={team_id}
         board_detail={teamBoardDetailWithoutTypename}
+        isAdminOfTheBoard={isAdmin}
       />
     </div>
   )

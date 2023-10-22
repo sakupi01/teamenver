@@ -35,6 +35,7 @@ export const updateBoardDetail = async ({
         changes: { ...args },
       },
     )
+    console.log('here: ', update_board_details)
     return { update_board_details }
   } catch (error) {
     return handleServerError(error)
