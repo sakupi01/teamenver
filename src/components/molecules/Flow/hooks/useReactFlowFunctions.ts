@@ -210,7 +210,6 @@ export const useReactFlowFunctions = (
     (deleted: Node<any, string | undefined>[]) => {
       if (!deleteOne) {
         deleteBoardDetail(deleted[0].data.key, isTeamBoard)
-        console.log('setDeleteOne(true)')
         setDeleteOne(true)
       }
       function removeTreeOfOutgoers(node: Node) {
@@ -221,6 +220,8 @@ export const useReactFlowFunctions = (
           outgoers.forEach((outgoer) => {
             removeTreeOfOutgoers(outgoer)
           })
+        } else {
+          setDeleteOne(false)
         }
       }
 
