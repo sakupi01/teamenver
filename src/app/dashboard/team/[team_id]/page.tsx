@@ -4,6 +4,8 @@ import { Flow } from '@/components/molecules/Flow'
 
 import { getTeamBoardDetail } from '@/services/server/GetTeamBoardDetail'
 
+import { FlowPane } from '../../../../components/molecules/FlowPane/FlowPane'
+
 export type TeamPageProps = {
   params: {
     team_id: string
@@ -24,15 +26,20 @@ const TeamPage = async ({
   }
 
   return (
-    <div className='w-full h-full'>
-      <Flow
-        board_detail_id={id}
-        toFirstOneIndicator={prevFirstNullKey}
-        isTeamBoard={true}
-        team_id={team_id}
-        board_detail={teamBoardDetailWithoutTypename}
-        isAdminOfTheBoard={isAdmin}
-      />
+    <div className='w-full h-full grid grid-cols-5 gap-5'>
+      <div className='col-span-4'>
+        <Flow
+          board_detail_id={id}
+          toFirstOneIndicator={prevFirstNullKey}
+          isTeamBoard={true}
+          team_id={team_id}
+          board_detail={teamBoardDetailWithoutTypename}
+          isAdminOfTheBoard={isAdmin}
+        />
+      </div>
+      <div className='col-span-1'>
+        <FlowPane />
+      </div>
     </div>
   )
 }
