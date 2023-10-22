@@ -33,16 +33,12 @@ mutation CreateDetails($board_id: uuid!) {
 
 mutation UpdateDetails($id: uuid!, $changes: board_details_set_input) {
   update_board_details(where: { id: { _eq: $id } }, _set: $changes) {
-    returning {
-      id
-    }
+    affected_rows
   }
 }
 mutation UpdateTeamBoardDetails($id: uuid!, $changes: team_board_details_set_input) {
   update_team_board_details(where: { id: { _eq: $id } }, _set: $changes) {
-    returning {
-      id
-    }
+    affected_rows
   }
 }
 

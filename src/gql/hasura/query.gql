@@ -79,22 +79,6 @@ query GetMyBoardInTeam($team_id: uuid!, $user_id: String!) {
   boards(where: { _and: { team_id: { _eq: $team_id }, user_id: { _eq: $user_id } } }) {
     id
     is_public
-    board_detail {
-      id
-      hygen
-      framework
-      formatter
-      css_library
-      created_at
-      isGit
-      lint_staged_husky
-      linter
-      manager
-      ui_library
-      updated_at
-      volta
-      vscode
-    }
   }
 }
 
@@ -169,5 +153,6 @@ query GetTeamBoardDetail($team_id: uuid!) {
         isGit
       }
     }
+    admin_id
   }
 }

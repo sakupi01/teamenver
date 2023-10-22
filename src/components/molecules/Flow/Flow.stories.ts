@@ -22,5 +22,6 @@ export const Default: Story = {
     isTeamBoard: true,
     board_detail: {},
     team_id: '0',
+    isAdminOfTheBoard: true,
   },
 }

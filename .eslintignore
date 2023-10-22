@@ -36,7 +36,7 @@ next-env.d.ts
 
 styled-system
 
-/src/gql/github/github.schema.graphql
+/src/gql
 
 # stroybook
 storybook-static

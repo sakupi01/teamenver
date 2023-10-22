@@ -20,6 +20,7 @@ export type FlowProps = {
   isTeamBoard: boolean
   team_id?: string
   board_detail: ReturnGetTeamBoardDetailType['teamBoardDetailWithoutTypename']
+  isAdminOfTheBoard: boolean
 }
 
 const InnerFlow = ({
@@ -28,6 +29,7 @@ const InnerFlow = ({
   isTeamBoard,
   team_id,
   board_detail,
+  isAdminOfTheBoard,
 }: FlowProps) => {
   const {
     nodes,
@@ -64,18 +66,25 @@ const InnerFlow = ({
           onDrop={onDrop}
           onDragOver={onDragOver}
           fitView
+          elementsSelectable={isAdminOfTheBoard}
+          nodesDraggable={isAdminOfTheBoard}
+          nodesConnectable={isAdminOfTheBoard}
         >
           <Controls />
           <MiniMap />
           <Background variant={BackgroundVariant.Dots} gap={12} size={1} />
         </ReactFlow>
       </div>
-      <SideBar
-        toFirstOneIndicator={toFirstOneIndicator}
-        isTeamBoard={isTeamBoard}
-        team_id={team_id}
-        board_detail_id={board_detail_id}
-      />
+      {isAdminOfTheBoard ? (
+        <SideBar
+          toFirstOneIndicator={toFirstOneIndicator}
+          isTeamBoard={isTeamBoard}
+          team_id={team_id}
+          board_detail_id={board_detail_id}
+        />
+      ) : (
+        <></>
+      )}
     </div>
   )
 }
@@ -86,6 +95,7 @@ export const Flow = ({
   isTeamBoard,
   team_id,
   board_detail,
+  isAdminOfTheBoard,
 }: FlowProps) => {
   return (
     <ReactFlowProvider>
@@ -95,6 +105,7 @@ export const Flow = ({
         isTeamBoard={isTeamBoard}
         team_id={team_id}
         board_detail={board_detail}
+        isAdminOfTheBoard={isAdminOfTheBoard}
       />
     </ReactFlowProvider>
   )
