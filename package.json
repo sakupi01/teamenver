@@ -71,7 +71,7 @@
     "graphql-request": "^6.1.0",
     "graphql-ws": "^5.14.0",
     "hygen": "^6.2.11",
-    "lucide-react": "^0.284.0",
+    "lucide-react": "^0.290.0",
     "markuplint": "^3.12.1",
     "million": "latest",
     "next": "latest",
