@@ -107,7 +107,7 @@
     "@storybook/react": "^7.4.6",
     "@storybook/test-runner": "^0.13.0",
     "@storybook/testing-library": "^0.2.2",
-    "@stylistic/eslint-plugin": "^0.0.5",
+    "@stylistic/eslint-plugin": "^0.1.0",
     "@testing-library/react": "^14.0.0",
     "commitizen": "^4.3.0",
     "eslint-config-prettier": "^8.9.0",
