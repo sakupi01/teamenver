@@ -19,10 +19,17 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 
+import { selectSettingsStore } from '@/libs/state/selector'
+
 import { Approvers } from '../../atoms/Approvers/Approvers'
 
 export const FlowPane = () => {
+  const settingsData = selectSettingsStore.use.settings()
+
   return (
+    // ここでinputを変更することができてもそんなに費用対効果が高くない
+    // dependenciesを測っていないもののinputを変更することは割と簡単そうなのでやる
+
     <Card className='w-full'>
       <CardHeader>
         <CardTitle>Input</CardTitle>
@@ -47,6 +54,7 @@ export const FlowPane = () => {
             </div>
           </div>
         </form>
+        <p>{JSON.stringify(settingsData)}</p>
       </CardContent>
       <CardFooter className='flex justify-between'>
         <Approvers />

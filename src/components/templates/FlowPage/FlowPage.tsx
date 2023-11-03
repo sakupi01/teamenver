@@ -1,5 +1,10 @@
+'use client'
+import { useEffect } from 'react'
+
 import { Flow } from '@/components/molecules/Flow'
 import { FlowPane } from '@/components/molecules/FlowPane'
+
+import { settingsStore } from '@/libs/state/store'
 
 import { ReturnGetTeamBoardDetailType } from '@/services/server/GetTeamBoardDetail'
 
@@ -17,6 +22,13 @@ export const FlowPage = ({
   teamBoardDetailWithoutTypename,
   isAdmin,
 }: FlowPageProps) => {
+  const updateSettings = settingsStore((s) => s.updateSettings)
+
+  useEffect(() => {
+    updateSettings(teamBoardDetailWithoutTypename)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
   return (
     <div className='w-full h-full grid grid-cols-5 gap-5'>
       <div className='col-span-4'>

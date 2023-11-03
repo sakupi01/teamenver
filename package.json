@@ -102,6 +102,7 @@
   "devDependencies": {
     "@graphql-codegen/cli": "^5.0.0",
     "@graphql-codegen/client-preset": "^4.1.0",
+    "@redux-devtools/extension": "^3.2.5",
     "@storybook/addon-a11y": "^7.4.6",
     "@storybook/addon-essentials": "^7.4.6",
     "@storybook/addon-interactions": "^7.4.6",
@@ -132,7 +133,8 @@
     "tailwindcss": "^3.3.3",
     "ts-node": "^10.9.1",
     "tsconfig-paths-webpack-plugin": "^4.1.0",
-    "typescript": "5.1.6"
+    "typescript": "5.1.6",
+    "zukeeper": "^1.0.2"
   },
   "msw": {
     "workerDirectory": "public"
