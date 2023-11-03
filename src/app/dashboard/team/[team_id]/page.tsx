@@ -1,10 +1,8 @@
 import { redirect } from 'next/navigation'
 
-import { Flow } from '@/components/molecules/Flow'
+import { FlowPage } from '@/components/templates/FlowPage'
 
 import { getTeamBoardDetail } from '@/services/server/GetTeamBoardDetail'
-
-import { FlowPane } from '../../../../components/molecules/FlowPane/FlowPane'
 
 export type TeamPageProps = {
   params: {
@@ -26,21 +24,13 @@ const TeamPage = async ({
   }
 
   return (
-    <div className='w-full h-full grid grid-cols-5 gap-5'>
-      <div className='col-span-4'>
-        <Flow
-          board_detail_id={id}
-          toFirstOneIndicator={prevFirstNullKey}
-          isTeamBoard={true}
-          team_id={team_id}
-          board_detail={teamBoardDetailWithoutTypename}
-          isAdminOfTheBoard={isAdmin}
-        />
-      </div>
-      <div className='col-span-1'>
-        <FlowPane />
-      </div>
-    </div>
+    <FlowPage
+      team_id={team_id}
+      board_detail_id={id}
+      prevFirstNullKey={prevFirstNullKey}
+      teamBoardDetailWithoutTypename={teamBoardDetailWithoutTypename}
+      isAdmin={isAdmin}
+    />
   )
 }
 

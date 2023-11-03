@@ -110,6 +110,3 @@ export const Flow = ({
     </ReactFlowProvider>
   )
 }
-
-// supabaseUrlが読み込まれてないみたい
-//
