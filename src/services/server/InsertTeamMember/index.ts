@@ -3,7 +3,10 @@ import { getSession } from '@auth0/nextjs-auth0'
 import { BadRequestError, UnAuthorizedError } from '@/libs/error/http'
 import { gqlHasuraClient } from '@/libs/graphql/clientLegacy'
 
-import { InsertTeamMemberDocument } from '@/gql/codegen/hasura/graphql'
+import {
+  InsertAgreementDocument,
+  InsertTeamMemberDocument,
+} from '@/gql/codegen/hasura/graphql'
 
 import { handleServerError } from '..'
 
@@ -28,11 +31,18 @@ export const insertTeamMember = async (team_id: string | null) => {
       },
     )
 
+    if (!insert_team_member_one) {
+      throw new BadRequestError()
+    }
+    const { insert_agreements_one } = await gqlHasuraClient.request(
+      InsertAgreementDocument,
+      {
+        team_board_id: insert_team_member_one.team_id,
+      },
+    )
+
     return { insert_team_member_one }
   } catch (error) {
-    console.log('***************************')
-    console.log(error)
-    console.log('***************************')
     return handleServerError(error)
   }
 }

@@ -16,12 +16,14 @@ type SelectorProps = {
   label: string
   defaultValue?: string
   options?: string[]
+  isAdmin: boolean
 }
 export const Selector = ({
   id,
   label,
   defaultValue,
   options = ['yes', 'no', 'template'],
+  isAdmin,
 }: SelectorProps) => {
   const updateSettings = settingsStore((s) => s.updateSettings)
 
@@ -29,6 +31,7 @@ export const Selector = ({
     <>
       <Label htmlFor={id}>{label}</Label>
       <Select
+        disabled={!isAdmin}
         onValueChange={(value) => {
           updateSettings({ [label]: value })
           updateBoardDetail(label, value, true)

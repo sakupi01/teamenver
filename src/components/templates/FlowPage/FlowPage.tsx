@@ -42,7 +42,7 @@ export const FlowPage = ({
         />
       </div>
       <div className='col-span-1'>
-        <FlowPane />
+        <FlowPane isAdmin={isAdmin} />
       </div>
     </div>
   )

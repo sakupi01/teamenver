@@ -8,6 +8,7 @@ import {
   CreateTeamBoardDetailsDocument,
   CreateTeamBoardDocument,
   CreateTeamDocument,
+  InsertAgreementDocument,
   InsertTeamMemberDocument,
 } from '@/gql/codegen/hasura/graphql'
 
@@ -54,6 +55,13 @@ export const createTeam = async ({ name }: { name: string | null }) => {
 
     const { insert_team_board_details_one } = await gqlHasuraClient.request(
       CreateTeamBoardDetailsDocument,
+      {
+        team_board_id: insert_team_boards_one.id,
+      },
+    )
+
+    const { insert_agreements_one } = await gqlHasuraClient.request(
+      InsertAgreementDocument,
       {
         team_board_id: insert_team_boards_one.id,
       },

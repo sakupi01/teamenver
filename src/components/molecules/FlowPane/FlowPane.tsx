@@ -17,7 +17,7 @@ import { selectSettingsStore } from '@/libs/state/selector'
 import { Approvers } from '../../atoms/Approvers/Approvers'
 import { Input } from '../../atoms/Input/Input'
 
-export const FlowPane = () => {
+export const FlowPane = ({ isAdmin }: { isAdmin: boolean }) => {
   const settingsData = selectSettingsStore.use.settings()
   const { framework, css_library, ui_library, ...mutableSettings } = settingsData
   const iterableMutableSettings = Object.entries(mutableSettings)
@@ -48,6 +48,7 @@ export const FlowPane = () => {
                       id={label}
                       defaultValue={value || ''}
                       options={['npm', 'yarn', 'pnpm', 'bun']}
+                      isAdmin={isAdmin}
                     />
                   )
                 } else if (label == 'isGit') {
@@ -58,18 +59,17 @@ export const FlowPane = () => {
                       id={label}
                       defaultValue={value || ''}
                       options={['true', 'false']}
+                      isAdmin={isAdmin}
                     />
                   )
                 } else {
-                  // TODO: zustandにupdateをかける
-                  // dbにupdateをかける
-                  // その後に再描画をかける
                   return (
                     <Selector
                       key={label}
                       label={label}
                       id={label}
                       defaultValue={value || ''}
+                      isAdmin={isAdmin}
                     />
                   )
                 }
