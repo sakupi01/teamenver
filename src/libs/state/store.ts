@@ -20,10 +20,8 @@ interface Action {
 export const settingsStore = create<State & Action>()((set) => ({
   settings: {},
   updateSettings: (input) => {
-    console.log(input)
-
     return set((state) => ({ settings: { ...state.settings, ...input } }))
   },
 }))
 
-window.store = settingsStore
+// window.store = settingsStore // for debugging

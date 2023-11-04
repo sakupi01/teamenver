@@ -7,6 +7,10 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 
+import { settingsStore } from '@/libs/state/store'
+
+import { updateBoardDetail } from '@/services/client/UpdateBoardDetail'
+
 type SelectorProps = {
   id: string
   label: string
@@ -19,10 +23,18 @@ export const Selector = ({
   defaultValue,
   options = ['yes', 'no', 'template'],
 }: SelectorProps) => {
+  const updateSettings = settingsStore((s) => s.updateSettings)
+
   return (
     <>
       <Label htmlFor={id}>{label}</Label>
-      <Select>
+      <Select
+        onValueChange={(value) => {
+          updateSettings({ [label]: value })
+          updateBoardDetail(label, value, true)
+          window.location.reload()
+        }}
+      >
         <SelectTrigger id={id}>
           <SelectValue placeholder={defaultValue} />
         </SelectTrigger>

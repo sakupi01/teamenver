@@ -61,6 +61,9 @@ export const FlowPane = () => {
                     />
                   )
                 } else {
+                  // TODO: zustandにupdateをかける
+                  // dbにupdateをかける
+                  // その後に再描画をかける
                   return (
                     <Selector
                       key={label}
