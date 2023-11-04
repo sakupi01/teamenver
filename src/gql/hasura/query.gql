@@ -159,3 +159,13 @@ query GetTeamBoardDetail($team_id: uuid!) {
     admin_id
   }
 }
+
+query GetAgreements($team_board_id: uuid!) {
+  agreements(where: { team_board_id: { _eq: $team_board_id } }) {
+    user {
+      name
+      id
+    }
+    is_agreed
+  }
+}
