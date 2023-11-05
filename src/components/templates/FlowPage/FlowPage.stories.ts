@@ -17,7 +17,6 @@ type Story = StoryObj<typeof meta>
 
 export const Default: Story = {
   args: {
-    team_id: '0',
     board_detail_id: '0',
     prevFirstNullKey: '0',
     teamBoardDetailWithoutTypename: {},
