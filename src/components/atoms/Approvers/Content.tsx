@@ -1,4 +1,4 @@
-import useSWR from 'swr'
+import useSWR, { mutate } from 'swr'
 
 import { PopoverContent } from '@/components/ui/popover'
 import { ScrollArea } from '@/components/ui/scroll-area'
@@ -14,6 +14,7 @@ export const Content = () => {
     '/api/get/approvers',
     fetcher,
   )
+  mutate('/api/get/approvers')
   if (error) {
     return <div>failed to load</div>
   }

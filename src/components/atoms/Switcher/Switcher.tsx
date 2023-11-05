@@ -14,6 +14,7 @@ type SwitcherProps = {
 }
 export const Switcher = ({ isAgreed, user }: SwitcherProps) => {
   const [isPending, startTransition] = useTransition()
+
   return (
     <>
       <div className='grid grid-cols-2'>
