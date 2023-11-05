@@ -31,18 +31,21 @@ export const insertTeamMember = async (team_id: string | null) => {
       },
     )
 
-    if (!insert_team_member_one) {
+    if (!insert_team_member_one || !insert_team_member_one.teams.team_boards) {
       throw new BadRequestError()
     }
+
     const { insert_agreements_one } = await gqlHasuraClient.request(
       InsertAgreementDocument,
       {
-        team_board_id: insert_team_member_one.team_id,
+        team_board_id: insert_team_member_one.teams.team_boards.id,
       },
     )
 
     return { insert_team_member_one }
   } catch (error) {
+    console.log(error)
+
     return handleServerError(error)
   }
 }
