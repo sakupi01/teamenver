@@ -1,21 +1,22 @@
 import { DropdownMenuProps } from '@radix-ui/react-dropdown-menu'
 import { MARK_SUBSCRIPT, MARK_SUPERSCRIPT } from '@udecode/plate-basic-marks'
-import { focusEditor, toggleMark, useEditorState } from '@udecode/plate-common'
+import { collapseSelection, toggleMark, useEditorState } from '@udecode/plate-common'
+import { MARK_HIGHLIGHT } from '@udecode/plate-highlight'
+import { MARK_KBD } from '@udecode/plate-kbd'
 import React from 'react'
 
 import { Icons } from '@/components/ui/icons'
 
 import {
   DropdownMenu,
+  DropdownMenuTrigger,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuTrigger,
   useOpenState,
 } from './dropdown-menu'
 import { ToolbarButton } from './toolbar'
-
-export function MoreDropdownMenu(props: DropdownMenuProps) {
-  const editor = useEditorState('plate')
+export function ToolbarDropdownMenu(props: DropdownMenuProps) {
+  const editor = useEditorState()
   const openState = useOpenState()
 
   return (
@@ -33,10 +34,33 @@ export function MoreDropdownMenu(props: DropdownMenuProps) {
         <DropdownMenuItem
           onSelect={() => {
             toggleMark(editor, {
+              key: MARK_HIGHLIGHT,
+            })
+            collapseSelection(editor, { edge: 'end' })
+          }}
+        >
+          <Icons.highlight className='mr-2 h-5 w-5' />
+          Highlight
+        </DropdownMenuItem>
+
+        <DropdownMenuItem
+          onSelect={() => {
+            toggleMark(editor, {
+              key: MARK_KBD,
+            })
+            collapseSelection(editor, { edge: 'end' })
+          }}
+        >
+          <Icons.kbd className='mr-2 h-5 w-5' />
+          Keyboard input
+        </DropdownMenuItem>
+
+        <DropdownMenuItem
+          onSelect={() => {
+            toggleMark(editor, {
               key: MARK_SUBSCRIPT,
               clear: MARK_SUPERSCRIPT,
             })
-            focusEditor(editor)
           }}
         >
           <Icons.superscript className='mr-2 h-5 w-5' />
@@ -49,7 +73,6 @@ export function MoreDropdownMenu(props: DropdownMenuProps) {
               key: MARK_SUPERSCRIPT,
               clear: MARK_SUBSCRIPT,
             })
-            focusEditor(editor)
           }}
         >
           <Icons.subscript className='mr-2 h-5 w-5' />

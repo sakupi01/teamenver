@@ -6,12 +6,14 @@ import {
   MARK_UNDERLINE,
 } from '@udecode/plate-basic-marks'
 import { useEditorReadOnly } from '@udecode/plate-common'
+import { MARK_BG_COLOR, MARK_COLOR } from '@udecode/plate-font'
 import React from 'react'
 
-import { Icons } from '@/components/ui/icons'
+import { Icons, iconVariants } from '@/components/ui/icons'
 
+import { ColorDropdownMenu } from './color-dropdown-menu'
 import { MarkToolbarButton } from './mark-toolbar-button'
-import { MoreDropdownMenu } from './more-dropdown-menu'
+import { ToolbarDropdownMenu } from './toolbar-dropdown'
 import { TurnIntoDropdownMenu } from './turn-into-dropdown-menu'
 
 export function FloatingToolbarButtons() {
@@ -41,10 +43,17 @@ export function FloatingToolbarButtons() {
           <MarkToolbarButton nodeType={MARK_CODE} tooltip='Code (⌘+E)'>
             <Icons.code />
           </MarkToolbarButton>
+          <>
+            <ColorDropdownMenu nodeType={MARK_COLOR} tooltip='Text Color'>
+              <Icons.color className={iconVariants({ variant: 'toolbar' })} />
+            </ColorDropdownMenu>
+            <ColorDropdownMenu nodeType={MARK_BG_COLOR} tooltip='Highlight Color'>
+              <Icons.bg className={iconVariants({ variant: 'toolbar' })} />
+            </ColorDropdownMenu>
+          </>
         </>
       )}
-
-      <MoreDropdownMenu />
+      <ToolbarDropdownMenu />
     </>
   )
 }
