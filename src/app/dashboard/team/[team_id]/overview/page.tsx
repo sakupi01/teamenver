@@ -1,5 +1,6 @@
 'use client'
 
+import { useUser } from '@auth0/nextjs-auth0/client'
 import { createAlignPlugin } from '@udecode/plate-alignment'
 import { createAutoformatPlugin } from '@udecode/plate-autoformat'
 import {
@@ -39,6 +40,7 @@ import {
   RenderAfterEditable,
   withProps,
   PlateLeaf,
+  Value,
 } from '@udecode/plate-common'
 import { createDndPlugin } from '@udecode/plate-dnd'
 import { createEmojiPlugin } from '@udecode/plate-emoji'
@@ -94,10 +96,12 @@ import {
   ELEMENT_TH,
 } from '@udecode/plate-table'
 import { createTrailingBlockPlugin } from '@udecode/plate-trailing-block'
+import { useState } from 'react'
 import { DndProvider } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
 
 import { BlockquoteElement } from '@/components/plate-ui/blockquote-element'
+import { Button } from '@/components/plate-ui/button'
 import { CodeBlockElement } from '@/components/plate-ui/code-block-element'
 import { CodeLeaf } from '@/components/plate-ui/code-leaf'
 import { CodeLineElement } from '@/components/plate-ui/code-line-element'
@@ -132,6 +136,8 @@ import { TableElement } from '@/components/plate-ui/table-element'
 import { TableRowElement } from '@/components/plate-ui/table-row-element'
 import { TodoListElement } from '@/components/plate-ui/todo-list-element'
 import { withDraggables } from '@/components/plate-ui/with-draggables'
+import { Skeleton } from '@/components/ui/skeleton'
+import { toast } from '@/components/ui/use-toast'
 
 const plugins = createPlugins(
   [
@@ -341,35 +347,146 @@ const plugins = createPlugins(
 )
 
 const initialValue = [
+  { type: 'h1', children: [{ text: '🌳 Blocks' }], id: '1' },
   {
-    id: '1',
     type: 'p',
     children: [
       {
-        text: 'Hello, world!',
+        text: 'Easily create headings of various levels, from H1 to H6, to structure your content and make it more organized.',
       },
     ],
+    id: '2',
+  },
+  {
+    type: 'blockquote',
+    children: [
+      {
+        text: 'Create blockquotes to emphasize important information or highlight quotes from external sources.',
+      },
+    ],
+    id: '3',
+  },
+  {
+    type: 'code_block',
+    lang: 'javascript',
+    children: [
+      {
+        type: 'code_line',
+        children: [{ text: '// Use code blocks to showcase code snippets' }],
+      },
+      { type: 'code_line', children: [{ text: 'function greet() {' }] },
+      // eslint-disable-next-line @stylistic/quotes
+      { type: 'code_line', children: [{ text: " console.info('Hello World!');" }] },
+      { type: 'code_line', children: [{ text: '}' }] },
+    ],
+    id: '4',
+  },
+  { type: 'h1', children: [{ text: '🌱 Marks' }], id: '1' },
+  {
+    type: 'p',
+    children: [
+      {
+        text: 'Add style and emphasis to your text using the mark plugins, which offers a variety of formatting options.',
+      },
+    ],
+    id: '2',
+  },
+  {
+    type: 'p',
+    children: [
+      { text: 'Make text ' },
+      { text: 'bold', bold: true },
+      { text: ', ' },
+      { text: 'italic', italic: true },
+      { text: ', ' },
+      { text: 'underlined', underline: true },
+      { text: ', or apply a ' },
+      { text: 'combination', bold: true, italic: true, underline: true },
+      { text: ' of these styles for a visually striking effect.' },
+    ],
+    id: '3',
+  },
+  {
+    type: 'p',
+    children: [
+      { text: 'Add ' },
+      { text: 'strikethrough', strikethrough: true },
+      { text: ' to indicate deleted or outdated content.' },
+    ],
+    id: '4',
+  },
+  {
+    type: 'p',
+    children: [
+      { text: 'Write code snippets with inline ' },
+      { text: 'code', code: true },
+      { text: ' formatting for easy readability.' },
+    ],
+    id: '5',
+  },
+  {
+    type: 'p',
+    children: [
+      { text: 'Press ' },
+      { text: '⌘+B', kbd: true },
+      { text: ' to apply bold mark or ' },
+      { text: '⌘+I', kbd: true },
+      { text: ' for italic mark.' },
+    ],
+    id: '6',
   },
 ]
 
 export default function OverviewPage() {
+  const { user, isLoading, error } = useUser()
+
+  const [content, setContent] = useState<Value>(initialValue)
+
+  const handleSave = () => {
+    toast({
+      title: '✅ Your changes have been successfully saved.',
+    })
+  }
+
+  if (isLoading) {
+    return (
+      <div className='flex flex-col gap-4'>
+        <Skeleton className='h-10 w-full' />
+        <Skeleton className='h-10 w-full' />
+        <Skeleton className='h-10 w-full' />
+      </div>
+    )
+  } else if (error) {
+    return <div>{error.message}</div>
+  }
   return (
-    <DndProvider backend={HTML5Backend}>
-      <CommentsProvider users={{}} myUserId='1'>
-        <Plate plugins={plugins} initialValue={initialValue}>
-          <FixedToolbar>
-            <FixedToolbarButtons />
-          </FixedToolbar>
+    <div className='flex flex-col items-end'>
+      <DndProvider backend={HTML5Backend}>
+        <CommentsProvider users={{}} myUserId={user?.sub}>
+          <Plate
+            plugins={plugins}
+            initialValue={initialValue}
+            onChange={(newValue) => {
+              setContent(newValue)
+            }}
+          >
+            <FixedToolbar>
+              <FixedToolbarButtons />
+            </FixedToolbar>
 
-          <Editor />
+            <Editor />
 
-          <FloatingToolbar>
-            <FloatingToolbarButtons />
-          </FloatingToolbar>
-          <MentionCombobox items={[]} />
-          <CommentsPopover />
-        </Plate>
-      </CommentsProvider>
-    </DndProvider>
+            <FloatingToolbar>
+              <FloatingToolbarButtons />
+            </FloatingToolbar>
+            <MentionCombobox items={[]} />
+            <CommentsPopover />
+          </Plate>
+        </CommentsProvider>
+      </DndProvider>
+      <Button className='m-5' onClick={() => handleSave()}>
+        Save
+      </Button>
+    </div>
   )
 }
