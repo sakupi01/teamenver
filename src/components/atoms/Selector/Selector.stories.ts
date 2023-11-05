@@ -19,6 +19,7 @@ export const Default: Story = {
   args: {
     id: '0',
     label: 'hogehoge',
-    placeholder: 'fugafuga',
+    defaultValue: 'fugafuga',
+    isAdmin: true,
   },
 }
