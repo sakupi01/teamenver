@@ -42,4 +42,7 @@ styled-system
 storybook-static
 
 # shad/cn ui components
-/src/components/ui/*.tsx
+/src/components/ui/*
+
+# plate ui components
+/src/components/plate-ui/*
