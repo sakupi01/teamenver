@@ -36,6 +36,25 @@ export const Navigation = ({ current_team_id, public_boards_info }: NavigationPr
       <NavigationMenu className='flex max-w-full flex-1 items-center justify-between'>
         <NavigationMenuList>
           <NavigationMenuItem>
+            <Link
+              href={`/dashboard/team/${current_team_id}/overview`}
+              legacyBehavior
+              passHref
+            >
+              <NavigationMenuLink
+                className={navigationMenuTriggerStyle()}
+                active={
+                  pathname === `/dashboard/team/${current_team_id}/overview`
+                    ? true
+                    : false
+                }
+              >
+                📜Overview
+              </NavigationMenuLink>
+            </Link>
+          </NavigationMenuItem>
+
+          <NavigationMenuItem>
             <Link href={`/dashboard/team/${current_team_id}`} legacyBehavior passHref>
               <NavigationMenuLink
                 className={navigationMenuTriggerStyle()}
