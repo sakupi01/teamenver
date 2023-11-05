@@ -4,6 +4,7 @@ import { initialize, mswDecorator } from 'msw-storybook-addon'
 import '../src/app/globals.css'
 import { handleGetFrameworks } from '../src/services/server/GetFrameworks/__mock__/msw'
 import { handleGetProjectOverview } from '../src/services/server/GetOverview/__mock__/msw'
+import { handleGetApprovers } from '../src/services/server/GetApprovers/__mock__/msw'
 import { UserProvider } from '@auth0/nextjs-auth0/client'
 const preview: Preview = {
   parameters: {
@@ -14,7 +15,9 @@ const preview: Preview = {
         date: /Date$/,
       },
     },
-    msw: { handlers: [handleGetFrameworks(), handleGetProjectOverview()] },
+    msw: {
+      handlers: [handleGetFrameworks(), handleGetProjectOverview(), handleGetApprovers()],
+    },
     layout: 'fullscreen',
     nextjs: {
       appDirectory: true,
