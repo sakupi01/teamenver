@@ -122,3 +122,18 @@ mutation UpdateAgreement($team_board_id: uuid!, $is_agreed: Boolean!) {
     affected_rows
   }
 }
+
+mutation InsertProjectOverview($team_id: uuid!) {
+  insert_project_details_one(object: { team_id: $team_id }) {
+    id
+  }
+}
+
+mutation UpdateProjectOverview($team_id: uuid!, $content: String!) {
+  update_project_details(
+    where: { team_id: { _eq: $team_id } }
+    _set: { project_abstract: $content }
+  ) {
+    affected_rows
+  }
+}
