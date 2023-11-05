@@ -7,5 +7,3 @@ export function handleGetFrameworks() {
     return res(ctx.json(mockGetFrameworksResponse))
   })
 }
-
-export const handlers = [handleGetFrameworks()]
