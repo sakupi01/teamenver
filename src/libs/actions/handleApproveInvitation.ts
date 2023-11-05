@@ -1,7 +1,7 @@
 'use server'
 import { redirect } from 'next/navigation'
 
-import { insertTeamMember } from '@/services/server/InsertTeamMember/index'
+import { insertTeamMember } from '@/services/server/InsertTeamMember'
 
 import { kvClient } from '../redis/kvClient'
 
