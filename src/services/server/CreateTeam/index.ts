@@ -74,9 +74,6 @@ export const createTeam = async ({ name }: { name: string | null }) => {
 
     return { insert_teams, insert_team_member_one }
   } catch (error) {
-    console.log('***************************')
-    console.log(error)
-    console.log('***************************')
     return handleServerError(error)
   }
 }

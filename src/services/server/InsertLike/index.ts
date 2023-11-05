@@ -23,9 +23,6 @@ export const insertLike = async (comment_id: string) => {
 
     return { insert_likes_one }
   } catch (error) {
-    console.log('***************************')
-    console.log(error)
-    console.log('***************************')
     return handleServerError(error)
   }
 }

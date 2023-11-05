@@ -32,9 +32,6 @@ export const updateBoardVisibility = async (is_public: boolean) => {
 
     return { update_boards_by_pk }
   } catch (error) {
-    console.log('***************************')
-    console.log(error)
-    console.log('***************************')
     return handleServerError(error)
   }
 }

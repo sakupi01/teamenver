@@ -30,9 +30,6 @@ export const createBoardDetail = async () => {
       cookies().set('current_board_detail_id', insert_board_details?.returning[0].id)
     return { insert_board_details }
   } catch (error) {
-    console.log('***************************')
-    console.log(error)
-    console.log('***************************')
     return handleServerError(error)
   }
 }
