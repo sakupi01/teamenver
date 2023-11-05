@@ -8,6 +8,7 @@ import {
   CreateTeamBoardDetailsDocument,
   CreateTeamBoardDocument,
   CreateTeamDocument,
+  InsertAgreementDocument,
   InsertTeamMemberDocument,
 } from '@/gql/codegen/hasura/graphql'
 
@@ -59,6 +60,13 @@ export const createTeam = async ({ name }: { name: string | null }) => {
       },
     )
 
+    const { insert_agreements_one } = await gqlHasuraClient.request(
+      InsertAgreementDocument,
+      {
+        team_board_id: insert_team_boards_one.id,
+      },
+    )
+
     insert_teams && cookies().set('current_team_id', insert_teams.returning[0].id)
     insert_teams && cookies().set('current_team_board_id', insert_team_boards_one.id)
     insert_teams &&
@@ -66,9 +74,6 @@ export const createTeam = async ({ name }: { name: string | null }) => {
 
     return { insert_teams, insert_team_member_one }
   } catch (error) {
-    console.log('***************************')
-    console.log(error)
-    console.log('***************************')
     return handleServerError(error)
   }
 }

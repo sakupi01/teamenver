@@ -9,10 +9,6 @@ export const defaultHeaders = {
 
 export const handleResolve = async (res: Response) => {
   if (!res.ok) {
-    console.log('***************************')
-    console.log(res)
-    console.log('***************************')
-
     const status = res.status as ErrorStatus
     throw new HttpError(status)
   }

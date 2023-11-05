@@ -106,3 +106,19 @@ mutation UpdateBoardVisibility($board_id: uuid!, $is_public: Boolean!) {
     updated_at
   }
 }
+
+mutation InsertAgreement($team_board_id: uuid!) {
+  insert_agreements_one(object: { team_board_id: $team_board_id }) {
+    id
+    is_agreed
+  }
+}
+
+mutation UpdateAgreement($team_board_id: uuid!, $is_agreed: Boolean!) {
+  update_agreements(
+    where: { team_board_id: { _eq: $team_board_id } }
+    _set: { is_agreed: $is_agreed }
+  ) {
+    affected_rows
+  }
+}

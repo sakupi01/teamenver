@@ -26,8 +26,6 @@ export const useNodeInit = (
   initialNodes: ReturnGetTeamBoardDetailType['teamBoardDetailWithoutTypename'],
   toFirstOneIndicator: string | null, // 最初のnullの前のキー // 最初のきーがnullの場合はnullが返却される
 ) => {
-  console.log(toFirstOneIndicator)
-
   const initialNodesValues = Object.values(initialNodes)
   const initialNodesKeys = Object.keys(initialNodes)
 

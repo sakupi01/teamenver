@@ -23,10 +23,10 @@ export default function Join() {
       return res.json()
     })
 
-  const joined_teams = useSWR<GetJoinedTeamsApi.GetType>(
+  const res = useSWR<GetJoinedTeamsApi.GetType>(
     `/api/get/joined_teams?user_id=${user?.sub}`,
     fetcher,
-  ).data?.teams
+  )
 
   const handleSelectTeam = (
     team_id: string,
@@ -40,7 +40,7 @@ export default function Join() {
   return (
     <main className={'p-[5%]'}>
       <p className='scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl'>
-        Hello, {user?.nickname}
+        Hello, {error ? 'failed to load' : isLoading ? 'loading...' : user?.nickname}
       </p>
       <form action={createTeamHandler} method='POST'>
         <input type='text' name='name' placeholder='Input a team name' />
@@ -49,15 +49,20 @@ export default function Join() {
       <div className='text-lg font-semibold'>
         or, you can join the team that you already joined in.
       </div>
-      {joined_teams &&
-        joined_teams?.map((team) => (
+      {res.error ? (
+        <div>failed to load</div>
+      ) : res.data === undefined || res.isLoading ? (
+        'loading...'
+      ) : (
+        res.data.teams.map((team) => (
           <Button
             onClick={() => handleSelectTeam(team.id, team.team_boards, team.boards[0])}
             key={team.id}
           >
             {team.name}
           </Button>
-        ))}
+        ))
+      )}
     </main>
   )
 }

@@ -23,9 +23,6 @@ export const deleteLike = async (comment_id: string) => {
 
     return { delete_likes }
   } catch (error) {
-    console.log('***************************')
-    console.log(error)
-    console.log('***************************')
     return handleServerError(error)
   }
 }

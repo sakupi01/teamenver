@@ -27,7 +27,6 @@ const InnerFlow = ({
   board_detail_id,
   toFirstOneIndicator,
   isTeamBoard,
-  team_id,
   board_detail,
   isAdminOfTheBoard,
 }: FlowProps) => {
@@ -79,7 +78,6 @@ const InnerFlow = ({
         <SideBar
           toFirstOneIndicator={toFirstOneIndicator}
           isTeamBoard={isTeamBoard}
-          team_id={team_id}
           board_detail_id={board_detail_id}
         />
       ) : (
@@ -93,7 +91,6 @@ export const Flow = ({
   board_detail_id,
   toFirstOneIndicator,
   isTeamBoard,
-  team_id,
   board_detail,
   isAdminOfTheBoard,
 }: FlowProps) => {
@@ -103,13 +100,9 @@ export const Flow = ({
         board_detail_id={board_detail_id}
         toFirstOneIndicator={toFirstOneIndicator}
         isTeamBoard={isTeamBoard}
-        team_id={team_id}
         board_detail={board_detail}
         isAdminOfTheBoard={isAdminOfTheBoard}
       />
     </ReactFlowProvider>
   )
 }
-
-// supabaseUrlが読み込まれてないみたい
-//

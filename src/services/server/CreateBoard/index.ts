@@ -28,9 +28,6 @@ export const createBoard = async () => {
     insert_boards && cookies().set('current_board_id', insert_boards?.returning[0].id)
     return { insert_boards }
   } catch (error) {
-    console.log('***************************')
-    console.log(error)
-    console.log('***************************')
     return handleServerError(error)
   }
 }
