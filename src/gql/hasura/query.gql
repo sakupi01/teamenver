@@ -169,3 +169,10 @@ query GetAgreements($team_board_id: uuid!) {
     is_agreed
   }
 }
+
+query GetProjectOverview($team_id: uuid!) {
+  project_details(where: { team_id: { _eq: $team_id } }) {
+    team_id
+    project_abstract
+  }
+}
