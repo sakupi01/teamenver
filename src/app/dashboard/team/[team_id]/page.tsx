@@ -25,7 +25,6 @@ const TeamPage = async ({
 
   return (
     <FlowPage
-      team_id={team_id}
       board_detail_id={id}
       prevFirstNullKey={prevFirstNullKey}
       teamBoardDetailWithoutTypename={teamBoardDetailWithoutTypename}

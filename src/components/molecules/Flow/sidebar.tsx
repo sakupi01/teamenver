@@ -1,7 +1,4 @@
-import { useRouter } from 'next/navigation'
 import React, { useEffect } from 'react'
-
-import { Button } from '@/components/ui/button'
 
 import { sidebarData } from '@/types/custom/sidebarData'
 
@@ -11,17 +8,14 @@ import { useSidebarState } from './hooks'
 type SideBarProps = {
   board_detail_id: string
   toFirstOneIndicator: string | null
-  team_id?: string
   isTeamBoard: boolean
 }
 
 export const SideBar = ({
   toFirstOneIndicator,
   isTeamBoard,
-  team_id,
   board_detail_id,
 }: SideBarProps) => {
-  const router = useRouter()
   const { loading, libraries, onDragStart, setLoading, setLibraries } = useSidebarState(
     isTeamBoard,
     board_detail_id,
@@ -45,13 +39,19 @@ export const SideBar = ({
     return (
       <aside className='border-r border-gray-300 p-4 text-sm bg-gray-50 w-1/5 md:w-[20%] md:max-width-[250px]'>
         <div className='mb-10'>
-          <p className='text-red-500'>The settings has been saved.</p>
+          <p className='text-slate-800 font-semibold'>
+            全てのチームメンバーの承認後に
+            <br />
+            このプロジェクトは実行できます。
+          </p>
+
+          <p className='text-slate-800 font-semibold'>
+            詳細な承認済みユーザの確認は
+            <br />
+            右サイドバーの
+            <span className='text-red-500 font-semibold'>「Approvers」</span>から
+          </p>
         </div>
-        {isTeamBoard ? (
-          <Button onClick={() => router.push(`/result/team/${team_id}`)}>実行</Button>
-        ) : (
-          <></>
-        )}
       </aside>
     )
   }

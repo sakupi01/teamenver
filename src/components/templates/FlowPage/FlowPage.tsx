@@ -9,14 +9,12 @@ import { settingsStore } from '@/libs/state/store'
 import { ReturnGetTeamBoardDetailType } from '@/services/server/GetTeamBoardDetail'
 
 type FlowPageProps = {
-  team_id: string
   board_detail_id: string
   prevFirstNullKey: string | null
   teamBoardDetailWithoutTypename: ReturnGetTeamBoardDetailType['teamBoardDetailWithoutTypename']
   isAdmin: boolean
 }
 export const FlowPage = ({
-  team_id,
   board_detail_id,
   prevFirstNullKey,
   teamBoardDetailWithoutTypename,
@@ -36,7 +34,6 @@ export const FlowPage = ({
           board_detail_id={board_detail_id}
           toFirstOneIndicator={prevFirstNullKey}
           isTeamBoard={true}
-          team_id={team_id}
           board_detail={teamBoardDetailWithoutTypename}
           isAdminOfTheBoard={isAdmin}
         />

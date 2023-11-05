@@ -1,4 +1,5 @@
 'use client'
+import { usePathname, useRouter } from 'next/navigation'
 import * as React from 'react'
 import useSWR, { mutate } from 'swr'
 
@@ -18,6 +19,10 @@ import { Approvers } from '../../atoms/Approvers/Approvers'
 import { SelectCardContent } from './SelectCardContent'
 
 export const FlowPane = ({ isAdmin }: { isAdmin: boolean }) => {
+  const router = useRouter()
+  const pathname = usePathname()
+  const team_id = pathname.split('/').findLast((pathParam) => pathParam !== '')
+
   const fetcher = (url: string) => fetch(url).then((res) => res.json())
   const { data, isLoading, error } = useSWR<GetApproversApi.GetType>(
     '/api/get/approvers',
@@ -56,7 +61,12 @@ export const FlowPane = ({ isAdmin }: { isAdmin: boolean }) => {
         ) : data === undefined || isLoading ? (
           'loading...'
         ) : isAdmin ? (
-          <Button disabled={!isAllAgreed}>Deploy</Button>
+          <Button
+            disabled={!isAllAgreed}
+            onClick={() => router.push(`/result/team/${team_id}`)}
+          >
+            実行
+          </Button>
         ) : (
           ''
         )}
