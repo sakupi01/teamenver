@@ -137,3 +137,25 @@ mutation UpdateProjectOverview($team_id: uuid!, $content: String!) {
     affected_rows
   }
 }
+
+mutation UpdateUserInfo(
+  $id: String!
+  $name: String!
+  $email: String!
+  $github_url: String!
+  $twitter_url: String!
+  $image_url: String!
+) {
+  update_users_by_pk(
+    pk_columns: { id: $id }
+    _set: {
+      name: $name
+      email: $email
+      github_url: $github_url
+      twitter_url: $twitter_url
+      image_url: $image_url
+    }
+  ) {
+    id
+  }
+}

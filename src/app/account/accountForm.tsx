@@ -21,25 +21,35 @@ import { LoginUser } from '@/libs/schema/loginUser'
 import { useUploadImage } from './hooks/useUploadImage'
 
 export type AccountFormProps = {
-  email: string
   name: string
+  email: string
+  github_url: string
+  twitter_url: string
   imageUrl: string
 }
 
-export default function AccountForm({ email, name, imageUrl }: AccountFormProps) {
+export default function AccountForm({
+  email,
+  name,
+  github_url,
+  twitter_url,
+  imageUrl,
+}: AccountFormProps) {
   const form = useForm<LoginUser>({
     resolver: zodResolver(LoginUserSchema),
     defaultValues: {
-      email: email,
       name: name,
-      imageUrl: imageUrl,
+      email: email,
+      github_url: github_url,
+      twitter_url: twitter_url,
+      image_url: imageUrl,
     },
   })
 
   const { onChangeImage, url } = useUploadImage({
     register: form.register,
     setValue: form.setValue,
-    name: 'imageUrl',
+    name: 'image_url',
     defaultImageUrl: imageUrl,
     onRejected: (error) => {
       toast({
@@ -47,7 +57,7 @@ export default function AccountForm({ email, name, imageUrl }: AccountFormProps)
         description: (
           <pre className='mt-2 w-[340px] rounded-md bg-slate-950 p-4'>
             <code className='text-white'>
-              {JSON.stringify(form.formState.errors.imageUrl?.message, null, 2)}
+              {JSON.stringify(form.formState.errors.image_url?.message, null, 2)}
             </code>
           </pre>
         ),
@@ -60,8 +70,22 @@ export default function AccountForm({ email, name, imageUrl }: AccountFormProps)
       })
     },
   })
+  async function onSubmit(data: LoginUser) {
+    const res = await fetch('/api/send/userinfo', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        email: data.email,
+        name: data.name,
+        github_url: data.github_url,
+        twitter_url: data.twitter_url,
+        image_url: data.image_url,
+      }),
+    })
+    console.log(res)
 
-  function onSubmit(data: LoginUser) {
     toast({
       title: 'You submitted the following values:',
       description: (
@@ -113,7 +137,33 @@ export default function AccountForm({ email, name, imageUrl }: AccountFormProps)
         />
         <FormField
           control={form.control}
-          name='imageUrl'
+          name='github_url'
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Github</FormLabel>
+              <FormControl>
+                <Input {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name='twitter_url'
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>X</FormLabel>
+              <FormControl>
+                <Input {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name='image_url'
           render={() => (
             <FormItem>
               <FormLabel>Avatar Image</FormLabel>
@@ -129,13 +179,13 @@ export default function AccountForm({ email, name, imageUrl }: AccountFormProps)
           )}
         />
         <Image
-          src={url || imageUrl}
+          src={`${process.env.NEXT_PUBLIC_SUPABASE_STORAGE_BASE_URL}${url || imageUrl}`}
           alt='avatar'
           width={100}
           height={100}
           className='w-[100px] h-[100px] rounded-full object-cover'
         />
-        <Button type='submit'>Submit</Button>
+        <Button type='submit'>Save</Button>
       </form>
     </Form>
   )

@@ -46,9 +46,7 @@ const PeopleList = async ({ params }: PeopleListProps) => {
               <CardFooter className='flex justify-between p-0 space-x-1'>
                 <Button variant='outline' size='icon'>
                   <Link
-                    href={
-                      new URL(person.users.twitter_url || 'https://twitter.com/404.html')
-                    }
+                    href={new URL(person.users.twitter_url || 'https://x.com/404.html')}
                   >
                     <Icons.twitter className='h-4 w-4' />
                   </Link>

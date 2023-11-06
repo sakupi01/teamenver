@@ -57,11 +57,7 @@ export function useUploadImage<T extends FieldValues>({
     formData.append('file', file)
     uploadImageHandler({ formData })
       .then((data) => {
-        const imgPath =
-          `${process.env.NEXT_PUBLIC_SUPABASE_STORAGE_BASE_URL}${data.path}` as PathValue<
-            T,
-            Path<T>
-          >
+        const imgPath = `${data.path}` as PathValue<T, Path<T>>
         setUrl(imgPath)
         setValue(name, imgPath)
         onResolved?.(data)
