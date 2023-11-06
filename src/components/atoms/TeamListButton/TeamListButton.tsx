@@ -14,14 +14,15 @@ export const TeamListButton = ({
   }
   return (
     <Button
-      variant='ghost'
+      variant={'ghost'}
       size='icon'
+      className='rounded-full'
       onClick={() => {
         router.push(`/dashboard/team/${current_team_id}/people`)
       }}
     >
       <Avatar>
-        <AvatarFallback>👫</AvatarFallback>
+        <AvatarFallback className='bg-transparent'>👫</AvatarFallback>
       </Avatar>
     </Button>
   )

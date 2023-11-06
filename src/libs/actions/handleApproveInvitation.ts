@@ -3,6 +3,7 @@ import { redirect } from 'next/navigation'
 
 import { insertTeamMember } from '@/services/server/InsertTeamMember'
 
+import { BadRequestError } from '../error/http'
 import { kvClient } from '../redis/kvClient'
 
 import { handleSetCookies } from './handleSetCookies'
@@ -12,7 +13,7 @@ export const handleApproveInvitation = async (
   team_id: string | undefined,
 ) => {
   if (team_id === undefined || null || key === undefined || null) {
-    redirect('/error/500')
+    throw new BadRequestError()
   }
   try {
     // set to db

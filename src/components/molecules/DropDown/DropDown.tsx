@@ -1,8 +1,9 @@
+import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import useSWR from 'node_modules/swr/core/dist/index.mjs'
 
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { Avatar } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
@@ -34,16 +35,17 @@ export function DropDown() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant='ghost' size='icon'>
+        <Button variant='ghost' size='icon' className='rounded-full'>
           <Avatar>
-            <AvatarImage
-              src={
-                data?.users_by_pk?.image_url ||
-                'https://ejkzhsvxsplsaljuquds.supabase.co/storage/v1/object/public/avatar/account.svg'
-              }
+            <Image
+              src={`${process.env.NEXT_PUBLIC_SUPABASE_STORAGE_BASE_URL}${
+                data?.users_by_pk?.image_url || 'account.png'
+              }`}
               alt='avatar'
+              width={40}
+              height={40}
+              className=' rounded-full object-cover'
             />
-            <AvatarFallback>CN</AvatarFallback>
           </Avatar>
         </Button>
       </DropdownMenuTrigger>

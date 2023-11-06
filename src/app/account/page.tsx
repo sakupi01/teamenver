@@ -1,22 +1,25 @@
-import { getSession } from '@auth0/nextjs-auth0'
 import { redirect } from 'next/navigation'
+
+import { getUserInfo } from '@/services/server/GetUserInfo'
 
 import AccountForm from './accountForm'
 
 export default async function Account() {
-  const user = (await getSession())?.user
+  const { users_by_pk } = await getUserInfo()
 
-  if (!user) {
+  if (!users_by_pk) {
     redirect('/api/auth/login')
   }
+  console.log(users_by_pk)
 
   return (
     <>
       <AccountForm
-        id={user.id}
-        email={user.email}
-        name={user.nickname}
-        imageUrl={user.image_url}
+        name={users_by_pk.name}
+        email={users_by_pk.email}
+        github_url={users_by_pk.github_url || 'https://github.com/404.html'}
+        twitter_url={users_by_pk.twitter_url || 'https://x.com/404.html'}
+        imageUrl={users_by_pk.image_url || 'avatar.svg'}
       />
     </>
   )
