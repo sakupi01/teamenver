@@ -1,6 +1,7 @@
+import Image from 'next/image'
 import Link from 'next/link'
 
-import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar'
+import { Avatar } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import {
   Card,
@@ -13,7 +14,6 @@ import {
 import { Icons } from '@/components/ui/icons'
 
 import { getTeamMember } from '@/services/server/GetTeamMember'
-
 type PeopleListProps = {
   params: {
     team_id: string
@@ -35,8 +35,13 @@ const PeopleList = async ({ params }: PeopleListProps) => {
             <div className='flex items-center justify-between space-x-4'>
               <div className='flex items-center space-x-4'>
                 <Avatar>
-                  <AvatarImage src={person.users.image_url} alt={person.users.name} />
-                  <AvatarFallback>P</AvatarFallback>
+                  <Image
+                    src={`${process.env.NEXT_PUBLIC_SUPABASE_STORAGE_BASE_URL}${person.users.image_url}`}
+                    alt={person.users.name}
+                    width={40}
+                    height={40}
+                    className='rounded-full object-cover'
+                  />
                 </Avatar>
                 <div>
                   <p className='text-sm font-medium leading-none'>{person.users.name}</p>

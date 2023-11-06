@@ -3,7 +3,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import useSWR from 'node_modules/swr/core/dist/index.mjs'
 
-import { Avatar, AvatarFallback } from '@/components/ui/avatar'
+import { Avatar } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
@@ -35,7 +35,7 @@ export function DropDown() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant='ghost' size='icon'>
+        <Button variant='ghost' size='icon' className='rounded-full'>
           <Avatar>
             <Image
               src={`${process.env.NEXT_PUBLIC_SUPABASE_STORAGE_BASE_URL}${
@@ -44,9 +44,8 @@ export function DropDown() {
               alt='avatar'
               width={40}
               height={40}
-              className='flex h-full w-full items-center justify-center rounded-full bg-muted'
+              className=' rounded-full object-cover'
             />
-            <AvatarFallback>CN</AvatarFallback>
           </Avatar>
         </Button>
       </DropdownMenuTrigger>

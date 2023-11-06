@@ -30,6 +30,7 @@ export function ShareLinkButton({ current_team_id }: ShareLinkButtonProps) {
         <Button
           variant='ghost'
           size='icon'
+          className='rounded-full'
           onClick={() => {
             const id = nanoid()
             setLinkId(id)
