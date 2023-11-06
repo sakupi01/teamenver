@@ -9,15 +9,11 @@ export default async function Account() {
   if (!user) {
     redirect('/api/auth/login')
   }
+  console.log(user)
 
   return (
     <>
-      <AccountForm
-        id={user.id}
-        email={user.email}
-        name={user.nickname}
-        imageUrl={user.image_url}
-      />
+      <AccountForm email={user.email} name={user.nickname} imageUrl={user.picture} />
     </>
   )
 }

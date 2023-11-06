@@ -1,12 +1,12 @@
 'use client'
 import { zodResolver } from '@hookform/resolvers/zod'
+import Image from 'next/image'
 import { useForm } from 'react-hook-form'
 
 import { Button } from '@/components/ui/button'
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -18,20 +18,15 @@ import { toast } from '@/components/ui/use-toast'
 import { LoginUserSchema } from '@/libs/schema/loginUser'
 import { LoginUser } from '@/libs/schema/loginUser'
 
+import { useUploadImage } from './hooks/useUploadImage'
+
 export type AccountFormProps = {
-  id: string
   email: string
   name: string
   imageUrl: string
 }
 
-export default function AccountForm({ id, email, name, imageUrl }: AccountFormProps) {
-  // register: callback function to register your input into the hook form, it can be React Hook Form input or custom register input.
-  // we can take the inputs under control by applying the register function to the inputs.
-  // handleSubmit: callback function when validation pass, invoke the callback with the form data.
-  // watch: This will watch specified input/inputs and return its value. You can call watch() to be rendered every time so that you can have the latest value.
-  // formState: an object contains information about the form state, such as dirty, isSubmitted, touched, submitCount or isSubmitting.
-  // errors: an object contains form errors. Will be used to display the errors in the form.
+export default function AccountForm({ email, name, imageUrl }: AccountFormProps) {
   const form = useForm<LoginUser>({
     resolver: zodResolver(LoginUserSchema),
     defaultValues: {
@@ -41,8 +36,32 @@ export default function AccountForm({ id, email, name, imageUrl }: AccountFormPr
     },
   })
 
+  const { onChangeImage, url } = useUploadImage({
+    register: form.register,
+    setValue: form.setValue,
+    name: 'imageUrl',
+    defaultImageUrl: imageUrl,
+    onRejected: (error) => {
+      toast({
+        title: 'Error',
+        description: (
+          <pre className='mt-2 w-[340px] rounded-md bg-slate-950 p-4'>
+            <code className='text-white'>
+              {JSON.stringify(form.formState.errors.imageUrl?.message, null, 2)}
+            </code>
+          </pre>
+        ),
+      })
+    },
+    onResolved(data) {
+      toast({
+        title: '✅Success',
+        description: 'アバター画像がアップロードされました',
+      })
+    },
+  })
+
   function onSubmit(data: LoginUser) {
-    // ✅ This will be type-safe and validated because onSubmit is called only after the form is validated.
     toast({
       title: 'You submitted the following values:',
       description: (
@@ -51,16 +70,21 @@ export default function AccountForm({ id, email, name, imageUrl }: AccountFormPr
         </pre>
       ),
     })
-    console.log(data)
+  }
+  function onInvalid(errors: unknown) {
+    toast({
+      title: 'Error',
+      description: (
+        <pre className='mt-2 w-[340px] rounded-md bg-slate-950 p-4'>
+          <code className='text-white'>{JSON.stringify(errors, null, 2)}</code>
+        </pre>
+      ),
+    })
   }
 
-  // error checking
-  // console.log(form.formState.errors)
-
-  // The <Form /> wrapper in react-hook-form provides us with composable components for building forms.
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-8'>
+      <form onSubmit={form.handleSubmit(onSubmit, onInvalid)} className='space-y-8'>
         <FormField
           control={form.control}
           name='name'
@@ -70,7 +94,6 @@ export default function AccountForm({ id, email, name, imageUrl }: AccountFormPr
               <FormControl>
                 <Input {...field} />
               </FormControl>
-              <FormDescription>ユーザ名を変更できます</FormDescription>
               <FormMessage />
             </FormItem>
           )}
@@ -84,24 +107,33 @@ export default function AccountForm({ id, email, name, imageUrl }: AccountFormPr
               <FormControl>
                 <Input {...field} />
               </FormControl>
-              <FormDescription>メールアドレスを変更できます</FormDescription>
               <FormMessage />
             </FormItem>
           )}
         />
         <FormField
           control={form.control}
-          name='email'
+          name='imageUrl'
           render={() => (
             <FormItem>
               <FormLabel>Avatar Image</FormLabel>
               <FormControl>
-                <Input type='file' />
+                <Input
+                  type='file'
+                  accept='image/jpeg, image/png'
+                  onChange={onChangeImage}
+                />
               </FormControl>
-              <FormDescription>アバター画像を変更できます</FormDescription>
               <FormMessage />
             </FormItem>
           )}
+        />
+        <Image
+          src={url || imageUrl}
+          alt='avatar'
+          width={100}
+          height={100}
+          className='w-[100px] h-[100px] rounded-full object-cover'
         />
         <Button type='submit'>Submit</Button>
       </form>
