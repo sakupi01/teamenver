@@ -18,14 +18,10 @@ export async function GET(
     if (!comment_id || !is_delete) {
       throw new BadRequestError()
     }
-    console.log(is_delete)
-
     if (is_delete == 'true') {
-      console.log('deleting')
       const res = await deleteLike(comment_id)
       return NextResponse.json(res)
     } else {
-      console.log('inserting')
       const res = await insertLike(comment_id)
       return NextResponse.json(res)
     }

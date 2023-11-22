@@ -22,7 +22,6 @@ export async function GET(
     const res = await getMessage({ board_id, from_ts })
     return NextResponse.json(res)
   } catch (error) {
-    console.log(error)
     return handleApiRouteError(error)
   }
 }

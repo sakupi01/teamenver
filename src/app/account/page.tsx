@@ -10,7 +10,6 @@ export default async function Account() {
   if (!users_by_pk) {
     redirect('/api/auth/login')
   }
-  console.log(users_by_pk)
 
   return (
     <>

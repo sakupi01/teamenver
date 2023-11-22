@@ -3,8 +3,6 @@ const fs = require('fs').promises // ファイルシステムモジュールを�
 
 export const appGeneratorHandler = async () => {
   'use server'
-  console.log('HelloHere!')
-
   try {
     // ファイルを非同期的に読み込む
     // ファイルの内容を文字列として格納

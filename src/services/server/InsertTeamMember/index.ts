@@ -44,8 +44,6 @@ export const insertTeamMember = async (team_id: string | null) => {
 
     return { insert_team_member_one }
   } catch (error) {
-    console.log(error)
-
     return handleServerError(error)
   }
 }

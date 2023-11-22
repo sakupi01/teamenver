@@ -18,7 +18,6 @@ export async function GET(
 
     return NextResponse.json(res)
   } catch (error) {
-    console.log(error)
     return handleApiRouteError(error)
   }
 }

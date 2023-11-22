@@ -31,9 +31,6 @@ export const updateUserInfo = async ({
     }
 
     gqlHasuraClient.setHeader('authorization', `Bearer ${access_token}`)
-    console.log('bodybodybodybodybodybodybody')
-    console.log(name, email, github_url, twitter_url, image_url)
-    console.log('bodybodybodybodybodybodybody')
     const { update_users_by_pk } = await gqlHasuraClient.request(UpdateUserInfoDocument, {
       id: session?.user.sub,
       name: name,
