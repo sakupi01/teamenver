@@ -11,12 +11,10 @@ import { getBoardDetail } from '@/services/server/GetBoardDetail'
 
 export type TeamPageProps = {
   params: {
-    team_id: string
     board_id: string
   }
 }
-
-const BoardPage = async ({ params: { team_id, board_id } }: TeamPageProps) => {
+const BoardPage = async ({ params: { board_id } }: TeamPageProps) => {
   // 現在のボードの情報を取得
   const current_my_board_id = cookies().get('current_board_id')?.value
 

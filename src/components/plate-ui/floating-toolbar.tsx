@@ -1,21 +1,21 @@
-'use client';
+'use client'
 
-import { PortalBody, useComposedRef } from '@udecode/plate-common';
+import { PortalBody, useComposedRef } from '@udecode/plate-common'
 import {
   flip,
   FloatingToolbarState,
   offset,
   useFloatingToolbar,
   useFloatingToolbarState,
-} from '@udecode/plate-floating';
-import React from 'react';
+} from '@udecode/plate-floating'
+import React from 'react'
 
-import { cn } from '@/libs/utils';
+import { cn } from '@/libs/utils'
 
-import { Toolbar, ToolbarProps } from './toolbar';
+import { Toolbar, ToolbarProps } from './toolbar'
 
 export interface FloatingToolbarProps extends ToolbarProps {
-  state?: FloatingToolbarState;
+  state?: FloatingToolbarState
 }
 
 const FloatingToolbar = React.forwardRef<
@@ -30,34 +30,29 @@ const FloatingToolbar = React.forwardRef<
         offset(12),
         flip({
           padding: 12,
-          fallbackPlacements: [
-            'top-start',
-            'top-end',
-            'bottom-start',
-            'bottom-end',
-          ],
+          fallbackPlacements: ['top-start', 'top-end', 'bottom-start', 'bottom-end'],
         }),
       ],
       ...state?.floatingOptions,
     },
-  });
+  })
 
   const {
     ref: floatingRef,
     props: rootProps,
     hidden,
-  } = useFloatingToolbar(floatingToolbarState);
+  } = useFloatingToolbar(floatingToolbarState)
 
-  const ref = useComposedRef<HTMLDivElement>(componentRef, floatingRef);
+  const ref = useComposedRef<HTMLDivElement>(componentRef, floatingRef)
 
-  if (hidden) return null;
+  if (hidden) return null
 
   return (
     <PortalBody>
       <Toolbar
         ref={ref}
         className={cn(
-          'absolute z-50 whitespace-nowrap border bg-popover px-1 opacity-100 shadow-md print:hidden'
+          'absolute z-50 whitespace-nowrap border bg-popover px-1 opacity-100 shadow-md print:hidden',
         )}
         {...rootProps}
         {...props}
@@ -65,8 +60,8 @@ const FloatingToolbar = React.forwardRef<
         {children}
       </Toolbar>
     </PortalBody>
-  );
-});
-FloatingToolbar.displayName = 'FloatingToolbar';
+  )
+})
+FloatingToolbar.displayName = 'FloatingToolbar'
 
-export { FloatingToolbar };
+export { FloatingToolbar }
