@@ -20,8 +20,6 @@ export async function POST(
     const res = await updateUserInfo(body)
     return NextResponse.json(res)
   } catch (error) {
-    console.log(error)
-
     return handleApiRouteError(error)
   }
 }

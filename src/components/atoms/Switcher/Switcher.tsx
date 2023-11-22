@@ -1,3 +1,4 @@
+import { useUser } from '@auth0/nextjs-auth0/client'
 import { useTransition } from 'react'
 
 import { Label } from '@/components/ui/label'
@@ -14,11 +15,11 @@ type SwitcherProps = {
 }
 export const Switcher = ({ isAgreed, user }: SwitcherProps) => {
   const [isPending, startTransition] = useTransition()
-
+  const loginUser = useUser();
   return (
     <>
       <div className='grid grid-cols-2'>
-        <div className='text-sm'>{user.name}</div>
+        <div className='text-sm'>{user.id === loginUser.user?.sub ? 'You' : user.name}</div>
         <div className='flex items-center space-x-2'>
           <Switch
             checked={isAgreed}
@@ -26,6 +27,7 @@ export const Switcher = ({ isAgreed, user }: SwitcherProps) => {
             onCheckedChange={() =>
               startTransition(() => handleUpdateAgreement(!isAgreed))
             }
+            disabled={user.id !== loginUser.user?.sub}
           />
           {isPending ? (
             'Updating...'
