@@ -106,6 +106,9 @@ query GetJoinedTeams($user_id: String!) {
       }
     }
   }
+  users_by_pk(id: $user_id) {
+    name
+  }
 }
 
 query GetUserInfo($id: String!) {

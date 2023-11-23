@@ -32,7 +32,7 @@ const formSchema = z.object({
 
 // million-ignore
 export default function Join() {
-  const { user, isLoading, error } = useUser()
+  const { user } = useUser()
   const router = useRouter()
 
   const fetcher = (url: string) =>
@@ -40,7 +40,7 @@ export default function Join() {
       return res.json()
     })
 
-  const res = useSWR<GetJoinedTeamsApi.GetType>(
+  const {data, isLoading, error} = useSWR<GetJoinedTeamsApi.GetType>(
     `/api/get/joined_teams?user_id=${user?.sub}`,
     fetcher,
   )
@@ -68,7 +68,7 @@ export default function Join() {
     <main className={'min-h-screen px-[10%] py-[5%]'}>
       <div className='flex flex-col justify-center items-center gap-8'>
         <p className='scroll-m-20 text-6xl font-extrabold tracking-tight lg:text-8xl'>
-          Hello, {error ? 'failed to load' : isLoading ? 'loading...' : user?.nickname}
+          Hello, {error ? 'failed to load' : isLoading ? 'loading...' : data?.users_by_pk?.name}
         </p>
 
         <Form {...form}>
@@ -99,12 +99,12 @@ export default function Join() {
       </div>
       <ScrollArea>
         <div className='my-5 flex space-x-5'>
-          {res.error ? (
+          {error ? (
             <div>failed to load</div>
-          ) : res.data === undefined || res.isLoading ? (
+          ) : data === undefined || isLoading ? (
             'loading...'
           ) : (
-            res.data.teams.map((team) => (
+            data.teams.map((team) => (
               <Card
                 key={team.id}
                 onClick={() =>

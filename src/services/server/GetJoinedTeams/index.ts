@@ -24,11 +24,11 @@ export const getJoinedTeams = async ({ user_id }: ReturnGetJoinedTeamsProps) => 
     }
 
     gqlHasuraClient.setHeader('authorization', `Bearer ${access_token}`)
-    const { teams } = await gqlHasuraClient.request(GetJoinedTeamsDocument, {
+    const { teams, users_by_pk } = await gqlHasuraClient.request(GetJoinedTeamsDocument, {
       user_id: user_id,
     })
 
-    return { teams }
+    return { teams, users_by_pk }
   } catch (error) {
     return handleServerError(error)
   }
