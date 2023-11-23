@@ -84,7 +84,6 @@ export default function AccountForm({
         image_url: data.image_url,
       }),
     })
-    console.log(res)
 
     toast({
       title: 'You submitted the following values:',
