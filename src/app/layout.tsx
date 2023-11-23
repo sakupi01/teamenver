@@ -9,7 +9,7 @@ const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
   title: 'Teamenver',
-  description: 'Teamenver app',
+  description: 'To boot up team productivity.',
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
