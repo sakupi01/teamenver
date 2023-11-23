@@ -39,7 +39,9 @@ export const getTeamBoardDetail = async (team_id: string) => {
 
     const prevFirstNullKey = findKeyBeforeNullValue(teamBoardDetailWithoutTypename)
 
-    return { id, prevFirstNullKey, teamBoardDetailWithoutTypename }
+    const isAdmin = teams_by_pk.admin_id === session?.user.sub
+
+    return { id, prevFirstNullKey, teamBoardDetailWithoutTypename, isAdmin }
   } catch (error) {
     return handleServerError(error)
   }

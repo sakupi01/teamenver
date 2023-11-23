@@ -79,22 +79,6 @@ query GetMyBoardInTeam($team_id: uuid!, $user_id: String!) {
   boards(where: { _and: { team_id: { _eq: $team_id }, user_id: { _eq: $user_id } } }) {
     id
     is_public
-    board_detail {
-      id
-      hygen
-      framework
-      formatter
-      css_library
-      created_at
-      isGit
-      lint_staged_husky
-      linter
-      manager
-      ui_library
-      updated_at
-      volta
-      vscode
-    }
   }
 }
 
@@ -146,6 +130,9 @@ query GetTeamMember($team_id: uuid!) {
       github_url
       twitter_url
     }
+    teams {
+      name
+    }
   }
 }
 
@@ -169,5 +156,23 @@ query GetTeamBoardDetail($team_id: uuid!) {
         isGit
       }
     }
+    admin_id
+  }
+}
+
+query GetAgreements($team_board_id: uuid!) {
+  agreements(where: { team_board_id: { _eq: $team_board_id } }) {
+    user {
+      name
+      id
+    }
+    is_agreed
+  }
+}
+
+query GetProjectOverview($team_id: uuid!) {
+  project_details(where: { team_id: { _eq: $team_id } }) {
+    team_id
+    project_abstract
   }
 }

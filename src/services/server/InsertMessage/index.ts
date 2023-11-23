@@ -27,9 +27,6 @@ export const insertMessage = async (content: string | null, current_board_id: st
 
     return { insert_comments_one }
   } catch (error) {
-    console.log('***************************')
-    console.log(error)
-    console.log('***************************')
     return handleServerError(error)
   }
 }

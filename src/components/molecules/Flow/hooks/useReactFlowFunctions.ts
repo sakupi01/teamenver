@@ -17,6 +17,8 @@ import {
 
 import 'reactflow/dist/style.css'
 
+import { settingsStore } from '@/libs/state/store'
+
 import { nodeInfo } from '@/types/custom/nodeInfo'
 
 import { deleteBoardDetail } from '@/services/client/DeleteBoardDetail'
@@ -36,6 +38,7 @@ export const useReactFlowFunctions = (
     toFirstOneIndicator,
   )
   const store = useStoreApi()
+  const updateSettings = settingsStore((state) => state.updateSettings)
   const reactFlowWrapper = useRef<HTMLInputElement>(null)
   const [nodes, setNodes] = useNodesState(initializedNodes)
   const [edges, setEdges] = useEdgesState(initializedEdges)
@@ -111,6 +114,7 @@ export const useReactFlowFunctions = (
       }
 
       setNodes((nds) => nds.concat(newNode))
+      updateSettings({ [data.key]: data.label })
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [reactFlowInstance],
@@ -210,17 +214,18 @@ export const useReactFlowFunctions = (
     (deleted: Node<any, string | undefined>[]) => {
       if (!deleteOne) {
         deleteBoardDetail(deleted[0].data.key, isTeamBoard)
-        console.log('setDeleteOne(true)')
         setDeleteOne(true)
       }
       function removeTreeOfOutgoers(node: Node) {
         const outgoers = getOutgoers(node, nodes, edges)
         if (outgoers.length) {
           deleteElements({ nodes: outgoers })
-          // we loop through the outgoers and try to remove any outgoers of our outgoers
+          updateSettings({ [node.data['key']]: node.data['label'] })
           outgoers.forEach((outgoer) => {
             removeTreeOfOutgoers(outgoer)
           })
+        } else {
+          setDeleteOne(false)
         }
       }
 

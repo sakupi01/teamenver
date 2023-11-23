@@ -22,15 +22,12 @@ export const createBoard = async () => {
   try {
     gqlHasuraClient.setHeader('authorization', `Bearer ${access_token}`)
     const { insert_boards } = await gqlHasuraClient.request(CreateBoardDocument, {
-      is_public: false,
+      is_public: true,
       team_id: current_team_id,
     })
     insert_boards && cookies().set('current_board_id', insert_boards?.returning[0].id)
     return { insert_boards }
   } catch (error) {
-    console.log('***************************')
-    console.log(error)
-    console.log('***************************')
     return handleServerError(error)
   }
 }

@@ -87,7 +87,6 @@ export const ChatPage = ({ current_board_id, accessToken }: ChatPageProps) => {
             })
             // コメントが登録されていた場合のみ、messagesを更新してレンダリングを許可
             if (res.comments.length) {
-              console.log(res.comments.length)
               const newMessages = [...messages, ...res.comments]
               setMessages(() => {
                 return newMessages

@@ -36,10 +36,13 @@ next-env.d.ts
 
 styled-system
 
-/src/gql/github/github.schema.graphql
+/src/gql
 
 # stroybook
 storybook-static
 
 # shad/cn ui components
-/src/components/ui/*.tsx
+/src/components/ui/*
+
+# plate ui components
+/src/components/plate-ui/*

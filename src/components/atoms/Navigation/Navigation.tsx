@@ -2,7 +2,6 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { useRouter } from 'next/navigation'
 import useSWR from 'node_modules/swr/core/dist/index.mjs'
 import React from 'react'
 
@@ -31,12 +30,30 @@ export const Navigation = ({ current_team_id, public_boards_info }: NavigationPr
     `/api/get/myboard_in_team?team_id=${current_team_id}`,
     fetcher,
   )
-  const router = useRouter()
   const pathname = usePathname()
   return (
     <div className='fixed top-0 left-0 right-0 z-50 py-10 px-20'>
       <NavigationMenu className='flex max-w-full flex-1 items-center justify-between'>
         <NavigationMenuList>
+          <NavigationMenuItem>
+            <Link
+              href={`/dashboard/team/${current_team_id}/overview`}
+              legacyBehavior
+              passHref
+            >
+              <NavigationMenuLink
+                className={navigationMenuTriggerStyle()}
+                active={
+                  pathname === `/dashboard/team/${current_team_id}/overview`
+                    ? true
+                    : false
+                }
+              >
+                📜Overview
+              </NavigationMenuLink>
+            </Link>
+          </NavigationMenuItem>
+
           <NavigationMenuItem>
             <Link href={`/dashboard/team/${current_team_id}`} legacyBehavior passHref>
               <NavigationMenuLink

@@ -6,7 +6,7 @@ import * as GetJoinedTeamsApi from '@/api/get/joined_teams/route'
 export const handleSetCookies = (
   team_id: string,
   team_boards: GetJoinedTeamsApi.GetType['teams'][0]['team_boards'],
-  boards: GetJoinedTeamsApi.GetType['teams'][0]['boards'][0],
+  boards?: GetJoinedTeamsApi.GetType['teams'][0]['boards'][0],
 ) => {
   cookies().set('current_team_id', team_id)
 

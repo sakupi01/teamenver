@@ -2,10 +2,18 @@ const million = require('million/compiler')
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    domains: ['ejkzhsvxsplsaljuquds.supabase.co'],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'ejkzhsvxsplsaljuquds.supabase.co',
+      },
+      {
+        protocol: 'https',
+        hostname: 's.gravatar.com',
+      },
+    ],
   },
   experimental: {
-    serverActions: true,
     typedRoutes: true,
   },
   async headers() {

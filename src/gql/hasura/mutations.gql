@@ -33,16 +33,12 @@ mutation CreateDetails($board_id: uuid!) {
 
 mutation UpdateDetails($id: uuid!, $changes: board_details_set_input) {
   update_board_details(where: { id: { _eq: $id } }, _set: $changes) {
-    returning {
-      id
-    }
+    affected_rows
   }
 }
 mutation UpdateTeamBoardDetails($id: uuid!, $changes: team_board_details_set_input) {
   update_team_board_details(where: { id: { _eq: $id } }, _set: $changes) {
-    returning {
-      id
-    }
+    affected_rows
   }
 }
 
@@ -70,6 +66,14 @@ mutation InsertTeamMember($team_id: uuid!, $user_id: String!) {
   insert_team_member_one(object: { team_id: $team_id, user_id: $user_id }) {
     team_id
     user_id
+    teams {
+      team_boards {
+        id
+        team_board_detail {
+          id
+        }
+      }
+    }
   }
 }
 
@@ -100,5 +104,58 @@ mutation DeleteLike($comment_id: uuid!, $user_id: String!) {
 mutation UpdateBoardVisibility($board_id: uuid!, $is_public: Boolean!) {
   update_boards_by_pk(pk_columns: { id: $board_id }, _set: { is_public: $is_public }) {
     updated_at
+  }
+}
+
+mutation InsertAgreement($team_board_id: uuid!) {
+  insert_agreements_one(object: { team_board_id: $team_board_id }) {
+    id
+    is_agreed
+  }
+}
+
+mutation UpdateAgreement($team_board_id: uuid!, $is_agreed: Boolean!) {
+  update_agreements(
+    where: { team_board_id: { _eq: $team_board_id } }
+    _set: { is_agreed: $is_agreed }
+  ) {
+    affected_rows
+  }
+}
+
+mutation InsertProjectOverview($team_id: uuid!) {
+  insert_project_details_one(object: { team_id: $team_id }) {
+    id
+  }
+}
+
+mutation UpdateProjectOverview($team_id: uuid!, $content: String!) {
+  update_project_details(
+    where: { team_id: { _eq: $team_id } }
+    _set: { project_abstract: $content }
+  ) {
+    affected_rows
+  }
+}
+
+mutation UpdateUserInfo(
+  $id: String!
+  $name: String!
+  $email: String!
+  $github_url: String!
+  $twitter_url: String!
+  $image_url: String!
+) {
+  update_users_by_pk(
+    pk_columns: { id: $id }
+    _set: {
+      name: $name
+      email: $email
+      github_url: $github_url
+      twitter_url: $twitter_url
+      image_url: $image_url
+    }
+  ) {
+    id
   }
 }

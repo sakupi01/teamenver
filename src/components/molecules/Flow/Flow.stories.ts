@@ -21,6 +21,6 @@ export const Default: Story = {
     toFirstOneIndicator: null,
     isTeamBoard: true,
     board_detail: {},
-    team_id: '0',
+    isAdminOfTheBoard: true,
   },
 }
