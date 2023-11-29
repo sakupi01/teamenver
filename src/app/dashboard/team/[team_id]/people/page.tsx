@@ -36,7 +36,16 @@ const PeopleList = async ({ params }: PeopleListProps) => {
               <div className='flex items-center space-x-4'>
                 <Avatar>
                   <Image
-                    src={`${process.env.NEXT_PUBLIC_SUPABASE_STORAGE_BASE_URL}${person.users.image_url}`}
+                    src={
+                      person.users.image_url?.startsWith(
+                        'https://avatars.githubusercontent.com',
+                      ) ||
+                      person.users.image_url?.startsWith(
+                        'https://lh3.googleusercontent.com',
+                      )
+                        ? person.users.image_url
+                        : `${process.env.NEXT_PUBLIC_SUPABASE_STORAGE_BASE_URL}${person.users.image_url}`
+                    }
                     alt={person.users.name}
                     width={40}
                     height={40}

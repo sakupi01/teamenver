@@ -17,14 +17,23 @@ export const getTeamMember = async (current_team_id: string | undefined) => {
     if (!current_team_id) {
       throw new BadRequestError()
     }
-
+    console.log('*********')
+    console.error('access_token', JSON.stringify(access_token))
+    console.error('current_team_id', JSON.stringify(current_team_id))
+    console.log('*********')
     gqlHasuraClient.setHeader('authorization', `Bearer ${access_token}`)
     const { team_member } = await gqlHasuraClient.request(GetTeamMemberDocument, {
       team_id: current_team_id,
     })
+    console.log('*********')
+    console.error('get team_member', JSON.stringify(team_member, null, 2))
+    console.log('*********')
 
     return { team_member }
   } catch (error) {
+    console.log('*********')
+    console.error('get team_member', JSON.stringify(error, null, 2))
+    console.log('*********')
     return handleServerError(error)
   }
 }

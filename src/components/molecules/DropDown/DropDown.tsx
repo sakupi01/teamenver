@@ -13,7 +13,6 @@ import {
   DropdownMenuLabel,
   DropdownMenuPortal,
   DropdownMenuSeparator,
-  DropdownMenuShortcut,
   DropdownMenuSub,
   DropdownMenuSubContent,
   DropdownMenuSubTrigger,
@@ -31,6 +30,11 @@ export function DropDown() {
     '/api/get/user_info',
     fetcher,
   )
+  const image_url =
+    data?.users_by_pk?.image_url?.startsWith('https://avatars.githubusercontent.com') ||
+    data?.users_by_pk?.image_url?.startsWith('https://lh3.googleusercontent.com')
+      ? data?.users_by_pk?.image_url
+      : `${process.env.NEXT_PUBLIC_SUPABASE_STORAGE_BASE_URL}${data?.users_by_pk?.image_url}`
   if (isLoading) return <div>Loading...</div>
   return (
     <DropdownMenu>
@@ -38,9 +42,7 @@ export function DropDown() {
         <Button variant='ghost' size='icon' className='rounded-full'>
           <Avatar>
             <Image
-              src={`${process.env.NEXT_PUBLIC_SUPABASE_STORAGE_BASE_URL}${
-                data?.users_by_pk?.image_url || 'account.png'
-              }`}
+              src={image_url}
               alt='avatar'
               width={40}
               height={40}
@@ -54,19 +56,8 @@ export function DropDown() {
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
           <Link href={'/account'}>
-            <DropdownMenuItem>
-              Profile
-              <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
-            </DropdownMenuItem>
+            <DropdownMenuItem>Profile</DropdownMenuItem>
           </Link>
-          <DropdownMenuItem>
-            Settings
-            <DropdownMenuShortcut>⌘S</DropdownMenuShortcut>
-          </DropdownMenuItem>
-          <DropdownMenuItem disabled>
-            Keyboard shortcuts
-            <DropdownMenuShortcut>⌘K</DropdownMenuShortcut>
-          </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
 
@@ -87,10 +78,7 @@ export function DropDown() {
           </Link>
 
           <Link href={'/select/team'}>
-            <DropdownMenuItem>
-              New Team
-              <DropdownMenuShortcut>⌘+T</DropdownMenuShortcut>
-            </DropdownMenuItem>
+            <DropdownMenuItem>New Team</DropdownMenuItem>
           </Link>
         </DropdownMenuGroup>
 
@@ -109,10 +97,7 @@ export function DropDown() {
           }}
           variant={'ghost'}
         >
-          <DropdownMenuItem>
-            Log out
-            <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
-          </DropdownMenuItem>
+          <DropdownMenuItem>Log out</DropdownMenuItem>
         </Button>
       </DropdownMenuContent>
     </DropdownMenu>
