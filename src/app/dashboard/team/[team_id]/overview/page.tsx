@@ -1,3 +1,4 @@
+'use client'
 import { OverviewPage } from '@/components/templates/OverviewPage/OverviewPage'
 
 export default function Overview() {
