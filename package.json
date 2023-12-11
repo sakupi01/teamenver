@@ -73,7 +73,7 @@
     "@udecode/plate-alignment": "^27.0.0",
     "@udecode/plate-autoformat": "^27.0.0",
     "@udecode/plate-basic-marks": "^27.0.0",
-    "@udecode/plate-block-quote": "^24.5.2",
+    "@udecode/plate-block-quote": "^27.0.0",
     "@udecode/plate-break": "^24.5.2",
     "@udecode/plate-caption": "^24.5.2",
     "@udecode/plate-code-block": "^24.5.2",
